@@ -12,7 +12,7 @@ BoXFP has been developed as a series of add on packages to the QuShape Software 
 ## Support and Contacts
 
  - The first point of contact for any issues: 
- h
+ https://github.com/TinnedPsam/BoXFP/issues
 
 
 
