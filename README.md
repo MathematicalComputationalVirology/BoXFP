@@ -13,6 +13,10 @@ BoXFP has been developed as a series of add on packages to the QuShape Software 
 
  - The first point of contact for any issues: 
  https://github.com/TinnedPsam/BoXFP/issues
+ 
+ - Furhter information can be obtained from the following email address:
+ sam.clark@york.ac.uk
+ 
 
 
 
