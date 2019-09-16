@@ -1,43 +1,44 @@
-# Genome Position Determination 
+# Data Preprocessing 
 
 ## Script
 
-The script given for this tutorial is `sequence_alignment_v1_TCV_pr1.py`
+The script given for this tutorial is `pre_processing.py`
 
 ## Input data
 
-Input data should be from one of the pickle `.obj` files created during preprocessing of the data. 
-The reference genome sequence should be provided in a text file in FASTA format. 
+Input data should be provided as `_raw.csv` files for each dataset in the ensemble. 
 
-## Data partitioning 
+## Initial data read-in 
 
-The ddA ladder trace in the data is partitioned using the `S1_partitioning` function. Correlations between partitioned ladder traces are assessed using the function `correl_assessor`. The mean correlation is then calculated for each dataset, and these means are plotted as a histogram,
+In the first instance a text file listing all of the datasets in the ensemble. this can be created by typing the following command in the  command line:
+
+`for i in *raw.csv; do echo $i | sed -e "s/.fsa//g" ; done > data_files.fl`
+
+this data file is then read in as an array which is used to open all of the dataset files intially using the function `data_reader`. This function requires the specification of the start and end of the initial region of interest (ROI), which should cover the peaks of the size marker trace for all datasets in the ensemble: 
+
+`data_arr0 = sam_funcs.data_reader(file_list,6000,1400)`
+
+correct placement of the ROI in the script provided is determined by plotting all of the size marker traces onto a sinlge plot, to ensure that size marker regions for each of the datasets is covered by the initial ROI:
 
 ```
-sum_array=S_cov_matrix.mean(axis=1)
+n=len(data_arr0)
 
-plt.hist(sum_array)
+#plot the size marker traces to ensure that all peaks have been captured
+color=iter(plt.cm.rainbow(np.linspace(0,1,n)))
+for i in range(n):
+    col=next(color)
+    plt.plot(data_arr0[i]['Position'],data_arr0[i]['SizeMarker'],c=col)
 plt.show()
 ```
+preprocessing is then carried out over this initial ROI for each dataset using the `preprocessing` function. 
 
-Datasets which have a poor correlation with the other datasets in the ensemble can be removed if requested,
+## ROI determination for individual datasets 
 
-```
-keep_seqs=np.where(sum_array>cutoff)[0]
+Peak positions in the size marker trace are determined using the function `peak_finder`. The plotting function `sm_plotter` is then used to plot the size marker traces with the peak position annotated on it for reference. These plots should be consulted to make sure that the `peak_finder` function has correctly located all the peaks in the size marker trace. 
 
-S1_partition1 = [S1_partition[i] for i in keep_seqs]
+## Preprocessing over windows
 
-```
+With the positions of the size marker peaks determined for each dataset in the ensemble, the function `data_reader_v2` to generate preprocessed versions of the datasets in the ensemble over several windows in the data. This is performed to ensure that error due to preprocessing has been reduced. by defualt 10 windows are used that increase in size from 5 elution points either side of the size marker region to 50 elution points either side of the size marker region. The preprocessed data is then stored in several pickle `.obj` files, each with a specified name for the entire batch and an index t indicate the window. 
 
-## Consensus sequence generation. 
-
-A consensus binary is generated using the function `position_vote`. Two cutoffs values, `x1` and `x2`, must be specified in this function. `x1` indicates the cutoff percentage which specifies whether a partitioned peak should be considered a labelled nucleotide in the trace, and then be designated as a 1 in the binary sequence. `x2` indicates the cutoff percentage of votes cast in each position which indicate whether a position is considered a labelled nucleotide or not. For best results these two values which should range between 0 and 1 should be varied iteratively, as in the tutorial script. 
-
-## Genome scanning 
-
-This consensus sequence is then scanned across a binary representation of the reference genome sequence, and the position with the greatest correlation is then isolated and printed out. There are two functions to perform this action. 
-
-- `sequence_search` scans across the entire genome.
-- `sequence_search_area` scans across a small section of the genome, with a start point specified and section size. 
 
 
