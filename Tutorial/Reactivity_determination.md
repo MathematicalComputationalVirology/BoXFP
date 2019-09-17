@@ -58,7 +58,7 @@ nad_se_V_25_2=ad_se_V_25/aver_V_25_2
 nad_se_R_25_2=ad_se_R_25/aver_R_25_2
 
 #calculating errors on difference mapping
-nad_se_D_25=BoXFP.error_propogation(nad_se_V_25_2,nad_se_R_25_2)
+nad_se_D_25=BoXFP.error_propagation(nad_se_V_25_2,nad_se_R_25_2)
 ```
 
 the corrected reactivities, both normalised and unnormalised are stored in arrays along with the difference maps for later use. 
