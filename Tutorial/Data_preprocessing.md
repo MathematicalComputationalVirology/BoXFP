@@ -30,7 +30,7 @@ for i in range(n):
     plt.plot(data_arr0[i]['Position'],data_arr0[i]['SizeMarker'],c=col)
 plt.show()
 ```
-preprocessing is then carried out over this initial ROI for each dataset using the `preprocessing` function. 
+preprocessing is then carried out over this initial ROI for each dataset using the `preprocess` function. 
 
 ## ROI determination for individual datasets 
 
