@@ -31,7 +31,7 @@ Reactivities for each nucleus are calculated as the area of the peak associated 
 
 Following this calculated reactivities must me corrected for background. The scaling factor of the background treatment (0 ms) to the other treatments is calculated using the function `scaleShapeDataWindow` from the QuShape package `funcSeqAll`. The corrected reactivities are then calculated using the function `reactivity_correction`, which produces a normalised reactivity profile and the normalisation factor used to produce it. The normalisation factors for each 
 
-Errors from the background and the footprinted datasets are propogated using the function `error_propogation`. These errors are then normalised using the normalisation factors used for the reactivity profile. 
+Errors from the background and the footprinted datasets are propogated using the function `error_propagation`. These errors are then normalised using the normalisation factors used for the reactivity profile. 
 
 ## Difference mapping 
 
