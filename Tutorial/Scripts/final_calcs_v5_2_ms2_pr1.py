@@ -32,33 +32,7 @@ if __name__ == '__main__':
     #read in data file list    
     with open('data_files.fl' ,'r') as f:
         file_list =f.readlines()
-    """
-    
-    file0=open('190730_pp.obj','rb')
-    
-    #read in data initially
-    data_arr0=pickle.load(file0)
-    
-    #find the size marker peaks
-    peka,peaksTM=sam_funcs.peak_finder_v2(data_arr0,4,.25,lower_limit=1400)
-    data_arr=[]
-    
-    #check if the size marker peaks have been counted abnormally 
-    for i in range(len(peaksTM)):
-        
-        lenTM=len(peaksTM[i])
-        
-        if lenTM!=21:
-            print file_list[i]+' '+str(i)
-    
-    #plot size marker peak locations on size marker traces
-    sam_funcs.sm_plotter(data_arr0,peaksTM,file_list)
-    
-    #preprocess data over windows and then store the data in pickle files
-    
-    ####NOTE THE USE OF THE TOP IN THIS RUN. THIS IS DESIGNED TO REMOVE THE EXIT PEAK FROM THE PREPROCESSING STEP.####
-    sam_funcs.data_reader_v2(file_list,peaksTM,'190822',top=19)
-    """
+  
     #initialise replicate correlation storage arrays
     corAB_R_50=[]
     corAC_R_50=[]

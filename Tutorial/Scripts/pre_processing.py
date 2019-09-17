@@ -31,7 +31,7 @@ if __name__ == '__main__':
     #read in file list
     with open('data_files.fl' ,'r') as f:
         file_list =f.readlines()
-    """
+    
     #read in data initially to get the SM peak positions
     data_arr0 = sam_funcs.data_reader(file_list,6000,1400)
         
@@ -67,4 +67,4 @@ if __name__ == '__main__':
     
     #run the data reader version two that carries out the windowing and stores the windows in a pickle .obj file
     sam_funcs.data_reader_v2(file_list,peaksTM,'190902_11')
-    """
+    
