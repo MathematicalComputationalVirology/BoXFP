@@ -38,7 +38,7 @@ Peak positions in the size marker trace are determined using the function `peak_
 
 ## Preprocessing over windows
 
-With the positions of the size marker peaks determined for each dataset in the ensemble, the function `data_reader_v2` to generate preprocessed versions of the datasets in the ensemble over several windows in the data. This is performed to ensure that error due to preprocessing has been reduced. by defualt 10 windows are used that increase in size from 5 elution points either side of the size marker region to 50 elution points either side of the size marker region. The preprocessed data is then stored in several pickle `.obj` files, each with a specified name for the entire batch and an index t indicate the window. 
+With the positions of the size marker peaks determined for each dataset in the ensemble, the function `DR_windowing` to generate preprocessed versions of the datasets in the ensemble over several windows in the data. This is performed to ensure that error due to preprocessing has been reduced. by defualt 10 windows are used that increase in size from 5 elution points either side of the size marker region to 50 elution points either side of the size marker region. The preprocessed data is then stored in several pickle `.obj` files, each with a specified name for the entire batch and an index t indicate the window. 
 
 
 
