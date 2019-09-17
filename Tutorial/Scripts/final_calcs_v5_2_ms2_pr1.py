@@ -16,8 +16,8 @@ from scipy.stats.stats import pearsonr
 
 if __name__ == '__main__':
     
-    #sys.path.append(os.path.abspath('/Users/mqbppsc3/Desktop/externalLibraries')) 
-    sys.path.append(os.path.abspath('/home/samclark/sclark/Cap_elec/software/externalLibraries'))
+   
+    sys.path.append(os.path.abspath('directory'))
     import funcFile
     import funcPeakAlign
     import funcSeqAll
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     import funcByRef
     import funcGeneral
     import funcTimeWarp
-    import sam_funcs
+    import BoXFP
     
     np.set_printoptions(threshold=sys.maxsize)
     
@@ -84,7 +84,7 @@ if __name__ == '__main__':
         data_arr2=pickle.load(file_1)
 
         #calculate size marker peaks positions 
-        peka,peaksTM=sam_funcs.peak_finder_v2(data_arr2,4,.25,lower_limit=1400)
+        peka,peaksTM=sam_funcs.peak_finder(data_arr2,4,.25,lower_limit=1400)
         
         #plot size marker positions on size marker traces. 
         sam_funcs.sm_plotter(data_arr2,peaksTM,file_list)
@@ -131,9 +131,7 @@ if __name__ == '__main__':
         part_pr1_R_0=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_0,data_arr2,tm=0,tm_cutoff=19)
 
         part_pr1_R_25=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_25,data_arr2,tm=0,tm_cutoff=19)
-
-        #part_pr1_R_50_1=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_50,data_arr2) 
-
+ 
         part_pr1_R_50=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_50,data_arr2,tm=0,tm_cutoff=19)
         part_pr1_R_100=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_100,data_arr2,tm=0,tm_cutoff=19)
 
@@ -172,16 +170,16 @@ if __name__ == '__main__':
 
 
         #calculate average amppitudes and areas of peaks and the standard deviation of the areas
-        amp_av_pr1_R_0,area_av_pr1_R_0,area_sd_pr1_R_0=sam_funcs.area_calcs(part_pr1_R_0,data_arr2,pr1_R_0)
-        amp_av_pr1_R_25,area_av_pr1_R_25,area_sd_pr1_R_25=sam_funcs.area_calcs(part_pr1_R_25,data_arr2,pr1_R_25)
-        amp_av_pr1_R_50,area_av_pr1_R_50,area_sd_pr1_R_50=sam_funcs.area_calcs(part_pr1_R_50,data_arr2,pr1_R_50)
-        amp_av_pr1_R_100,area_av_pr1_R_100,area_sd_pr1_R_100=sam_funcs.area_calcs(part_pr1_R_100,data_arr2,pr1_R_100)
+        amp_av_pr1_R_0,area_av_pr1_R_0,area_sd_pr1_R_0=sam_funcs.RX_calculator_replicates(part_pr1_R_0,data_arr2,pr1_R_0)
+        amp_av_pr1_R_25,area_av_pr1_R_25,area_sd_pr1_R_25=sam_funcs.RX_calculator_replicates(part_pr1_R_25,data_arr2,pr1_R_25)
+        amp_av_pr1_R_50,area_av_pr1_R_50,area_sd_pr1_R_50=sam_funcs.RX_calculator_replicates(part_pr1_R_50,data_arr2,pr1_R_50)
+        amp_av_pr1_R_100,area_av_pr1_R_100,area_sd_pr1_R_100=sam_funcs.RX_calculator_replicates(part_pr1_R_100,data_arr2,pr1_R_100)
 
 
-        amp_av_pr1_V_0,area_av_pr1_V_0,area_sd_pr1_V_0=sam_funcs.area_calcs(part_pr1_V_0,data_arr2,pr1_V_0)
-        amp_av_pr1_V_25,area_av_pr1_V_25,area_sd_pr1_V_25=sam_funcs.area_calcs(part_pr1_V_25,data_arr2,pr1_V_25)
-        amp_av_pr1_V_50,area_av_pr1_V_50,area_sd_pr1_V_50=sam_funcs.area_calcs(part_pr1_V_50,data_arr2,pr1_V_50)
-        amp_av_pr1_V_100,area_av_pr1_V_100,area_sd_pr1_V_100=sam_funcs.area_calcs(part_pr1_V_100,data_arr2,pr1_V_100)
+        amp_av_pr1_V_0,area_av_pr1_V_0,area_sd_pr1_V_0=sam_funcs.RX_calculator_replicates(part_pr1_V_0,data_arr2,pr1_V_0)
+        amp_av_pr1_V_25,area_av_pr1_V_25,area_sd_pr1_V_25=sam_funcs.RX_calculator_replicates(part_pr1_V_25,data_arr2,pr1_V_25)
+        amp_av_pr1_V_50,area_av_pr1_V_50,area_sd_pr1_V_50=sam_funcs.RX_calculator_replicates(part_pr1_V_50,data_arr2,pr1_V_50)
+        amp_av_pr1_V_100,area_av_pr1_V_100,area_sd_pr1_V_100=sam_funcs.RX_calculator_replicates(part_pr1_V_100,data_arr2,pr1_V_100)
 
 
         #calculate replicate correlation values
@@ -232,13 +230,13 @@ if __name__ == '__main__':
 
 
         #calculate the background corrected areas and normalised reactiivities 
-        ad_pr1_R_25,nad_pr1_R_25,aver_pr1_R_25=sam_funcs.area_differences(area_av_pr1_R_25,area_av_pr1_R_0,sf_pr1_R_25)
-        ad_pr1_R_50,nad_pr1_R_50,aver_pr1_R_50=sam_funcs.area_differences(area_av_pr1_R_50,area_av_pr1_R_0,sf_pr1_R_50)
-        ad_pr1_R_100,nad_pr1_R_100,aver_pr1_R_100=sam_funcs.area_differences(area_av_pr1_R_100,area_av_pr1_R_0,sf_pr1_R_100)
+        ad_pr1_R_25,nad_pr1_R_25,aver_pr1_R_25=sam_funcs.RX_correction(area_av_pr1_R_25,area_av_pr1_R_0,sf_pr1_R_25)
+        ad_pr1_R_50,nad_pr1_R_50,aver_pr1_R_50=sam_funcs.RX_correction(area_av_pr1_R_50,area_av_pr1_R_0,sf_pr1_R_50)
+        ad_pr1_R_100,nad_pr1_R_100,aver_pr1_R_100=sam_funcs.RX_correction(area_av_pr1_R_100,area_av_pr1_R_0,sf_pr1_R_100)
 
-        ad_pr1_V_25,nad_pr1_V_25,aver_pr1_V_25=sam_funcs.area_differences(area_av_pr1_V_25,area_av_pr1_V_0,sf_pr1_V_25)
-        ad_pr1_V_50,nad_pr1_V_50,aver_pr1_V_50=sam_funcs.area_differences(area_av_pr1_V_50,area_av_pr1_V_0,sf_pr1_V_50)
-        ad_pr1_V_100,nad_pr1_V_100,aver_pr1_V_100=sam_funcs.area_differences(area_av_pr1_V_100,area_av_pr1_V_0,sf_pr1_V_100)
+        ad_pr1_V_25,nad_pr1_V_25,aver_pr1_V_25=sam_funcs.RX_correction(area_av_pr1_V_25,area_av_pr1_V_0,sf_pr1_V_25)
+        ad_pr1_V_50,nad_pr1_V_50,aver_pr1_V_50=sam_funcs.RX_correction(area_av_pr1_V_50,area_av_pr1_V_0,sf_pr1_V_50)
+        ad_pr1_V_100,nad_pr1_V_100,aver_pr1_V_100=sam_funcs.RX_correction(area_av_pr1_V_100,area_av_pr1_V_0,sf_pr1_V_100)
 
 
         #print the normalisation factors

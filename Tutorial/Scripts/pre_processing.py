@@ -15,9 +15,8 @@ from scipy.stats.stats import pearsonr
 
 
 if __name__ == '__main__':
-    
-    #sys.path.append(os.path.abspath('/Users/mqbppsc3/Desktop/externalLibraries')) 
-    sys.path.append(os.path.abspath('/home/samclark/sclark/Cap_elec/software/externalLibraries'))
+     
+    sys.path.append(os.path.abspath('directory'))
     import funcFile
     import funcPeakAlign
     import funcSeqAll
@@ -25,7 +24,7 @@ if __name__ == '__main__':
     import funcByRef
     import funcGeneral
     import funcTimeWarp
-    import sam_funcs
+    import BoXFP
     
     np.set_printoptions(threshold=sys.maxsize)
     #read in file list
@@ -51,7 +50,7 @@ if __name__ == '__main__':
     data_arr1=sam_funcs.mobility_shift(data_arr)
     
     #find peaks in TM traces
-    peka,peaksTM=sam_funcs.peak_finder_v2(data_arr1,4,.25,cap=7000)
+    peka,peaksTM=sam_funcs.peak_finder(data_arr1,4,.25,cap=7000)
     data_arr=[]
     
     #list all those peask that have a disproportionate number of SM peaks
@@ -66,5 +65,5 @@ if __name__ == '__main__':
     sam_funcs.sm_plotter(data_arr1,peaksTM,file_list)
     
     #run the data reader version two that carries out the windowing and stores the windows in a pickle .obj file
-    sam_funcs.data_reader_v2(file_list,peaksTM,'190902_11')
+    sam_funcs.DR_windowing(file_list,peaksTM,'190902_11')
     

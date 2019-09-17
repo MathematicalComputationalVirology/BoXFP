@@ -16,8 +16,7 @@ from scipy.stats.stats import pearsonr
 
 if __name__ == '__main__':
     
-    #sys.path.append(os.path.abspath('/Users/mqbppsc3/Desktop/externalLibraries')) 
-    sys.path.append(os.path.abspath('/home/samclark/sclark/Cap_elec/software/externalLibraries'))
+    sys.path.append(os.path.abspath('directory'))
     import funcFile
     import funcPeakAlign
     import funcSeqAll
@@ -25,7 +24,7 @@ if __name__ == '__main__':
     import funcByRef
     import funcGeneral
     import funcTimeWarp
-    import sam_funcs
+    import BoXFP
     
     np.set_printoptions(threshold=sys.maxsize)
     #read in file list
@@ -129,7 +128,7 @@ if __name__ == '__main__':
 
 
         #perform peak finding and plot peaks
-        peka,peaksTM=sam_funcs.peak_finder_v2(data_arr2,4,.25,TM=1)
+        peka,peaksTM=sam_funcs.peak_finder(data_arr2,4,.25,TM=1)
 
         sam_funcs.sm_plotter(data_arr2,peaksTM,file_list)
 
@@ -247,37 +246,31 @@ if __name__ == '__main__':
         corBC_G_50=np.append(corBC_G_50,cor_mat_G_50[2,1])
         
         
-        print'Re'
         #calculate areas of peaks in replicated data
-        amp_av_Re_10,area_av_Re_10,area_sd_Re_10=sam_funcs.area_calcs(part_Re_10,data_arr2,Re_10)
-        amp_av_Re_25,area_av_Re_25,area_sd_Re_25=sam_funcs.area_calcs(part_Re_25,data_arr2,Re_25)
-        amp_av_Re_50,area_av_Re_50,area_sd_Re_50=sam_funcs.area_calcs(part_Re_50,data_arr2,Re_50)
+        amp_av_Re_10,area_av_Re_10,area_sd_Re_10=sam_funcs.RX_calculator_replicates(part_Re_10,data_arr2,Re_10)
+        amp_av_Re_25,area_av_Re_25,area_sd_Re_25=sam_funcs.RX_calculator_replicates(part_Re_25,data_arr2,Re_25)
+        amp_av_Re_50,area_av_Re_50,area_sd_Re_50=sam_funcs.RX_calculator_replicates(part_Re_50,data_arr2,Re_50)
         
-        
-        print'R'
-        amp_av_R_10,area_av_R_10,area_sd_R_10=sam_funcs.area_calcs(part_R_10,data_arr2,R_10)
-        amp_av_R_25,area_av_R_25,area_sd_R_25=sam_funcs.area_calcs(part_R_25,data_arr2,R_25)
-        amp_av_R_50,area_av_R_50,area_sd_R_50=sam_funcs.area_calcs(part_R_50,data_arr2,R_50)
+        amp_av_R_10,area_av_R_10,area_sd_R_10=sam_funcs.RX_calculator_replicates(part_R_10,data_arr2,R_10)
+        amp_av_R_25,area_av_R_25,area_sd_R_25=sam_funcs.RX_calculator_replicates(part_R_25,data_arr2,R_25)
+        amp_av_R_50,area_av_R_50,area_sd_R_50=sam_funcs.RX_calculator_replicates(part_R_50,data_arr2,R_50)
 
-        print'G'
-        amp_av_G_10,area_av_G_10,area_sd_G_10=sam_funcs.area_calcs(part_G_10,data_arr2,G_10)
-        amp_av_G_25,area_av_G_25,area_sd_G_25=sam_funcs.area_calcs(part_G_25,data_arr2,G_25)
-        amp_av_G_50,area_av_G_50,area_sd_G_50=sam_funcs.area_calcs(part_G_50,data_arr2,G_50)
-
-        print'V' 
-        amp_av_V_10,area_av_V_10,area_sd_V_10=sam_funcs.area_calcs(part_V_10,data_arr2,V_10)
-        amp_av_V_25,area_av_V_25,area_sd_V_25=sam_funcs.area_calcs(part_V_25,data_arr2,V_25)
-        amp_av_V_50,area_av_V_50,area_sd_V_50=sam_funcs.area_calcs(part_V_50,data_arr2,V_50)
+        amp_av_G_10,area_av_G_10,area_sd_G_10=sam_funcs.RX_calculator_replicates(part_G_10,data_arr2,G_10)
+        amp_av_G_25,area_av_G_25,area_sd_G_25=sam_funcs.RX_calculator_replicates(part_G_25,data_arr2,G_25)
+        amp_av_G_50,area_av_G_50,area_sd_G_50=sam_funcs.RX_calculator_replicates(part_G_50,data_arr2,G_50)
+        amp_av_V_10,area_av_V_10,area_sd_V_10=sam_funcs.RX_calculator_replicates(part_V_10,data_arr2,V_10)
+        amp_av_V_25,area_av_V_25,area_sd_V_25=sam_funcs.RX_calculator_replicates(part_V_25,data_arr2,V_25)
+        amp_av_V_50,area_av_V_50,area_sd_V_50=sam_funcs.RX_calculator_replicates(part_V_50,data_arr2,V_50)
 
 
         #calculate areas in non replicated data
-        peak_list_R_0=sam_funcs.(partition_RX2[27],data_arr2,27)
+        peak_list_R_0=sam_funcs.RX_calculator_single(partition_RX2[27],data_arr2,27)
         
-        peak_list_Re_0=sam_funcs.reac_calculator_2(partition_RX2[20],data_arr2,27)
+        peak_list_Re_0=sam_funcs.RX_calculator_single(partition_RX2[20],data_arr2,27)
 
-        peak_list_G_0=sam_funcs.reac_calculator_2(partition_RX2[0],data_arr2,0)
+        peak_list_G_0=sam_funcs.RX_calculator_single(partition_RX2[0],data_arr2,0)
 
-        peak_list_V_0=sam_funcs.reac_calculator_2(partition_RX2[13],data_arr2,13)
+        peak_list_V_0=sam_funcs.RX_calculator_single(partition_RX2[13],data_arr2,13)
 
         #calculate scaling factor for background correction 
         sf_R_10=funcSeqAll.scaleShapeDataWindow(amp_av_R_10,peak_list_R_0['amp'],deg=40,rate=0.25,step=10,fit='linear')
@@ -306,25 +299,25 @@ if __name__ == '__main__':
 
         
         #calculate the corrected area differences, normalised area differences
-        ad_R_10,nad_R_10,aver_R_10=sam_funcs.area_differences(area_av_R_10,peak_list_R_0['area'],sf_R_10)
+        ad_R_10,nad_R_10,aver_R_10=sam_funcs.RX_correction(area_av_R_10,peak_list_R_0['area'],sf_R_10)
 
-        ad_R_25,nad_R_25,aver_R_25=sam_funcs.area_differences(area_av_R_25,peak_list_R_0['area'],sf_R_25)
-        ad_R_50,nad_R_50,aver_R_50=sam_funcs.area_differences(area_av_R_50,peak_list_R_0['area'],sf_R_50)
+        ad_R_25,nad_R_25,aver_R_25=sam_funcs.RX_correction(area_av_R_25,peak_list_R_0['area'],sf_R_25)
+        ad_R_50,nad_R_50,aver_R_50=sam_funcs.RX_correction(area_av_R_50,peak_list_R_0['area'],sf_R_50)
         
-        ad_Re_10,nad_Re_10,aver_Re_10=sam_funcs.area_differences(area_av_Re_10,peak_list_Re_0['area'],sf_Re_10)
+        ad_Re_10,nad_Re_10,aver_Re_10=sam_funcs.RX_correction(area_av_Re_10,peak_list_Re_0['area'],sf_Re_10)
 
-        ad_Re_25,nad_Re_25,aver_Re_25=sam_funcs.area_differences(area_av_Re_25,peak_list_Re_0['area'],sf_Re_25)
-        ad_Re_50,nad_Re_50,aver_Re_50=sam_funcs.area_differences(area_av_Re_50,peak_list_Re_0['area'],sf_Re_50)
+        ad_Re_25,nad_Re_25,aver_Re_25=sam_funcs.RX_correction(area_av_Re_25,peak_list_Re_0['area'],sf_Re_25)
+        ad_Re_50,nad_Re_50,aver_Re_50=sam_funcs.RX_correction(area_av_Re_50,peak_list_Re_0['area'],sf_Re_50)
 
-        ad_G_10,nad_G_10,aver_G_10=sam_funcs.area_differences(area_av_G_10,peak_list_G_0['area'],sf_G_10)
+        ad_G_10,nad_G_10,aver_G_10=sam_funcs.RX_correction(area_av_G_10,peak_list_G_0['area'],sf_G_10)
 
-        ad_G_25,nad_G_25,aver_G_25=sam_funcs.area_differences(area_av_G_25,peak_list_G_0['area'],sf_G_25)
-        ad_G_50,nad_G_50,aver_G_50=sam_funcs.area_differences(area_av_G_50,peak_list_G_0['area'],sf_G_50)
+        ad_G_25,nad_G_25,aver_G_25=sam_funcs.RX_correction(area_av_G_25,peak_list_G_0['area'],sf_G_25)
+        ad_G_50,nad_G_50,aver_G_50=sam_funcs.RX_correction(area_av_G_50,peak_list_G_0['area'],sf_G_50)
 
 
-        ad_V_10,nad_V_10,aver_V_10=sam_funcs.area_differences(area_av_V_10,peak_list_V_0['area'],sf_V_10)
-        ad_V_25,nad_V_25,aver_V_25=sam_funcs.area_differences(area_av_V_25,peak_list_G_0['area'],sf_G_25)
-        ad_V_50,nad_V_50,aver_V_50=sam_funcs.area_differences(area_av_V_50,peak_list_V_0['area'],sf_V_50)
+        ad_V_10,nad_V_10,aver_V_10=sam_funcs.RX_correction(area_av_V_10,peak_list_V_0['area'],sf_V_10)
+        ad_V_25,nad_V_25,aver_V_25=sam_funcs.RX_correction(area_av_V_25,peak_list_G_0['area'],sf_G_25)
+        ad_V_50,nad_V_50,aver_V_50=sam_funcs.RX_correction(area_av_V_50,peak_list_V_0['area'],sf_V_50)
         
         
         #bin normalisation factors
