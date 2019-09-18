@@ -8,3 +8,4 @@ The following packages are required for to run BoXFP:
 - `Pickle`: *72223*
 - `SciPy`: *1.2.1*
 - `Bio`: *1.73*
+- `pyqtgraph`: *0.10.0*
