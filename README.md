@@ -7,7 +7,7 @@
 
 ## What can BoXFP do? 
 
-BoXFP has been developed as a series of add on packages to the QuShape Software package developed by Dr Fethullah Karabiber of the Weeks Laboratory (https://weeks.chem.unc.edu/qushape/). It utilises a number of algorithms to effectively provide nucleotide specific reactivity information from both single experiments and  over several replicates. Capillary electrophoresis data from SHAPE, Hydroxyl-radical and enzyme based reactivity probing experiments can all be analysed using the package. 
+BoXFP has been developed as an add-on package to the QuShape software packages developed by Dr Fethullah Karabiber of the Weeks Laboratory (https://weeks.chem.unc.edu/qushape/). It utilises a number of algorithms to effectively provide nucleotide specific reactivity information from both single experiments and  over several replicates. Capillary electrophoresis data from SHAPE, Hydroxyl-radical and enzyme based reactivity probing experiments can all be analysed using the package. 
 
 ## Support and Contacts
 
