@@ -32,7 +32,7 @@ if __name__ == '__main__':
         file_list =f.readlines()
     
     #read in data initially to get the SM peak positions
-    data_arr0 = sam_funcs.data_reader(file_list,6000,1400)
+    data_arr0 = BoXFP.data_reader(file_list,6000,1400)
         
     n=len(data_arr0)
 
@@ -44,13 +44,13 @@ if __name__ == '__main__':
     plt.show()
 
     #run preprocessing
-    data_arr = sam_funcs.preprocess(data_arr0)
+    data_arr = BoXFP.preprocess(data_arr0)
 
     #run mobility shift
-    data_arr1=sam_funcs.mobility_shift(data_arr)
+    data_arr1=BoXFP.mobility_shift(data_arr)
     
     #find peaks in TM traces
-    peka,peaksTM=sam_funcs.peak_finder(data_arr1,4,.25,cap=7000)
+    peka,peaksTM=BoXFP.peak_finder(data_arr1,4,.25,cap=7000)
     data_arr=[]
     
     #list all those peask that have a disproportionate number of SM peaks
@@ -62,8 +62,8 @@ if __name__ == '__main__':
             print file_list[i]+' '+str(i)
     
     #plot the SM traces with the peak positions marked to make sure the peak finder function has found the right peaks.
-    sam_funcs.sm_plotter(data_arr1,peaksTM,file_list)
+    BoXFP.sm_plotter(data_arr1,peaksTM,file_list)
     
     #run the data reader version two that carries out the windowing and stores the windows in a pickle .obj file
-    sam_funcs.DR_windowing(file_list,peaksTM,'190902_11')
+    BoXFP.DR_windowing(file_list,peaksTM,'190902_11')
     
