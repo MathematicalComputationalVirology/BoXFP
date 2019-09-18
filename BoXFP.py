@@ -6451,7 +6451,7 @@ def sequence_snapshots(xcoord,ycoord,yerr,col,window=100,virus='',primer='',cond
         #plot and save data
         ax1.bar(xcoord,ycoord[::-1],color=col)
         
-        if yerr!=None:
+        if type(yerr) is np.ndarray:
             ax1.errorbar(xcoord,ycoord[::-1],yerr=yerr[::-1],color='k',fmt=None,elinewidth=1,capsize=None)
         ax1.set_xlim(start,end)
         if diff:
