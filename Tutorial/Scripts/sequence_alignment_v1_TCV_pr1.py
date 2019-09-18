@@ -16,8 +16,7 @@ from Bio import SeqIO
 
 if __name__ == '__main__':
     
-    #sys.path.append(os.path.abspath('/Users/mqbppsc3/Desktop/externalLibraries'))
-    sys.path.append(os.path.abspath('/home/samclark/sclark/Cap_elec/software/externalLibraries'))
+    sys.path.append(os.path.abspath('directory'))
     import funcFile
     import funcPeakAlign
     import funcSeqAll
@@ -25,7 +24,7 @@ if __name__ == '__main__':
     import funcByRef
     import funcGeneral
     import funcTimeWarp
-    import sam_funcs
+    import BoXFP
     
     np.set_printoptions(threshold=sys.maxsize)
     
@@ -50,7 +49,7 @@ if __name__ == '__main__':
     ref_seq='TCV_ref_genome.fasta'    
 
     #partition sequence data
-    partition_SB=sam_funcs.S1_partitioning(data_arrB,3)
+    partition_SB=BoXFP.S1_partitioning(data_arrB,3)
 
     
     
@@ -63,7 +62,7 @@ if __name__ == '__main__':
     plt.show()
 
     #calculate correlations between partitioned sequences
-    SB_cov_list,SB_cov_matrix=sam_funcs.correl_assessor(partition_SB,1)
+    SB_cov_list,SB_cov_matrix=BoXFP.correl_assessor(partition_SB,1)
 
     #calculate mean correlations for each sequence
     sum_arrayB=SB_cov_matrix.mean(axis=1)
@@ -94,7 +93,7 @@ if __name__ == '__main__':
     for i,x1 in enumerate(x):
         
         #perform postion vote
-        correl_val,vote_arr = sam_funcs.position_vote(partition_SB,x1,0.5)
+        correl_val,vote_arr = BoXFP.position_vote(partition_SB,x1,0.5)
         
         
         if correl_val<1:
@@ -118,13 +117,13 @@ if __name__ == '__main__':
         for j,x2 in enumerate(x):
             
             #generate consensus sequence
-            corel_val,vote_arr = sam_funcs.position_vote(partition_SB,x1,x2)
+            corel_val,vote_arr = BoXFP.position_vote(partition_SB,x1,x2)
             
             #get nucleotide count
             nuc_count_mat[j] = np.count_nonzero(vote_arr)/float(len(vote_arr))*100
             
             #perform sequence search
-            signif_mat[i,j],pos_test_mat[i,j],corr_test_mat[i,j]= sam_funcs.sequence_search_area(ref_seq,vote_arr)
+            signif_mat[i,j],pos_test_mat[i,j],corr_test_mat[i,j]= BoXFP.sequence_search_area(ref_seq,vote_arr)
         
 
     #print out metric matrices

@@ -84,16 +84,16 @@ if __name__ == '__main__':
         data_arr2=pickle.load(file_1)
 
         #calculate size marker peaks positions 
-        peka,peaksTM=sam_funcs.peak_finder(data_arr2,4,.25,lower_limit=1400)
+        peka,peaksTM=BoXFP.peak_finder(data_arr2,4,.25,lower_limit=1400)
         
         #plot size marker positions on size marker traces. 
-        sam_funcs.sm_plotter(data_arr2,peaksTM,file_list)
+        BoXFP.sm_plotter(data_arr2,peaksTM,file_list)
 
         
         #run partition function on the data
         
         ####NOTE THE CUTOFF VALUE TO NEGATE THE EXIT PEAK.####
-        bin_alloc,partition_RX,peak_info=sam_funcs.RX_partitioning_replicates(data_arr2,1,.25,Cap=5000,ll=1400,tm=0,tm_cutoff=19)
+        bin_alloc,partition_RX,peak_info=BoXFP.RX_partitioning_replicates(data_arr2,1,.25,Cap=5000,ll=1400,tm=0,tm_cutoff=19)
         
 
         #index the data according to treatment conditions
@@ -127,68 +127,68 @@ if __name__ == '__main__':
         pr21_R_50=[69,70,71]
         pr21_R_100=[63,64,65]
 
-        part_pr1_V_100=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_V_100,data_arr2,tm=0,tm_cutoff=19)
-        part_pr1_R_0=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_0,data_arr2,tm=0,tm_cutoff=19)
+        part_pr1_V_100=BoXFP.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_V_100,data_arr2,tm=0,tm_cutoff=19)
+        part_pr1_R_0=BoXFP.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_0,data_arr2,tm=0,tm_cutoff=19)
 
-        part_pr1_R_25=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_25,data_arr2,tm=0,tm_cutoff=19)
+        part_pr1_R_25=BoXFP.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_25,data_arr2,tm=0,tm_cutoff=19)
  
-        part_pr1_R_50=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_50,data_arr2,tm=0,tm_cutoff=19)
-        part_pr1_R_100=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_100,data_arr2,tm=0,tm_cutoff=19)
+        part_pr1_R_50=BoXFP.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_50,data_arr2,tm=0,tm_cutoff=19)
+        part_pr1_R_100=BoXFP.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_R_100,data_arr2,tm=0,tm_cutoff=19)
 
-        part_pr1_V_0=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_V_0,data_arr2,tm=0,tm_cutoff=19)
+        part_pr1_V_0=BoXFP.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_V_0,data_arr2,tm=0,tm_cutoff=19)
 
-        part_pr1_V_25=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_V_25,data_arr2,tm=0,tm_cutoff=19)
+        part_pr1_V_25=BoXFP.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_V_25,data_arr2,tm=0,tm_cutoff=19)
 
-        part_pr1_V_50=sam_funcs.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_V_50,data_arr2,tm=0,tm_cutoff=19)
+        part_pr1_V_50=BoXFP.RX_partition_realignment(partition_RX,bin_alloc,peak_info,pr1_V_50,data_arr2,tm=0,tm_cutoff=19)
 
                 
         #print replicate correlation values
         print 'pr1_R_0'
-        print sam_funcs.correl_assessor(part_pr1_R_0,'amp')
+        print BoXFP.correl_assessor(part_pr1_R_0,'amp')
 
         print 'pr1_R_25'
-        print sam_funcs.correl_assessor(part_pr1_R_25,'amp')
+        print BoXFP.correl_assessor(part_pr1_R_25,'amp')
 
         print 'pr1_R_50'
-        print sam_funcs.correl_assessor(part_pr1_R_50,'amp')
+        print BoXFP.correl_assessor(part_pr1_R_50,'amp')
 
         print 'pr1_R_100'
-        print sam_funcs.correl_assessor(part_pr1_R_100,'amp')
+        print BoXFP.correl_assessor(part_pr1_R_100,'amp')
 
 
         print 'pr1_V_0'
-        print sam_funcs.correl_assessor(part_pr1_V_0,'amp')
+        print BoXFP.correl_assessor(part_pr1_V_0,'amp')
 
         print 'pr1_V_25'
-        print sam_funcs.correl_assessor(part_pr1_V_25,'amp')
+        print BoXFP.correl_assessor(part_pr1_V_25,'amp')
 
         print 'pr1_V_50'
-        print sam_funcs.correl_assessor(part_pr1_V_50,'amp')
+        print BoXFP.correl_assessor(part_pr1_V_50,'amp')
 
         print 'pr1_V_100'
-        print sam_funcs.correl_assessor(part_pr1_V_100,'amp')
+        print BoXFP.correl_assessor(part_pr1_V_100,'amp')
 
 
         #calculate average amppitudes and areas of peaks and the standard deviation of the areas
-        amp_av_pr1_R_0,area_av_pr1_R_0,area_sd_pr1_R_0=sam_funcs.RX_calculator_replicates(part_pr1_R_0,data_arr2,pr1_R_0)
-        amp_av_pr1_R_25,area_av_pr1_R_25,area_sd_pr1_R_25=sam_funcs.RX_calculator_replicates(part_pr1_R_25,data_arr2,pr1_R_25)
-        amp_av_pr1_R_50,area_av_pr1_R_50,area_sd_pr1_R_50=sam_funcs.RX_calculator_replicates(part_pr1_R_50,data_arr2,pr1_R_50)
-        amp_av_pr1_R_100,area_av_pr1_R_100,area_sd_pr1_R_100=sam_funcs.RX_calculator_replicates(part_pr1_R_100,data_arr2,pr1_R_100)
+        amp_av_pr1_R_0,area_av_pr1_R_0,area_sd_pr1_R_0=BoXFP.RX_calculator_replicates(part_pr1_R_0,data_arr2,pr1_R_0)
+        amp_av_pr1_R_25,area_av_pr1_R_25,area_sd_pr1_R_25=BoXFP.RX_calculator_replicates(part_pr1_R_25,data_arr2,pr1_R_25)
+        amp_av_pr1_R_50,area_av_pr1_R_50,area_sd_pr1_R_50=BoXFP.RX_calculator_replicates(part_pr1_R_50,data_arr2,pr1_R_50)
+        amp_av_pr1_R_100,area_av_pr1_R_100,area_sd_pr1_R_100=BoXFP.RX_calculator_replicates(part_pr1_R_100,data_arr2,pr1_R_100)
 
 
-        amp_av_pr1_V_0,area_av_pr1_V_0,area_sd_pr1_V_0=sam_funcs.RX_calculator_replicates(part_pr1_V_0,data_arr2,pr1_V_0)
-        amp_av_pr1_V_25,area_av_pr1_V_25,area_sd_pr1_V_25=sam_funcs.RX_calculator_replicates(part_pr1_V_25,data_arr2,pr1_V_25)
-        amp_av_pr1_V_50,area_av_pr1_V_50,area_sd_pr1_V_50=sam_funcs.RX_calculator_replicates(part_pr1_V_50,data_arr2,pr1_V_50)
-        amp_av_pr1_V_100,area_av_pr1_V_100,area_sd_pr1_V_100=sam_funcs.RX_calculator_replicates(part_pr1_V_100,data_arr2,pr1_V_100)
+        amp_av_pr1_V_0,area_av_pr1_V_0,area_sd_pr1_V_0=BoXFP.RX_calculator_replicates(part_pr1_V_0,data_arr2,pr1_V_0)
+        amp_av_pr1_V_25,area_av_pr1_V_25,area_sd_pr1_V_25=BoXFP.RX_calculator_replicates(part_pr1_V_25,data_arr2,pr1_V_25)
+        amp_av_pr1_V_50,area_av_pr1_V_50,area_sd_pr1_V_50=BoXFP.RX_calculator_replicates(part_pr1_V_50,data_arr2,pr1_V_50)
+        amp_av_pr1_V_100,area_av_pr1_V_100,area_sd_pr1_V_100=BoXFP.RX_calculator_replicates(part_pr1_V_100,data_arr2,pr1_V_100)
 
 
         #calculate replicate correlation values
-        vbv,cor_mat_R_100=sam_funcs.correl_assessor(part_pr1_R_100,'amp')
-        vbv,cor_mat_R_25=sam_funcs.correl_assessor(part_pr1_R_25,'amp')
-        vbv,cor_mat_R_50=sam_funcs.correl_assessor(part_pr1_R_50,'amp')
-        vbv,cor_mat_V_100=sam_funcs.correl_assessor(part_pr1_V_100,'amp')
-        vbv,cor_mat_V_25=sam_funcs.correl_assessor(part_pr1_V_25,'amp')
-        vbv,cor_mat_V_50=sam_funcs.correl_assessor(part_pr1_V_50,'amp')
+        vbv,cor_mat_R_100=BoXFP.correl_assessor(part_pr1_R_100,'amp')
+        vbv,cor_mat_R_25=BoXFP.correl_assessor(part_pr1_R_25,'amp')
+        vbv,cor_mat_R_50=BoXFP.correl_assessor(part_pr1_R_50,'amp')
+        vbv,cor_mat_V_100=BoXFP.correl_assessor(part_pr1_V_100,'amp')
+        vbv,cor_mat_V_25=BoXFP.correl_assessor(part_pr1_V_25,'amp')
+        vbv,cor_mat_V_50=BoXFP.correl_assessor(part_pr1_V_50,'amp')
         
         #store replicate values
         corAB_R_25=np.append(corAB_R_25,cor_mat_R_25[0,1])
@@ -230,13 +230,13 @@ if __name__ == '__main__':
 
 
         #calculate the background corrected areas and normalised reactiivities 
-        ad_pr1_R_25,nad_pr1_R_25,aver_pr1_R_25=sam_funcs.RX_correction(area_av_pr1_R_25,area_av_pr1_R_0,sf_pr1_R_25)
-        ad_pr1_R_50,nad_pr1_R_50,aver_pr1_R_50=sam_funcs.RX_correction(area_av_pr1_R_50,area_av_pr1_R_0,sf_pr1_R_50)
-        ad_pr1_R_100,nad_pr1_R_100,aver_pr1_R_100=sam_funcs.RX_correction(area_av_pr1_R_100,area_av_pr1_R_0,sf_pr1_R_100)
+        ad_pr1_R_25,nad_pr1_R_25,aver_pr1_R_25=BoXFP.RX_correction(area_av_pr1_R_25,area_av_pr1_R_0,sf_pr1_R_25)
+        ad_pr1_R_50,nad_pr1_R_50,aver_pr1_R_50=BoXFP.RX_correction(area_av_pr1_R_50,area_av_pr1_R_0,sf_pr1_R_50)
+        ad_pr1_R_100,nad_pr1_R_100,aver_pr1_R_100=BoXFP.RX_correction(area_av_pr1_R_100,area_av_pr1_R_0,sf_pr1_R_100)
 
-        ad_pr1_V_25,nad_pr1_V_25,aver_pr1_V_25=sam_funcs.RX_correction(area_av_pr1_V_25,area_av_pr1_V_0,sf_pr1_V_25)
-        ad_pr1_V_50,nad_pr1_V_50,aver_pr1_V_50=sam_funcs.RX_correction(area_av_pr1_V_50,area_av_pr1_V_0,sf_pr1_V_50)
-        ad_pr1_V_100,nad_pr1_V_100,aver_pr1_V_100=sam_funcs.RX_correction(area_av_pr1_V_100,area_av_pr1_V_0,sf_pr1_V_100)
+        ad_pr1_V_25,nad_pr1_V_25,aver_pr1_V_25=BoXFP.RX_correction(area_av_pr1_V_25,area_av_pr1_V_0,sf_pr1_V_25)
+        ad_pr1_V_50,nad_pr1_V_50,aver_pr1_V_50=BoXFP.RX_correction(area_av_pr1_V_50,area_av_pr1_V_0,sf_pr1_V_50)
+        ad_pr1_V_100,nad_pr1_V_100,aver_pr1_V_100=BoXFP.RX_correction(area_av_pr1_V_100,area_av_pr1_V_0,sf_pr1_V_100)
 
 
         #print the normalisation factors
@@ -260,17 +260,17 @@ if __name__ == '__main__':
         avers_R_50=np.append(avers_R_50,aver_pr1_R_50)
        
         #error propagation
-        ad_se_pr1_V_25=sam_funcs.error_propagation((area_sd_pr1_V_25/len(pr1_V_25)),sf_pr1_V_25*(area_sd_pr1_V_0/len(pr1_V_0)))
+        ad_se_pr1_V_25=BoXFP.error_propagation((area_sd_pr1_V_25/len(pr1_V_25)),sf_pr1_V_25*(area_sd_pr1_V_0/len(pr1_V_0)))
 
-        ad_se_pr1_V_50=sam_funcs.error_propagation((area_sd_pr1_V_50/len(pr1_V_50)),sf_pr1_V_50*(area_sd_pr1_V_0/len(pr1_V_0)))
+        ad_se_pr1_V_50=BoXFP.error_propagation((area_sd_pr1_V_50/len(pr1_V_50)),sf_pr1_V_50*(area_sd_pr1_V_0/len(pr1_V_0)))
 
-        ad_se_pr1_V_100=sam_funcs.error_propagation((area_sd_pr1_V_100/len(pr1_V_100)),sf_pr1_V_100*(area_sd_pr1_V_0/len(pr1_V_0)))
+        ad_se_pr1_V_100=BoXFP.error_propagation((area_sd_pr1_V_100/len(pr1_V_100)),sf_pr1_V_100*(area_sd_pr1_V_0/len(pr1_V_0)))
 
-        ad_se_pr1_R_25=sam_funcs.error_propagation((area_sd_pr1_R_25/len(pr1_R_25)),sf_pr1_R_25*(area_sd_pr1_R_0/len(pr1_R_0)))
+        ad_se_pr1_R_25=BoXFP.error_propagation((area_sd_pr1_R_25/len(pr1_R_25)),sf_pr1_R_25*(area_sd_pr1_R_0/len(pr1_R_0)))
 
-        ad_se_pr1_R_50=sam_funcs.error_propagation((area_sd_pr1_R_50/len(pr1_R_50)),sf_pr1_R_50*(area_sd_pr1_R_0/len(pr1_R_0)))
+        ad_se_pr1_R_50=BoXFP.error_propagation((area_sd_pr1_R_50/len(pr1_R_50)),sf_pr1_R_50*(area_sd_pr1_R_0/len(pr1_R_0)))
 
-        ad_se_pr1_R_100=sam_funcs.error_propagation((area_sd_pr1_R_100/len(pr1_R_100)),sf_pr1_R_100*(area_sd_pr1_R_0/len(pr1_R_0)))
+        ad_se_pr1_R_100=BoXFP.error_propagation((area_sd_pr1_R_100/len(pr1_R_100)),sf_pr1_R_100*(area_sd_pr1_R_0/len(pr1_R_0)))
 
         #calculate the normalised standard errors
 
@@ -324,9 +324,9 @@ if __name__ == '__main__':
 
 
 
-        nad_se_pr1_D_25=sam_funcs.error_propagation(nad_se_pr1_V_25,nad_se_pr1_R_25)
-        nad_se_pr1_D_50=sam_funcs.error_propagation(nad_se_pr1_V_50,nad_se_pr1_R_50)
-        nad_se_pr1_D_100=sam_funcs.error_propagation(nad_se_pr1_V_100,nad_se_pr1_R_100)
+        nad_se_pr1_D_25=BoXFP.error_propagation(nad_se_pr1_V_25,nad_se_pr1_R_25)
+        nad_se_pr1_D_50=BoXFP.error_propagation(nad_se_pr1_V_50,nad_se_pr1_R_50)
+        nad_se_pr1_D_100=BoXFP.error_propagation(nad_se_pr1_V_100,nad_se_pr1_R_100)
 
         
         
@@ -616,20 +616,20 @@ if __name__ == '__main__':
     full_df_pr1_D.to_csv('MS2_pri1_difference_data_3.csv',sep=',',index=False)
 
     ####produce normalised reactivity snapshots
-    sam_funcs.sequence_snapshots(nuc_pos1,nad_pr1_R_25,nad_se_pr1_R_25,col='g',virus='MS2',primer='pri1',condition='R',treatment='25')
+    BoXFP.sequence_snapshots(nuc_pos1,nad_pr1_R_25,nad_se_pr1_R_25,col='g',virus='MS2',primer='pri1',condition='R',treatment='25')
     
-    sam_funcs.sequence_snapshots(nuc_pos1,nad_pr1_R_50,nad_se_pr1_R_50,col='g',virus='MS2',primer='pri1',condition='R',treatment='50')
+    BoXFP.sequence_snapshots(nuc_pos1,nad_pr1_R_50,nad_se_pr1_R_50,col='g',virus='MS2',primer='pri1',condition='R',treatment='50')
     
-    sam_funcs.sequence_snapshots(nuc_pos1,nad_pr1_R_100,nad_se_pr1_R_100,col='g',virus='MS2',primer='pri1',condition='R',treatment='100')
+    BoXFP.sequence_snapshots(nuc_pos1,nad_pr1_R_100,nad_se_pr1_R_100,col='g',virus='MS2',primer='pri1',condition='R',treatment='100')
     
-    sam_funcs.sequence_snapshots(nuc_pos1,nad_pr1_V_25,nad_se_pr1_V_25,col='b',virus='MS2',primer='pri1',condition='V',treatment='25')
+    BoXFP.sequence_snapshots(nuc_pos1,nad_pr1_V_25,nad_se_pr1_V_25,col='b',virus='MS2',primer='pri1',condition='V',treatment='25')
     
-    sam_funcs.sequence_snapshots(nuc_pos1,nad_pr1_V_50,nad_se_pr1_V_50,col='b',virus='MS2',primer='pri1',condition='V',treatment='50')
+    BoXFP.sequence_snapshots(nuc_pos1,nad_pr1_V_50,nad_se_pr1_V_50,col='b',virus='MS2',primer='pri1',condition='V',treatment='50')
 
     
-    sam_funcs.sequence_snapshots(nuc_pos1,nad_pr1_V_100,nad_se_pr1_V_100,col='b',virus='MS2',primer='pri1',condition='V',treatment='100')
+    BoXFP.sequence_snapshots(nuc_pos1,nad_pr1_V_100,nad_se_pr1_V_100,col='b',virus='MS2',primer='pri1',condition='V',treatment='100')
    
    
-    sam_funcs.sequence_snapshots(nuc_pos1,nad_pr1_D_50,nad_se_pr1_D_50,col='m',virus='MS2',primer='pri1',condition='V-T',treatment='50',diff=True)
+    BoXFP.sequence_snapshots(nuc_pos1,nad_pr1_D_50,nad_se_pr1_D_50,col='m',virus='MS2',primer='pri1',condition='V-T',treatment='50',diff=True)
 
-    sam_funcs.sequence_snapshots(nuc_pos1,nad_pr1_D_100,nad_se_pr1_D_100,col='m',virus='MS2',primer='pri1',condition='V-T',treatment='100',diff=True)
+    BoXFP.sequence_snapshots(nuc_pos1,nad_pr1_D_100,nad_se_pr1_D_100,col='m',virus='MS2',primer='pri1',condition='V-T',treatment='100',diff=True)
