@@ -33,26 +33,28 @@ from scipy.stats.stats import pearsonr
 from scipy.stats.stats import spearmanr
 
 
-def similar(arr):
-    
-    correl_arr = np.empty([len(arr),len(arr)])
-    for i in range(len(arr)):
-        for j in range(len(arr)):
-            
-            correl_arr[i,j]=SequenceMatcher(None, arr[i], arr[j]).ratio()
-    return correl_arr
-
 #convert sequence into gaussian peaks
 def sequence_converter_gaussians(seq_file,letter1='T',letter2='C',height1=100.0,height2=50.0,width=2.0,low_height=10.0,sep=10,plot = True):
     
     """
-    Convert nucleotide sequence into profile of gaussians:
+    Convert nucleotide sequence into profile of gaussians
     
-    Generate high and low guassians.
-    Create empty trace array 10x the size of the nucleotide sequence to bin the guassians into.
-    Iterate through nucleotide sequence.
-    If a target nucleotide is observed add a high gaussian to the trace array centred at 10x nucleotide position. 
-    Else add low gaussian to trace array centred at 10x nucleotide position
+    Args: 
+    
+        seq_file(str):The path of the reference genome fasta file
+        letter1(chr):The nucleotide associated with the higher gaussian
+        letter2(chr):The nucleotide associated with the medium gaussian
+        height1 (float): The amplitude of the highest gaussian
+        height2 (float): The amplitude of the medium gaussian
+        width (float): The width of the gaussians 
+        low_height (float): The amplitude of gaussians associated with the non specific nucleotides
+        sep (float): The distances between the centres of gaussians in the profile
+    
+    Returns:
+        (tuple):tuple containing:
+            seq_arr (np.ndarray): guassian profile
+            nt_arr (np.ndarray): locations of nucleotides across profile 
+        
     """
     
     #extract sequence
@@ -106,12 +108,14 @@ def sequence_converter_gaussians(seq_file,letter1='T',letter2='C',height1=100.0,
     
 def preprocess(data_arr,smooth=4,TM_smooth=1):
     """
-    preprocessing function
-    processes involved:
+    preprocess chromatographs
     
-    smoothing (funcToolsAll.fsmooth)
-    baseline adjustment (funcToolsAll.baselineAdjust)
-    decay correction (funcToolsAll.autoDecaySum)
+    Args:
+        data_arr (list): List containing the raw chromotograph data
+        smooth (int): Width of triangular smoothing of main data traces
+        TM_smooth (int): Width of triangular smoothing for size marker
+    Returns:
+        data_arr1 (list): List containing the processed chromatograph data
     """
     data_arr1 = []
 
@@ -143,10 +147,13 @@ def preprocess(data_arr,smooth=4,TM_smooth=1):
 def mobility_shift(data_arr):
     
     """
-    Mobility shift function
-    Processes involved:
+    Mobility shift between footprinting trace and the ddA sequence trace
     
-    Mobility shift of RX to S1(funcToolsAll.fMobilityShift)
+    Args:
+        data_arr (list): List containing the preprocessed chromatograph data
+        
+    Return: 
+        data_arr1 (list): List containg the mobility shift corrected chromatograph data
     """
     
     data_arr1 = []
@@ -162,10 +169,17 @@ def mobility_shift(data_arr):
 
 def signal_alignment(data,align_data,move1,move2,fifcorr = True):
     """
-    signal alignment function
-    processes involved:
+    Align traces in chromatographs to each other based on trace alignment sequence outlined in trace_align
     
-    spline adjustment of sequences (funcPeakAlign.splineSampleData)
+    Args:
+        data (array): data array containing chromatograph data
+        align_data (array): data array containing chromotograph data used for alignment
+        move1 (array): Sequence of warping path used on the non align dataset
+        move2 (array): Sequence of warping path used on the align dataset
+        fifcorr (bool): Use correlations in alignment process
+        
+    Returns:
+        new_data (array): array of data for first dataset aligned to the second
     """
     
     #align RX data
@@ -185,13 +199,23 @@ def signal_alignment(data,align_data,move1,move2,fifcorr = True):
     return new_data
     
 
-def trace_align(data_arr,ind,ref,samp = 0,ifmob=True,ifdtw=True,ifpeak=True,gap1=-0.2):
+def trace_align(data_arr,ind,ref,samp =False,ifmob=True,ifdtw=True,ifpeak=True,gap1=-0.2):
     """
-    aligns traces to each other according to a reference data_set (align_data) and specific trace [ind],
-    processes involved:
+    Aligns traces to each other according to a reference data_set (align_data) and specific trace [ind]
 
-    DTW alignment (funcToolsAll.findMatchX_DTW and funcPeakAlign.splineSampleData)
-    peak matching alignment (find_peak_match_X and funcPeakAlign.splineSampleData)
+    Args:
+        data_arr (list): list containing all of the datasets in the ensemble
+        ind (int): integer specifying the trace used for the alignment process
+        ref: reference dataset used for alignment
+        samp (bool): specify whether a sample of the ensemble should be used instead of the whole ensemble
+        ifmob (bool): specify whether mobility shift should be performed
+        ifdtw (bool): specify whether dynamic time warp should be performed
+        ifpeak (bool): specify whether peak aliggment should be performed
+        gap1 (float): gap penalty
+    
+    Returns:
+        data_arr3 (list): List containing the ensemble with all datasets aligned to each other
+        
     """
     
     #set up arrays to put data in at various stages
@@ -199,7 +223,7 @@ def trace_align(data_arr,ind,ref,samp = 0,ifmob=True,ifdtw=True,ifpeak=True,gap1
     data_arr2 = []
     data_arr3 = []
     
-    if samp==1:
+    if samp:
         
         #restriction of size of array for testing 
         data_arr0 = data_arr[10:20]
@@ -250,50 +274,17 @@ def trace_align(data_arr,ind,ref,samp = 0,ifmob=True,ifdtw=True,ifpeak=True,gap1
     return data_arr3
 
 
-def normalise_wrt(data,align_data):
-    """
-    normalise data with respect to each other
-    processes involved:
-
-    merge two datasets (np.append)
-    calculate mean (np.mean)
-    calculate standard deviation (np.std)
-    normalise both datasets by subtracting mean from points and then dividing by standard deviation
-    """
-    #deepcopy data
-    data_deep = deepcopy(data)
-    data_deep =np.array(data_deep)
-    
-    #deepcopy alignment data
-    align_deep = deepcopy(align_data)
-    
-    #combine data series
-    data_comb =np.append(data_deep,align_deep)
-    
-    #find mean and standard deviation of combined data
-    mean = np.mean(data_comb)
-    std = np.std(data_comb)
-    
-    #normalise data
-    data_norm = (data_deep - mean)/std
-
-    #normalise alignment data 
-    align_norm = (align_deep - mean)/std
-        
-    #return normalised data series    
-    return data_norm,align_norm
-
-
 def normalise(data):
     
     """
-    Normalise data with respect to each other
-    Processes involved:
+    Normalise data
 
+    Args:
+        data (array): Array containing unnormalised  data profile
+        
     
-    Calculate mean (np.mean)
-    Calculate standard deviation (np.std)
-    Normalise dataset by subtracting mean from points and then dividing by standard deviation
+    Returns: 
+        data_out (array): Array containing normalised data profile
     """
     
     data_deep  = deepcopy(data)
@@ -306,21 +297,25 @@ def normalise(data):
     return data_out
     
     
-def find_DTW_match(align_data,data, ifwrt = False):
+def find_DTW_match(align_data,data):
     """
-    find optimal DTW path
-    processes involved:
+    Find optimal dynamic time warp (DTW) path
     
-    if normalisation is required perform it
-    find optimal DTW path (funcTimeWarp.myDTW)
-    perform post peak matching (funcToolsAll.postpeakMatch0)
+    Args:
+        align_data (array): Dataset of chromatograph data to align the second dataset too.
+        data (array): Second chromatograph dataset
+        
+    Returns: 
+        (tuple) tuple containing:
+            linkX0 (array): Array containing the warping path for the alignment dataset
+            linkX1 (array): Array containing the warping path for the secondary dataset
+    
+    
     """
     #if normalisation is required ask for it
-    if ifwrt:
-        data1,align_data1 = normalise_wrt(data,align_data)
-    else:
-        data1 = normalise(data)
-        align_data1 = normalise(align_data)
+
+    data1 = normalise(data)
+    align_data1 = normalise(align_data)
         
     #set up sakoe-chiba window length
     r1=len(align_data1)*0.05
@@ -331,41 +326,27 @@ def find_DTW_match(align_data,data, ifwrt = False):
     linkX0,linkX1 = funcToolsAll.postpeakMatch0(pathX,pathY,step= 100)
     
     return linkX0,linkX1
-
-def peaklist_array_maker(data_arr,ind):
-    """
-    Create peaklist for each trace in ensemble:
-    
-    Create peaklist for each trace (funcPeakAlign.fPeakList)
-    Add to array for full ensemble
-    """
-    
-    data_arr1 = []
-    for data in data_arr:
-        
-        peaklist = funcPeakAlign.fPeakList(data[ind], isDel=False, isAdd=False,repType='Cubic')
-            
-        data_arr1.append(peaklist)
-        
-    return data_arr1
     
 
-def find_peak_match_X(align_data,data,ifwrt = True,gap=-0.2):
+def find_peak_match_X(align_data,data,gap=-0.2):
     """
-    alignment based on peak matching
-    processes involved:
+    Alignment of two datasets based on peak matching
     
-    if requested normalise traces (funcSeqAll.normBox)
-    obtain parameters object (funcPeakAlign.DPeakAlignParams)
-    obtain peaklists for each trace (funcPeakAlign.fPeakList)
-    align peaks (funcPeakAlign.myPeakAlignment)
+    Args: 
+        align_data (array): Chromatograph data used for alignment 
+        data (array): Chromatograph data to be realigned
+        
+    Returns:
+        (tuple) tuple containing:
+            linkX0 (array): Array containing the warping path for the alignment dataset
+            linkX1 (array): Array containing the warping path for the secondary dataset
+        
+    
     """
     #normalise if requested
-    if ifwrt:
-        data1,align_data1 = normalise_wrt(data,align_data)
-    else:
-        data1 = normalise(data)
-        align_data1 = normalise(align_data)
+
+    data1 = normalise(data)
+    align_data1 = normalise(align_data)
       
     #obtain parameters object
     dParameters= funcPeakAlign.DPeakAlignParams()
@@ -396,12 +377,15 @@ def find_peak_match_X(align_data,data,ifwrt = True,gap=-0.2):
 def data_reader(file_list,top,bottom):
     
     """
-    read in data
-    processes involved:
+    Generic data reader
     
-    recursively open datafiles and extract data (pd.read_csv)
-    tidy data (data_tidy)
-    dump data into array
+    Args: 
+        file_list (list): List of the file names for datasets in the ensembles
+        top (int): The highest elution time point in the region of interest
+        bottom: the lowest elution time point in the region of interest
+    returns: 
+        data_arr (list): List containing the chromatograph datasets from the ensemble
+        
     """
     
     #intialise data array
@@ -416,15 +400,23 @@ def data_reader(file_list,top,bottom):
     
     return data_arr
 
-def DR_windowing(file_list,TM_peaks,date,top=20,bottom=0,increment=5,windows=10):
+def DR_windowing(file_list,TM_peaks,name,top=20,bottom=0,increment=5,windows=10):
     
     """
-    read in data
-    processes involved:
+    Performs preprocessing over several ROI windows
     
-    recursively open datafiles and extract data (pd.read_csv)
-    tidy data (data_tidy)
-    dump data into array
+    Args: 
+        file_list (list):List containg the file names for the datasets in the ensemble
+        TM_peaks (list): List containing all of the size marker peak positions in the datasets
+        name (str): String indicating the common name for the .obj pickle files
+        top (int): The highest peak in the peak list used
+        bottom (int): The lowest peak in the peak lists used
+        increment (int): Integer specifying the number of elution points by which the ROI windows change on either end
+        windows (int): Integer specifying the number of windows to be used. 
+        
+        Returns: 
+            None
+  
     """
     
     for j in range(windows):
@@ -446,7 +438,7 @@ def DR_windowing(file_list,TM_peaks,date,top=20,bottom=0,increment=5,windows=10)
             data_arr.append(data_tidy(data,top1,bottom1))
         data_arr1=preprocess(data_arr)
         data_arr2=mobility_shift(data_arr1)
-        file_path=date+'_'+str(j)+'.obj'
+        file_path=name+'_'+str(j)+'.obj'
         print str(bottom1)+'_'+str(top1)
         
         file1=open(file_path,'wb')
@@ -458,11 +450,16 @@ def DR_windowing(file_list,TM_peaks,date,top=20,bottom=0,increment=5,windows=10)
 def data_tidy(data,top,bottom):
 
     """
-    tidy data 
-    processes involved:
+    Remove all data not in the region of interest (ROI)
     
-    remove all data not in the region of interest (ROI)
-    remove all data points that are highly negative (<-10)
+    Args:
+        data (array): Data array containing the electropherogram data
+        top (int): Integer specifying the highest elution time point for the ROI
+        bottom (int): Integer specifying the lowest elution time point for the ROI
+    Returns:
+        data_out (array): data array containing the 
+        electropherogram data for the ROI only
+        
     """
     #remove data above the ROI
     data_out = data[data['Position']<top]
@@ -479,11 +476,17 @@ def data_tidy(data,top,bottom):
 def remove_outliers(x,y, outlierConstant=1.5):
     
     """
-    Remove outliers above:
-    Calculate Q1 and Q3 points
-    Calculate interquartile range
-    Calculate q3+const*IQR
-    All values below this value are added to a new array
+    Remove outliers from trace based on amplitude
+    
+    Args: 
+        x (array): Array containing x coordinates of trace
+        y (array): Array containing y coordinates of trace
+        outlierConstant (float): IQR multiplier used for outlier determination
+    Returns:
+        (tuple) Tuple containing: 
+            resultListx (array): Array of x coordinates in trace with outliers removed
+            
+            resultListy (array): Array of y coordinates in trace with outliers removed
     """
     ax = np.array(x)
     ay = np.array(y)
@@ -502,12 +505,19 @@ def remove_outliers(x,y, outlierConstant=1.5):
 def peak_finder(data_arr,ind,perc,TM=0,pn=21,cap=None,lower_limit=0):
     
     """
-    peak finding function 
-    processes involved:
+    Peak finding function 
     
-    find all peaks based on derivative scanning
-    bin position and amplitude
-    remove peak data for amplitudes below a threshold  
+    Args: 
+        data_arr (list): List containing the chromatograph data
+        ind (int): Integer specifying the trace channel 
+        perc (float): Ratio of max peak intensity used as cutoff criterion
+        TM (int): Set to find the specific number of peaks
+        pn (int): Specific number of peaks to find
+        cap (int): Cap specifying the highest peak amplitude considered in peak finding 
+        lower limit (int): Lowest elution time point considered in peak finding
+    Returns:
+        peak_array (list): List of recorded peak values for each dataset
+        
     """
     
     #initialise peak array
@@ -594,16 +604,19 @@ def peak_finder(data_arr,ind,perc,TM=0,pn=21,cap=None,lower_limit=0):
         ##print peaks1
         ##print i
         
-    return peak_rec,peak_arr
+    return peak_arr
 
-def peak_diffs(peak_arr, plot = 0):    
+def peak_diffs(peak_arr):    
     
     """
-    peak difference calculations 
-    processes involved:
+    Calculate differences between adjacent peak positions 
     
-    calculate distance between neighbouring peaks
-    calculate average distance between peaks
+    Args:
+        peak_arr (list): Peak lists for the datasets in ensemble
+    Returns:
+        (tuple) Tuple containing:
+            peak_diff_av (array): Average distances between peaks in ensemble
+            peak_diff_arr (list): All the peak differences for the entire ensemble
     """
     
     #initialise arrays
@@ -630,12 +643,6 @@ def peak_diffs(peak_arr, plot = 0):
         peak_diff_av.append(peak_av)
         peak_diff_arr.append(peak_diff)
     
-    #plot histogram of differences
-    if plot == 1:
-        plt.hist(peak_rec,bins=20)
-        plt.xlabel('Elution time difference')
-        plt.show()
-    
     #return differences and averages
     return peak_diff_av,peak_diff_arr
 
@@ -643,12 +650,12 @@ def peak_diffs(peak_arr, plot = 0):
 def find_first(a,b):
     
     """
-    find the first occurence of sub array on array  
-    processes involved:
-    
-    check lengths of arrays
-    scan through array in sub array length sections
-    if section is equal to target sub array return the starting point of the section
+    Find the first occurence of sub array on array  
+    Args: 
+        a (array): Larger array 
+        b (array): sub array
+    Returns:
+        i (int): first postion of array where sub array occurs
     """
     #calculate length of sub array
     len_b = len(b)
@@ -675,14 +682,14 @@ def find_first(a,b):
 def S1_partitioning(data_arr,ind):
     
     """
-    partition sequence trace using tape measure 
-    processes involved:
+    Partitioning function for the sequencing traces
     
-    find tape measure peaks (peak_finder)
-    extract sequencing traces between tape measure peaks
-    calculate bin widths between peaks
-    find peaks within bins - if no peak found assign max value in bin
-    return peak amplitude, position and relative nucleotide number dependent on tape measure
+    Args: 
+        data_arr (list): All of the datasets in the ensemble
+        ind (int): Sequence channel in data for consideration
+    Return:
+        reduced_peaks (list): Partitioned sequence trace peaks for all the datasets in the ensemble
+         
     """
     
     #vectors dictationg the marker sizes and differences between markers in the tape measure
@@ -690,7 +697,7 @@ def S1_partitioning(data_arr,ind):
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder(data_arr,4,.25,TM=1)
+    peka,peaksTM = peak_finder_v2(data_arr,4,.25,TM=1)
     
     #array of nucleotide position
     nuc_pos = np.arange(351)
@@ -846,41 +853,7 @@ def S1_partitioning(data_arr,ind):
         else:
             peak_list2=peak_list1
 
-        
-        
-        if i ==100:
-                fig,ax = plt.subplots(1)
-                ax.plot(data[0],data[2],lw=2)
-                ax.scatter(peak_list[:,0],peak_list[:,1],color='k',s=50)
-
-                ax.set_xlim(1650,1840)
-                ax.set_ylim(-10,200)
-                ax.set_xticks([])
-                ax.set_yticks([])
-                plt.show()
-               
-                fig,ax = plt.subplots(1)
-                ax.plot(data[0],data[2],lw=2)
-                ax.scatter(shoulder_data[:,0],shoulder_data[:,1],color='k',marker='s',s=50)
-
-                ax.set_xlim(1650,1840)
-                ax.set_ylim(-10,200)
-                ax.set_xticks([])
-                ax.set_yticks([])
-                plt.show()
-                
-                fig,ax = plt.subplots(1)
-                ax.plot(data[0],data[2],lw=2)
-                ax.scatter(miss_arr[:,0],miss_arr[:,1],color='k',marker='^',s=50)
-                
-                
-                ax.set_xlim(1650,1840)
-                ax.set_ylim(-10,200)
-                ax.set_xticks([])
-                ax.set_yticks([])
-                plt.show()
-        
-        ##print peak_list
+    
         
         peak_list5=np.zeros((350,2))
     
@@ -893,7 +866,6 @@ def S1_partitioning(data_arr,ind):
             
             #calculate difference between peak postions
             diff = end-start 
-            ##print diff
             
             #extract number of bins for specific region
             bins = marker_diffs[j]
@@ -905,22 +877,6 @@ def S1_partitioning(data_arr,ind):
             peak_list3=peak_list2[peak_list2[:,0]>int(start),:]
             
             peak_list4=peak_list3[peak_list3[:,0]<int(end),:]
-            if i ==100:
-                fig,ax = plt.subplots(1)
-                ax.plot(data[0],data[2],'b',label='ddA Ladder',lw=2)
-                ax.plot(data[0],data[4],'g',label='Size Marker',lw=2)
-                ax.scatter(peak_list4[:,0],peak_list4[:,1],color='k',s=50)
-                for q in range(marker_diffs[j]):
-                    plt.plot([start+(q)*nuc_sep]*2,[-100,10000],'k',linestyle='--',alpha=0.7,lw=2)
-                
-                ax.plot([start+(marker_diffs[j])*nuc_sep]*2,[-100,10000],'k',linestyle='--',alpha=0.7,label='Bin Edge',lw=2)
-                ax.legend( prop={'size': 20})
-                
-                ax.set_xticks([])
-                ax.set_yticks([])
-    
-                plt.show()
-       
                 
             
             
@@ -950,25 +906,34 @@ def S1_partitioning(data_arr,ind):
                 pos_ind+=1    
                 
         
-             
-        
         reduced_peaks.append(peak_list5)
                 
         
     return reduced_peaks
 
         
-def RX_partitioning_single(data_arr,ind,file_list,ll=0,perc=0.25,tm=0,tm_cutoff=21):
+def RX_partitioning_single(data_arr,ind,file_list,ll=0,perc=0.25,tm=False,tm_cutoff=21):
     
     """
-    partition foot#printing trace using tape measure for single replicate cases 
-    processes involved:
+    partition footprinted trace for single replicates
     
-    find tape measure peaks (peak_finder)
-    extract sequencing traces between tape measure peaks
-    calculate bin widths between peaks
-    find peaks within bins - if no peak found assign max value in bin
-    return peak amplitude, position and relative nucleotide number dependent on tape measure
+    
+    Partitioning function for the sequencing traces
+    
+    Args: 
+        data_arr (list): All of the datasets in the ensemble
+        ind (int): Footprint channel in datasets
+        file_list (list): File names for the datasets in the ensemble
+        ll (int): Lower limit of elution time points to be considered for size marker trace
+        perc (float): ratio of maximum peak intensity for cutoff
+        tm (bool): Set to find specific number of peaks
+        tm_cutoff (int): Highest peak marker to consider 
+        
+    Return:
+        (tuple) Tuple containg:
+            data_out (list): The partitioned footprinted data traces in numpy.ndarray format
+            data_out2 (list): The partitioned footprinted data traces peakList format
+            
     """
     
     #vectors dictationg the marker sizes and differences between markers in the tape measure
@@ -976,7 +941,7 @@ def RX_partitioning_single(data_arr,ind,file_list,ll=0,perc=0.25,tm=0,tm_cutoff=
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder(data_arr,4,perc,TM=tm,lower_limit=ll)
+    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,lower_limit=ll)
     sam_funcs.sm_plotter(data_arr,peaksTM,file_list)
     #array of nucleotide position
     nuc_pos = np.arange(351)
@@ -1547,14 +1512,25 @@ def RX_partitioning_single(data_arr,ind,file_list,ll=0,perc=0.25,tm=0,tm_cutoff=
 def RX_partitioning_single_500(data_arr0,ind,file_list,ll=0,perc=0.25,tm=0,tm_cutoff=21,Pn=21,Cap=None):
     
     """
-    partition foot#printing trace using tape measure for single replicate cases 
-    processes involved:
+    partition footprinted trace for single replicates using ROX 500 size marker set
     
-    find tape measure peaks (peak_finder)
-    extract sequencing traces between tape measure peaks
-    calculate bin widths between peaks
-    find peaks within bins - if no peak found assign max value in bin
-    return peak amplitude, position and relative nucleotide number dependent on tape measure
+    
+    Partitioning function for the sequencing traces
+    
+    Args: 
+        data_arr (list): All of the datasets in the ensemble
+        ind (int): Footprint channel in datasets
+        file_list (list): File names for the datasets in the ensemble
+        ll (int): Lower limit of elution time points to be considered for size marker trace
+        perc (float): ratio of maximum peak intensity for cutoff
+        tm (bool): Set to find specific number of peaks
+        tm_cutoff (int): Highest peak marker to consider 
+        
+    Return:
+        (tuple) Tuple containg:
+            data_out (list): The partitioned footprinted data traces in numpy.ndarray format
+            data_out2 (list): The partitioned footprinted data traces peakList format
+            
     """
     
     data_arr=deepcopy(data_arr0)
@@ -1563,7 +1539,7 @@ def RX_partitioning_single_500(data_arr0,ind,file_list,ll=0,perc=0.25,tm=0,tm_cu
     marker_sizes = [50, 75, 100, 139, 150, 160, 200, 250,300, 340, 350, 400,450,490,500]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder(data_arr,4,perc,TM=tm,lower_limit=ll,cap=Cap,pn=Pn)
+    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,lower_limit=ll,cap=Cap,pn=Pn)
     sam_funcs.sm_plotter(data_arr,peaksTM,file_list)
     #array of nucleotide position
     nuc_pos = np.arange(351)
@@ -2130,14 +2106,27 @@ def RX_partitioning_single_500(data_arr0,ind,file_list,ll=0,perc=0.25,tm=0,tm_cu
 def RX_partitioning_replicates(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutoff=21,fl=None,Pn=21):
     
     """
-    partition sequence trace using tape measure 
-    processes involved:
+    partition footprinted trace for up to 3 replicates
     
-    find tape measure peaks (peak_finder)
-    extract sequencing traces between tape measure peaks
-    calculate bin widths between peaks
-    find peaks within bins - if no peak found assign max value in bin
-    return peak amplitude, position and relative nucleotide number dependent on tape measure
+    
+    Partitioning function for the sequencing traces
+    
+    Args: 
+        data_arr (list): All of the datasets in the ensemble
+        ind (int): Footprint channel in datasets
+        fl (list): File names for the datasets in the ensemble
+        ll (int): Lower limit of elution time points to be considered for size marker trace
+        perc (float): ratio of maximum peak intensity for cutoff
+        tm (bool): Set to find specific number of peaks
+        Pn (int): specific number of peaks to find in peak_finder function
+        tm_cutoff (int): Highest peak marker to consider 
+        
+    Return:
+        (tuple) Tuple containg:
+            data_out (list): The initial bin allocations for footprinting partition
+            data_out2 (list): The partitioned footprinting data in discrete packets dictated by the size marker regions
+            data_out3 (list): Peaklists of footprinting data for al datasets in the ensemble. 
+            
     """
     
     #vectors dictationg the marker sizes and differences between markers in the tape measure
@@ -2655,14 +2644,27 @@ def RX_partitioning_replicates(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutoff=21
 def RX_partitioning_replicates_500(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutoff=21,fl=None,Pn=21):
     
     """
-    partition sequence trace using tape measure 
-    processes involved:
+    Partition footprinted trace for up to 3 replicates given ROX 500 size marker set
     
-    find tape measure peaks (peak_finder)
-    extract sequencing traces between tape measure peaks
-    calculate bin widths between peaks
-    find peaks within bins - if no peak found assign max value in bin
-    return peak amplitude, position and relative nucleotide number dependent on tape measure
+    
+    Partitioning function for the sequencing traces
+    
+    Args: 
+        data_arr (list): All of the datasets in the ensemble
+        ind (int): Footprint channel in datasets
+        fl (list): File names for the datasets in the ensemble
+        ll (int): Lower limit of elution time points to be considered for size marker trace
+        perc (float): ratio of maximum peak intensity for cutoff
+        tm (bool): Set to find specific number of peaks
+        Pn (int): specific number of peaks to find in peak_finder function
+        tm_cutoff (int): Highest peak marker to consider 
+        
+    Return:
+        (tuple) Tuple containg:
+            data_out (list): The initial bin allocations for footprinting partition
+            data_out2 (list): The partitioned footprinting data in discrete packets dictated by the size marker regions
+            data_out3 (list): Peaklists of footprinting data for al datasets in the ensemble. 
+            
     """
     
     #vectors dictationg the marker sizes and differences between markers in the tape measure
@@ -2670,7 +2672,7 @@ def RX_partitioning_replicates_500(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutof
     marker_sizes = [50, 75, 100, 139, 150, 160, 200, 250,300, 340, 350, 400,450,490,500]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
+    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
     
     if fl!=None:
         sam_funcs.sm_plotter(data_arr,peaksTM,fl)
@@ -3181,17 +3183,29 @@ def RX_partitioning_replicates_500(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutof
 
 
 
-def RX_partitioning_replicates_extended(data_arr,ind,perc,Cap=None,ll=0):
+def RX_partitioning_replicates_extended(data_arr,ind,perc,Cap=None,ll=0,tm=0):
     
     """
-    partition sequence trace using tape measure 
-    processes involved:
+    partition footprinted trace for up to 3 replicates with extension of 10 nucleotides either side of the trace.
     
-    find tape measure peaks (peak_finder)
-    extract sequencing traces between tape measure peaks
-    calculate bin widths between peaks
-    find peaks within bins - if no peak found assign max value in bin
-    return peak amplitude, position and relative nucleotide number dependent on tape measure
+    
+    Partitioning function for the sequencing traces
+    
+    Args: 
+        data_arr (list): All of the datasets in the ensemble
+        ind (int): Footprint channel in datasets
+        fl (list): File names for the datasets in the ensemble
+        ll (int): Lower limit of elution time points to be considered for size marker trace
+        perc (float): ratio of maximum peak intensity for cutoff
+        tm (bool): Set to find specific number of peaks
+     
+        
+    Return:
+        (tuple) Tuple containg:
+            data_out (list): The initial bin allocations for footprinting partition
+            data_out2 (list): The partitioned footprinting data in discrete packets dictated by the size marker regions
+            data_out3 (list): Peaklists of footprinting data for al datasets in the ensemble. 
+            
     """
     
     #vectors dictationg the marker sizes and differences between markers in the tape measure
@@ -3200,7 +3214,7 @@ def RX_partitioning_replicates_extended(data_arr,ind,perc,Cap=None,ll=0):
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder(data_arr,4,perc,TM=1,cap=Cap,lower_limit=ll)
+    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=1,cap=Cap,lower_limit=ll)
     
     ##print peaksTM
     #array of nucleotide position
@@ -3710,24 +3724,35 @@ def RX_partitioning_replicates_extended(data_arr,ind,perc,Cap=None,ll=0):
         data_out.append(bin_alloc2)
         
         data_out2.append(did_bin3)
-        peaks_TM2.append(peaks)
+       
     
-    return data_out,data_out2,data_out3,peaks_TM2
+    return data_out,data_out2,data_out3
 
 
 
 def RX_partition_realignment(partition, bin_alloc1,peak_info1,inds,data_arr1,fl=None,corr_b=0.7,inspect=1000,Cap=None,perc=0.25,tm=0,tm_cutoff=21):
     
     """
-    Realign partitioned RX traces:
-    
-    Extract the partitioned and bin allocation information for each replicate
-    Iterate through partitioning sublists
-    remove intensity nans
-    generate barcodes for intensity profiles (barcode_generator)
-    perform needleman-wunsch alignment of sequences (nw_align)
-    find correct insertions (trace_align3 and trace_align2)
-    return aligned data
+    Realign partitioned footprinting data based on up to 3 replicates
+        
+    Args:
+        partition (list): Partitioned footprinting data produced by RX_partitioning_replicates
+        data_arr (list): All of the datasets in the ensemble
+        peak_info1 (list): Peaklists of footprinting data for all datasets in the ensemble
+        inds (int): Indices in the ensemble indicating the location of the replicates
+        data_arr1 (list): All of the datasets in the ensemble
+        fl (list): File names for the datasets in the ensemble
+        corr_b (float): Correlation value indicating the minimum pairwise pearson correlation considered in realignment process
+        ll (int): Lower limit of elution time points to be considered for size marker trace
+        Cap: Maximum peak intensity considered for peak finding function
+        perc (float): Ratio of maximum peak intensity for cutoff
+        inspect (int): Specify a particular dataset that you want to inspect
+        tm (bool): Set to find specific number of peaks
+        tm_cutoff (int): Highest peak marker to consider 
+        
+    Return:
+        peak_infos (list): The aligned partitioned footprinted stored as a peakList object
+            
     """
     
     #initialise marker diffs
@@ -3745,7 +3770,7 @@ def RX_partition_realignment(partition, bin_alloc1,peak_info1,inds,data_arr1,fl=
     data_arr=deepcopy(data_arr1)
     bin_alloc=deepcopy(bin_alloc1)
     
-    peka,peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap)
+    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap)
     
     
     if fl!=None:
@@ -3940,15 +3965,27 @@ def RX_partition_realignment(partition, bin_alloc1,peak_info1,inds,data_arr1,fl=
 def RX_partition_realignment_500(partition, bin_alloc1,peak_info1,inds,data_arr1,fl=None,corr_b=0.7,inspect=1000,Cap=None,perc=0.25,tm=0,tm_cutoff=21,Pn=21):
     
     """
-    Realign partitioned RX traces:
-    
-    Extract the partitioned and bin allocation information for each replicate
-    Iterate through partitioning sublists
-    remove intensity nans
-    generate barcodes for intensity profiles (barcode_generator)
-    perform needleman-wunsch alignment of sequences (nw_align)
-    find correct insertions (trace_align3 and trace_align2)
-    return aligned data
+    Realign partitioned footprinting data based on up to 3 replicates given ROX 500 size marker set
+        
+    Args:
+        partition (list): Partitioned footprinting data produced by RX_partitioning_replicates
+        data_arr (list): All of the datasets in the ensemble
+        peak_info1 (list): Peaklists of footprinting data for all datasets in the ensemble
+        inds (int): Indices in the ensemble indicating the location of the replicates
+        data_arr1 (list): All of the datasets in the ensemble
+        fl (list): File names for the datasets in the ensemble
+        corr_b (float): Correlation value indicating the minimum pairwise pearson correlation considered in realignment process
+        ll (int): Lower limit of elution time points to be considered for size marker trace
+        Cap: Maximum peak intensity considered for peak finding function
+        perc (float): Ratio of maximum peak intensity for cutoff
+        inspect (int): Specify a particular dataset that you want to inspect
+        tm (bool): Set to find specific number of peaks
+        tm_cutoff (int): Highest peak marker to consider
+        Pn (int): specific number of peaks to find
+        
+    Return:
+        peak_infos (list): The aligned partitioned footprinted stored as a peakList object
+            
     """
     
     #initialise marker diffs
@@ -3966,7 +4003,7 @@ def RX_partition_realignment_500(partition, bin_alloc1,peak_info1,inds,data_arr1
     data_arr=deepcopy(data_arr1)
     bin_alloc=deepcopy(bin_alloc1)
     
-    peka,peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap,pn=Pn)
+    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap,pn=Pn)
     
     
     if fl!=None:
@@ -4160,15 +4197,25 @@ def RX_partition_realignment_500(partition, bin_alloc1,peak_info1,inds,data_arr1
 def RX_partition_realignment_extended(partition, bin_alloc1,peak_info1,inds,data_arr1,peaks_TM1,corr_b=0.7,inspect=1000,Cap=None,perc=0.25):
     
     """
-    Realign partitioned RX traces:
-    
-    Extract the partitioned and bin allocation information for each replicate
-    Iterate through partitioning sublists
-    remove intensity nans
-    generate barcodes for intensity profiles (barcode_generator)
-    perform needleman-wunsch alignment of sequences (nw_align)
-    find correct insertions (trace_align3 and trace_align2)
-    return aligned data
+    Realign partitioned footprinting data based on up to 3 replicates with size marker region extended by 10 nucleotides on either side
+        
+    Args:
+        partition (list): Partitioned footprinting data produced by RX_partitioning_replicates
+        data_arr (list): All of the datasets in the ensemble
+        peak_info1 (list): Peaklists of footprinting data for all datasets in the ensemble
+        inds (int): Indices in the ensemble indicating the location of the replicates
+        data_arr1 (list): All of the datasets in the ensemble
+        Peaks_TM1 (list): peak positions for size marker traces of the datasets in the ensemble
+        corr_b (float): Correlation value indicating the minimum pairwise pearson correlation considered in realignment process
+        Cap: Maximum peak intensity considered for peak finding function
+        perc (float): Ratio of maximum peak intensity for cutoff
+        inspect (int): Specify a particular dataset that you want to inspect
+        
+        
+        
+    Return:
+        peak_infos (list): The aligned partitioned footprinted stored as a peakList object
+            
     """
     
     #initialise marker diffs
@@ -4361,11 +4408,24 @@ def RX_partition_realignment_extended(partition, bin_alloc1,peak_info1,inds,data
 def final_realignment(new_traces2,data_arr1,starts,ends,bins1,inds1,labs,corr=0.95,corr_b=0.7,inspect=False):
     
     """
-    final realignment wrapper function:
-    
-    if the space marker region is greater than 10 nucleotides, split the region into 10 nucleotide subregions
-    run the subprocess
-    return new traces
+    Final realignment wrapper function (only called by RX_realignment functions)
+        
+    Args:
+        new_traces2 (list): List containing partitioned footprinting data package between size marker positions
+        data_arr1 (list): All of the datasets in the ensemble
+        starts (list): Size marker peaks at the start of the packaged region for each replicate
+        ends (list): Size marker peaks at the end of the packaged region for each replicate
+        inds1 (int): Indices in the ensemble indicating the location of the replicates
+        data_arr1 (list): All of the datasets in the ensemble
+        labs (list): Replicate labels
+        corr(float): Starting correlation value for alignment process
+        corr_b (float): Correlation value indicating the minimum pairwise pearson correlation considered in realignment process
+        inspect (bool): Specify whether inspection of data is required
+        
+        
+    Return:
+        new_traces (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.
+            
     """
     #deepcopy data    
     new_traces=deepcopy(new_traces2)
@@ -4422,15 +4482,25 @@ def final_realignment(new_traces2,data_arr1,starts,ends,bins1,inds1,labs,corr=0.
 def fr_subprocess(new_traces2,data_arr1,starts,ends,bins1,inds1,labs,corr=0.95,corr_b=0.7,inspect=False):
     
     """
-    final realignment sub processes:
-    
-    course grain the traces
-    calculate pearson correlations between traces
-    if one correlation between pairs is higher than others carry out process:
-    for the trace which has the lower correlation with the others remove those points less than 33% of max
-    barcode the resultant traces and perform alignment based on these
-    if all  correlations below the threshold reduce the threshold by 0.05 so long as the threshold is above a certain limit
-    if this limit is reached return the original traces fed into the algorithm. 
+    Final realignment sub process (only called by final_realignment wrapper function)
+        
+    Args:
+        new_traces2 (list): List containing partitioned footprinting data package between size marker positions
+        data_arr1 (list): All of the datasets in the ensemble
+        starts (list): Size marker peaks at the start of the packaged region for each replicate
+        ends (list): Size marker peaks at the end of the packaged region for each replicate
+        bins1 (array): number of bins (i.e. number of nucleotides between size markers) expected in each part of the size marker set.
+        inds1 (int): Indices in the ensemble  indicating the location of the replicates
+        data_arr1 (list): All of the datasets in the ensemble
+        labs (list): Replicate labels
+        corr(float): Starting correlation value for alignment process
+        corr_b (float): Correlation value indicating the minimum pairwise pearson correlation considered in realignment process
+        inspect (bool): Specify whether inspection of data is required
+        
+        
+    Return:
+        new_traces1 (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.
+            
     """
     hispace=[]
     p_inds=[]
@@ -4496,13 +4566,14 @@ def fr_subprocess(new_traces2,data_arr1,starts,ends,bins1,inds1,labs,corr=0.95,c
 def trace_align3(spaces,new_array):
     
     """
-    Trace align using three replicates:
-    
-    extract data for the three replicates
-    determine indexes of insertion (indexes)
-    insert into intensity profiles zero values for each possible combination of insert for the 3 replicates
-    calculate all possible pairwise PCC values
-    take profiles with greatest summated PCC
+    Partitioned data alignment process for 3 replicates (secondary function) 
+        
+    Args:
+        spaces (list): unaligned partitioned footprinting data for each replicate
+        new_array (list): List containing new NW alignments for each replicate
+        
+    Return:
+        new_traces (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.   
     """
     
     cov_arr=[]
@@ -4609,377 +4680,24 @@ def trace_align3(spaces,new_array):
 
 
 
-def trace_align3_v2_1(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,inspect=False):
-    
-    """
-    Trace align using three replicates:
-    
-    extract data for the three replicates
-    determine indexes of insertion (indexes)
-    insert into intensity profiles zero values for each possible combination of insert for the 3 replicates
-    calculate all possible pairwise PCC values
-    take profiles with greatest summated PCC
-    """
-    
-    cov_arr=[]
-    insert_indsA=[]
-    insert_indsB=[]
-    insert_indsC=[]
-    cg_arrA=[]
-    cg_arrB=[]
-    cg_arrC=[]
-    peak_travel=[]
-    
-    new_array1=deepcopy(new_array)
-    spaces1=deepcopy(spaces)
-    
-    #barcodes extract
-    new_arrayA=new_array1[0]
-    new_arrayB=new_array1[1]
-    new_arrayC=new_array1[2]
-
-    #peak data extract
-    spaceA_c=spaces1[0]
-    spaceB_c=spaces1[1]
-    spaceC_c=spaces1[2]
-    
- 
-    startA=starts[0]
-    startB=starts[1]
-    startC=starts[2]
-    
-    endA=ends[0]
-    endB=ends[1]
-    endC=ends[2]
-    
-    dataA=data_arr[inds[0]]
-    dataB=data_arr[inds[1]]
-    dataC=data_arr[inds[2]]
-    ##print new_arrayA
-    ##print new_arrayB
-    ##print new_arrayC
-    
-    #iterate thorugh combinations
-    for j in range(len(new_arrayA)):
-        #find insertion points
-        insertA=notindexes(new_arrayA[j,0])
-        #print new_arrayA[j,0]
-        #print 'inserts'
-        #print  insertA
-        if len(insertA)<1:
-            spaceA_n=spaceA_c
-            
-        else:
-            if len(insertA)<bins:
-                peak_distances=travel_determiner(insertA,peak_inds)
-                
-            spaceA_n=np.zeros([bins,2])
-            for t in range(len(insertA)):
-                spaceA_n[insertA[t],:]=spaceA_c[t,:]
-            if insertA[0]!=0:
-                diff=insertA[0]
-                
-                space=spaceA_c[0,0]-startA
-                #print spaceA_c[0,0]
-                #print startA
-                #print space
-                
-                new_ns=space/diff
-                
-                for q in range(int(diff)):
-                        new_pos=startA+(q+1)*new_ns
-                        datanew=dataA[1][(new_pos+0.5*new_ns)>dataA[0]]
-                        
-                        datanp=dataA[0][(new_pos+0.5*new_ns)>dataA[0]]
-                        
-                        datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                        new_value=np.nanmean(datanew)
-                        ##print 'data_new'
-                        ##print datanew
-                        ##print new_ns
-                        
-                        spaceA_n[q,0]=new_pos
-                        spaceA_n[q,1]=new_value
-                           
-            if insertA[-1]!=bins-1:
-                diff=bins-insertA[-1]
-                
-                space=endA-spaceA_c[-1,0]
-                
-                new_ns=space/diff
-                
-                for q in range(1,int(diff)):
-                        new_pos=spaceA_c[-1,0]+(q)*new_ns
-                        datanew=dataA[1][(new_pos+0.5*new_ns)>dataA[0]]
-                        
-                        datanp=dataA[0][(new_pos+0.5*new_ns)>dataA[0]]
-                        
-                        datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                        new_value=np.nanmean(datanew)
-                        #print datanew
-                        
-                        spaceA_n[insertA[-1]+q,0]=new_pos
-                        spaceA_n[insertA[-1]+q,1]=new_value
-                        
-            for t in range(len(insertA)-1):
-                diff=insertA[t+1]-insertA[t]
-                space=spaceA_c[t+1,0]-spaceA_c[t,0]
-                new_ns=space/diff
-                if diff>1:
-                    for q in range(1,int(diff)-1):
-                        new_pos=spaceA_c[t,0]+(q)*new_ns
-                        datanew=dataA[1][(new_pos+0.5*new_ns)>dataA[0]]
-                        
-                        datanp=dataA[0][(new_pos+0.5*new_ns)>dataA[0]]
-                        
-                        datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                        
-                        new_value=np.nanmean(datanew)
-                        
-                        spaceA_n[int(insertA[t])+q,0]=new_pos
-                        spaceA_n[int(insertA[t])+q,1]=new_value
-            
-            
-                        
-        
-        
-
-        for k in range(len(new_arrayB)):
-            
-            
-            insertB=notindexes(new_arrayB[k,0])
-            #print new_arrayB[k,0]
-
-        
-            if len(insertB)<1:
-                spaceB_n=spaceB_c
-            else:
-                if len(insertB)<bins:
-                    peak_distances=travel_determiner(insertB,peak_inds)
-                spaceB_n=np.zeros([bins,2])
-                for t in range(len(insertB)):
-                    spaceB_n[insertB[t],:]=spaceB_c[t,:]
-                if insertB[0]!=0:
-                    diff=insertB[0]
-                
-                    space=spaceB_c[0,0]-startB
-                
-                    new_ns=space/diff
-                
-                    for q in range(int(diff)):
-                        new_pos=startB+(q+1)*new_ns
-                        datanew=dataB[1][(new_pos+0.5*new_ns)>dataB[0]]
-                        
-                        datanp=dataB[0][(new_pos+0.5*new_ns)>dataB[0]]
-                        
-                        datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                        new_value=np.nanmean(datanew)
-                        
-                        spaceB_n[q,0]=new_pos
-                        spaceB_n[q,1]=new_value
-                        
-                if insertB[-1]!=bins-1:
-                    diff=bins-insertB[-1]
-                
-                    space=endB-spaceB_c[-1,0]
-                
-                    new_ns=space/diff
-                
-                    for q in range(1,int(diff)):
-                        new_pos=spaceB_c[-1,0]+(q)*new_ns
-                        datanew=dataB[1][(new_pos+0.5*new_ns)>dataB[0]]
-                        
-                        datanp=dataB[0][(new_pos+0.5*new_ns)>dataB[0]]
-                        
-                        datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                        new_value=np.nanmean(datanew)
-                        
-                        spaceB_n[insertB[-1]+q,0]=new_pos
-                        spaceB_n[insertB[-1]+q,1]=new_value
-
-
-                for t in range(len(insertB)-1):
-                    diff=insertB[t+1]-insertB[t]
-                    ##print diff
-                    space=spaceB_c[t+1,0]-spaceB_c[t,0]
-                    new_ns=space/diff
-                    if diff>1:
-                        for q in range(1,int(diff)-1):
-                            new_pos=spaceB_c[t,0]+(q)*new_ns
-                            datanew=dataB[1][(new_pos+0.5*new_ns)>dataB[0]]
-                            
-                            datanp=dataB[0][(new_pos+0.5*new_ns)>dataB[0]]
-                        
-                            datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                            
-                            
-                            
-                            new_value=np.nanmean(datanew)
-
-                            spaceB_n[int(insertB[t])+q,0]=new_pos
-                            spaceB_n[int(insertB[t])+q,1]=new_value
-
-            for l in range(len(new_arrayC)):
-                insertC=notindexes(new_arrayC[l,0])
-                #print new_arrayC[l,0]
-                
-                if len(insertC)<1:
-                    spaceC_n=spaceC_c
-                else:
-                    if len(insertC)<bins:
-                        peak_distances=travel_determiner(insertC,peak_inds)
-                    spaceC_n=np.zeros([bins,2])
-                    for t in range(len(insertC)):
-                        spaceC_n[insertC[t],:]=spaceC_c[t,:]
-                    if insertC[0]!=0:
-                        diff=insertC[0]
-                
-                        space=spaceC_c[0,0]-startC
-                
-                        new_ns=space/diff
-                
-                        for q in range(int(diff)):
-                            new_pos=startC+(q+1)*new_ns
-                            datanew=dataC[1][(new_pos+0.5*new_ns)>dataC[0]]
-
-                            datanp=dataC[0][(new_pos+0.5*new_ns)>dataC[0]]
-
-                            datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                            new_value=np.nanmean(datanew)
-
-                            spaceC_n[q,0]=new_pos
-                            spaceC_n[q,1]=new_value
-                        
-                    if insertC[-1]!=bins-1:
-                        diff=bins-insertC[-1]
-                
-                        space=endC-spaceC_c[-1,0]
-                
-                        new_ns=space/diff
-                
-                        for q in range(1,int(diff)):
-                            new_pos=spaceC_c[-1,0]+(q)*new_ns
-                            datanew=dataC[1][(new_pos+0.5*new_ns)>dataC[0]]
-
-                            datanp=dataC[0][(new_pos+0.5*new_ns)>dataC[0]]
-
-                            datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                            new_value=np.nanmean(datanew)
-
-                            spaceC_n[insertC[-1]+q,0]=new_pos
-                            spaceC_n[insertC[-1]+q,1]=new_value
-
-
-                    for t in range(len(insertC)-1):
-                        diff=insertC[t+1]-insertC[t]
-                        space=spaceC_c[t+1,0]-spaceC_c[t,0]
-                        new_ns=space/diff
-                        if diff>1:
-                            for q in range(1,int(diff)-1):
-                                new_pos=spaceC_c[t,0]+(q)*new_ns
-                                datanew=dataC[1][(new_pos+0.5*new_ns)>dataC[0]]
-                                
-                                datanp=dataC[0][(new_pos+0.5*new_ns)>dataC[0]]
-                        
-                                datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                                new_value=np.nanmean(datanew)
-
-                                spaceC_n[int(insertC[t])+q,0]=new_pos
-                                spaceC_n[int(insertC[t])+q,1]=new_value
-                #calculate PCCs between possible pairwise combinations 
-                ##print spaceA_n[:,1]
-                ##print spaceB_n[:,1]
-                ##print spaceC_n[:,1]
-                cor_arrA=np.nan_to_num(spaceA_n[:,1])
-                cor_arrB=np.nan_to_num(spaceB_n[:,1])
-                cor_arrC=np.nan_to_num(spaceC_n[:,1])
-                
-                cgA=coarse_grainer(cor_arrA)
-                cgB=coarse_grainer(cor_arrB)
-                cgC=coarse_grainer(cor_arrC)
-                cg_arrA.append(cgA)
-                cg_arrB.append(cgB)
-                cg_arrC.append(cgC)
-                normA=spaceA_n[:,1]/np.max(spaceA_n[:,1])
-                normB=spaceB_n[:,1]/np.max(spaceB_n[:,1])
-                normC=spaceC_n[:,1]/np.max(spaceC_n[:,1])
-                """
-                cov_AB=get_cov(cor_arrA/np.max(cor_arrA ),cor_arrB/np.max(cor_arrB))
-                
-                cov_BC=get_cov(cor_arrB/np.max(cor_arrB ),cor_arrC/np.max(cor_arrC))
-                cov_AC=get_cov(cor_arrA/np.max(cor_arrA ),cor_arrC/np.max(cor_arrC))
-                """
-                normA=np.nan_to_num(normA)
-                normB=np.nan_to_num(normB)
-                normC=np.nan_to_num(normC)
-                #print normA 
-                #print normB
-                #print normC
-                
-                cov_AB=pearsonr(normA,normB)[0]
-                #print cov_AB
-                cov_BC=pearsonr(normB,normC)[0]
-                cov_AC=pearsonr(normA,normC)[0]
-                #print cov_BC
-                #print cov_AC
-                peak_travel=np.append(peak_travel,np.max(peak_distances))
-               
-               
-
-                #summate PCCs
-                cov_arr=np.append(cov_arr,cov_AB+cov_BC+cov_AC)
-                
-                
-                
-                
-                
-                #bin new profiles
-                insert_indsA.append(spaceA_n)
-                insert_indsB.append(spaceB_n)
-                insert_indsC.append(spaceC_n)
-    ##print cov_arr
-    #find max summate PCC
-    #print 'peak'
-    #print peak_travel
-    #print np.where(peak_travel<20)
-    cov_arr2=cov_arr[np.where(peak_travel<6)]
-    max_cor_ind=np.argmax(np.nan_to_num(cov_arr2))    
-    newA= insert_indsA[max_cor_ind]
-    newB = insert_indsB[max_cor_ind]
-    newC = insert_indsC[max_cor_ind]
-    if inspect:
-        #print 'max'
-        #print max_cor_ind
-        #print 'cov'
-        #print cov_arr2
-
-        #return intensity profiles for max sum PCC
-        #print cg_arrA[max_cor_ind]
-        #print cg_arrB[max_cor_ind]
-        #print cg_arrC[max_cor_ind]
-        #print spaceC_c
-        #print newC
-        
-        plt.plot(np.arange(len(newA)),newA[:,1])
-        plt.plot(np.arange(len(newB)),newB[:,1])
-        plt.plot(np.arange(len(newC)),newC[:,1])
-        plt.show()
-
-
-    
-    
-    return [newA,newB,newC]
-
 def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,inspect=False):
     
     """
-    Trace align using three replicates:
-    
-    extract data for the three replicates
-    determine indexes of insertion (indexes)
-    insert into intensity profiles zero values for each possible combination of insert for the 3 replicates
-    calculate all possible pairwise PCC values
-    take profiles with greatest summated PCC
+    Partitioned data alignment process for 3 replicates (secondary function) 
+        
+    Args:
+        spaces (list): Unaligned partitioned footprinting data for each replicate
+        new_array (list): List containing new NW alignments for each replicate
+        data_arr (list): All the preprocessed data in the ensemble
+        inds (list): Indices indicating the positions of the replicates in the ensemble list
+        bins (array): number of bins (i.e. number of nucleotides between size markers) expected in each part of the size marker set.
+        starts (list): Size marker peaks at the start of the packaged region for each replicate
+        ends (list): Size marker peaks at the end of the packaged region for each replicate
+        peak_inds (int): Position of bins with assigned peaks before realignment. 
+        inspect (bool): Specify whether inspection of data is required
+        
+    Returns:
+        new_traces (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.   
     """
     
     cov_arr=[]
@@ -5016,13 +4734,8 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
     dataA=data_arr[inds[0]]
     dataB=data_arr[inds[1]]
     dataC=data_arr[inds[2]]
-    ##print new_arrayA
-    ##print new_arrayB
-    ##print new_arrayC
     
-    
-     
-    
+
     #iterate thorugh combinations
     for j in range(len(new_arrayA)):
         #find insertion points
@@ -5054,9 +4767,6 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
                         
                         datanew=datanew[datanp>(new_pos-0.5*new_ns)]
                         new_value=np.nanmean(datanew)
-                        ##print 'data_new'
-                        ##print datanew
-                        ##print new_ns
                         
                         spaceA_n[q,0]=new_pos
                         spaceA_n[q,1]=new_value
@@ -5097,9 +4807,6 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
                         
                         spaceA_n[int(insertA[t])+q,0]=new_pos
                         spaceA_n[int(insertA[t])+q,1]=new_value
-            
-            
-                        
         
         
 
@@ -5117,7 +4824,6 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
                 spaceB_n=np.zeros([bins,2])
                 for t in range(len(insertB)):
                     spaceB_n[insertB[t],:]=spaceB_c[t,:]
-                    ##print spaceB_n
                 if insertB[0]!=0:
                     diff=insertB[0]
                 
@@ -5128,15 +4834,12 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
                     for q in range(int(diff)):
                         new_pos=startB+(q+0.5)*new_ns
                         datanew=dataB[1][(new_pos+0.5*new_ns)>dataB[0]]
-                        ##print datanew
                         
                         
                         datanp=dataB[0][(new_pos+0.5*new_ns)>dataB[0]]
                         
                         datanew=datanew[datanp>(new_pos-0.5*new_ns)]
-                        #print datanew
                         new_value=np.nanmean(datanew)
-                        ##print new_value
                         
                         spaceB_n[q,0]=new_pos
                         spaceB_n[q,1]=new_value
@@ -5163,7 +4866,6 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
 
                 for t in range(len(insertB)-1):
                     diff=insertB[t+1]-insertB[t]
-                    ##print diff
                     space=spaceB_c[t+1,0]-spaceB_c[t,0]
                     new_ns=space/diff
                     if diff>1:
@@ -5181,13 +4883,7 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
 
                             spaceB_n[int(insertB[t])+q,0]=new_pos
                             spaceB_n[int(insertB[t])+q,1]=new_value
-                """
-                #print new_ns
-                #print space
-                #print diff
-                #print insertB            
-                #print spaceB_n
-                """
+         
             for l in range(len(new_arrayC)):
                 insertC=notindexes(new_arrayC[l,0])
                 
@@ -5255,9 +4951,7 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
                                 spaceC_n[int(insertC[t])+q,0]=new_pos
                                 spaceC_n[int(insertC[t])+q,1]=new_value
                 #calculate PCCs between possible pairwise combinations 
-                ##print spaceA_n[:,1]
-                ##print spaceB_n[:,1]
-                ##print spaceC_n[:,1]
+                
                 cor_arrA=np.nan_to_num(spaceA_n[:,1])
                 cor_arrB=np.nan_to_num(spaceB_n[:,1])
                 cor_arrC=np.nan_to_num(spaceC_n[:,1])
@@ -5271,25 +4965,16 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
                 normA=spaceA_n[:,1]/np.max(spaceA_n[:,1])
                 normB=spaceB_n[:,1]/np.max(spaceB_n[:,1])
                 normC=spaceC_n[:,1]/np.max(spaceC_n[:,1])
-                """
-                cov_AB=get_cov(cor_arrA/np.max(cor_arrA ),cor_arrB/np.max(cor_arrB))
-                
-                cov_BC=get_cov(cor_arrB/np.max(cor_arrB ),cor_arrC/np.max(cor_arrC))
-                cov_AC=get_cov(cor_arrA/np.max(cor_arrA ),cor_arrC/np.max(cor_arrC))
-                """
+        
                 normA=np.nan_to_num(normA)
                 normB=np.nan_to_num(normB)
                 normC=np.nan_to_num(normC)
-                ##print normA 
-                ##print normB
-                ##print normC
+             
                 
                 cov_AB=pearsonr(normA,normB)[0]
-                ##print cov_AB
                 cov_BC=pearsonr(normB,normC)[0]
                 cov_AC=pearsonr(normA,normC)[0]
-                ##print cov_BC
-                ##print cov_AC
+              
                 peak_travel=np.append(peak_travel,np.max(peak_distances))
                 if inspect:
                     print peak_distances
@@ -5307,14 +4992,7 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
                 insert_indsA.append(spaceA_n)
                 insert_indsB.append(spaceB_n)
                 insert_indsC.append(spaceC_n)
-    ##print cov_arr
-    #find max summate PCC
-    #print 'peak'
-    #print new_arrayA
-    #print new_arrayB
-    #print new_arrayC
-    #print cov_arr
-    #print peak_travel
+
     if np.min(peak_travel)>4:
         return 'error'
     if len(peak_travel)<2:
@@ -5329,15 +5007,6 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
     newB = insert_indsB[max_cor_ind]
     newC = insert_indsC[max_cor_ind]
     if inspect:
-        #print 'max'
-        #print max_cor_ind
-        #print 'cov'
-        #print cov_arr2
-        #print 'peak'
-        #print peak_travel
-
-        #return intensity profiles for max sum PCC
-        
         
         plt.plot(np.arange(len(newA)),newA[:,1])
         plt.plot(np.arange(len(newB)),newB[:,1])
@@ -5352,12 +5021,19 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
 def nan_remover(arr,start,end):
     
     """
-    remove nans from positions in partitioned data:
-    
+    Remove nans and zero values from peak position lists. 
+        
+    Args:
+        arr (arr): Array of values
+        start (int): Size marker peak at the start of the packaged region
+        end (int): Size marker peak at the end of the packaged region
+        
+        
+    Returns:
+        new_arr (arr): Peak positions with nan and zero values removed   
     """
     
     new_arr=arr
-    ##print new_arr
     
         
     num_inds=np.transpose(np.where(~np.isnan(new_arr)))
@@ -5394,8 +5070,6 @@ def nan_remover(arr,start,end):
         new_ns=sep/diff
         
         for i in range(int(diff)-1):
-            ##print num_inds
-            ##print diff
             new_arr[num_inds[-1]+i+1]=new_arr[num_inds[-1]]+(i+1)*new_ns 
     
     
@@ -5434,26 +5108,24 @@ def nan_remover(arr,start,end):
             new_ns=sep/diff
 
             for i in range(int(diff)):
-                ##print num_inds
-                ##print diff
+                
                 new_arr[num_inds[-1]+i]=new_arr[num_inds[-1]]+(i+1)*new_ns 
 
  
-    
-            
-                                                      
+                                       
     return new_arr
 
 def trace_align2(spaces,new_array):
     
     """
-    Trace align using three replicates:
-    
-    extract data for the three replicates
-    determine indexes of insertion (indexes)
-    insert into intensity profiles zero values for each possible combination of insert for the 3 replicates
-    calculate all possible pairwise PCC values
-    take profiles with greatest summated PCC
+    Partitioned data alignment process for 2 replicates (secondary function) 
+        
+    Args:
+        spaces (list): unaligned partitioned footprinting data for each replicate
+        new_array (list): List containing new NW alignments for each replicate
+        
+    Return:
+        new_traces (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.   
     """
     
     
@@ -5512,10 +5184,17 @@ def trace_align2(spaces,new_array):
 def nw_align(bars,bins,labels):
     
     """
-    Needleman-Wunsch alignment of barcodes:
+    Needleman-Wunsch alignment of barcodes
     
-    align barcodes (pwise.align.globalxd or pwise.align.globalxx)
-    bin aligned barcodes with the right length
+    Args:
+        bars (list): Barcodes for partitioned footprint data before alignment
+        bins (array): Number of bins (i.e. number of nucleotides between size markers) expected in each part of the size marker set
+        labels (list): Replicate labels
+        
+    Returns:
+        (tuple) Tuple containing:
+            output (list): Aligned barcodes
+            lens_out (list): Number of aligned barcodes generated for each replicate
     
     """
     
@@ -5603,33 +5282,48 @@ def nw_align(bars,bins,labels):
             
 def indexes(string,character='-'):
     """
-    Determine the insertion points from aligned sequences.
+    Determine the insertion points from aligned sequences
+    
+    Args:
+        string (str): The aligned barcodes
+        character (chr): the character to find
+    Returns:
+        output (array): indices where the chosen characters occurs
     """
     
     output=[]
     for i,c in enumerate(string):
         if c==character:
             output = np.append(output,i)
-    return output.astype(int)
+    return output
 
 def notindexes(string,character='-'):
     """
-    Determine the insertion points from aligned sequences.
+    Determine the non insertion points from aligned sequences
+    
+    Args:
+        string (str): The aligned barcodes
+        character (chr): the character to find
+    Returns:
+        output (array): indices where the chosen characters does not occur
     """
     
     output=[]
     for i,c in enumerate(string):
         if c!=character:
             output = np.append(output,i)
-    return output.astype(int)
+    return output
                 
         
 def barcode_generator(array):
-    
     """
-    barcode generation:
-    Calculate max of intensity profile
-    Add L,M,H to barcode depending on intensity
+    Barcode generator
+    
+    Args: 
+        array (array): Profile of the partition footprinting data
+    Returns:
+        string (str): Barcode based on profile
+        
     """
     #print array
     max_val=np.max(array)
@@ -5650,11 +5344,13 @@ def barcode_generator(array):
     return string
 
 def coarse_grainer(array):
-    
     """
-    barcode generation:
-    Calculate max of intensity profile
-    Add L,M,H to barcode depending on intensity
+    coarse grained profile generator
+    
+    Args: 
+        array (array): Profile of the partition footprinting data
+    Returns:
+        cg_arr (array): coarse graining of profile
     """
     max_val=np.max(array)
     
@@ -5672,18 +5368,25 @@ def coarse_grainer(array):
     
     return cg_arr
             
-def RX_calculator_single(partition_RX,data_arr2,RX):
+def RX_calculator_single(partition_RX,data_arr,RX):
     
     """
-    calculate reactivities for specific pairings of BG and RX:
+    Calculate reactivities of single replicate
     
-    calculate the reactivities for the BG and RX datasets
+    Args: 
+        Partition_RX (list): Partitioned footprinting data profile in peakList object
+        data_arr (list): All of the preprocessed datasets in the ensemble
+        RX (int): Index of dataset under investigation
+        
+    Returns:
+        new_peak_list (list): PeakList object containing calculated peak areas and widths
+    
     """
    
-    new_peak_list1=fit_shape_gauss(partition_RX,data_arr2[RX])
+    new_peak_list=fit_shape_gauss(partition_RX,data_arr[RX])
     
     
-    return new_peak_list1
+    return new_peak_list
 
 
 
@@ -5691,7 +5394,14 @@ def RX_calculator_single(partition_RX,data_arr2,RX):
 def error_propagation(arr1,arr2):
     
     """
-    trigonometric error propogation
+    Trigonometric error propogation
+    
+    Args: 
+        arr1 (array): First array of errors
+        arr2 (array): Second array of errors
+    
+    Returns:
+        new_errs (array): Combined errors
     """
     sq_sum_err=np.add(np.square(arr1),np.square(arr2))
     
@@ -5702,12 +5412,14 @@ def error_propagation(arr1,arr2):
 def distance_determiner(arr1,arr2):
     
     """
-    Calculate maximum distances between different nucleotide positions:
+    Distance calculator between different nucleotide positions
     
-    extract each value in arr1
-    take the difference of all values in arr2 with the selected value in arr1
-    calculate the sum of all the absolute differences 
-    repeat for all values in arr1
+    Args: 
+        arr1 (array):  first array of indices
+        arr2 (array): Second array of indices
+    
+    Returns:
+        arr_out (array): distances between the selected indices in the two arrays
     
     """
     
@@ -5732,12 +5444,14 @@ def distance_determiner(arr1,arr2):
 def travel_determiner(arr1,arr2):
     
     """
-    Calculate maximum distances between different nucleotide positions:
+    Calculate distance that a peak has shifted following realignment 
     
-    extract each value in arr1
-    take the difference of all values in arr2 with the selected value in arr1
-    calculate the sum of all the absolute differences 
-    repeat for all values in arr1
+    Args: 
+        arr1 (array): Initial positions of peaks
+        arr2 (array): Positions of peaks post alignment
+    
+    Returns:
+        arr_out (array): Distances travelled in nucleotides by peaks
     
     """
     
@@ -5758,20 +5472,23 @@ def travel_determiner(arr1,arr2):
 def fit_shape_gauss(dPeakList,data,isOptPos=True,controlA=None):    
     
     """
-    calculate the reactivities for each peak in the foot#printing data:
+    Calculate the reactivities for each peak in the footprinting data
     
-    optimise the first single sigma value (funcSeqAll.optimizeOneSigma)
-    if asked to, optimise the position (funcSeqAll.optimizePosition)
-    calculate all the widths (funcSeqAll.optimizeAllSigma)
-    calculate all of the amplitudes (funcSeqAll.optimizeAmp)
-    calculate the area based on the amplitude and the width
+    Args:
+    
+        dPeakList (list): peakList object containing footprinting data
+        data (array): Corresponding preprocesed 
+        dataset 
+        isOptPos (bool): Specify whether position should be optimised  
+        controlA (float): control values for optimizePosition function
+    Returns:
+        peak_list1 (list): peak information with reactivities (peak areas) calculated
     """
     #deepcopy peak list
     peak_list=deepcopy(dPeakList)
     #deepcopy data
     data_dc=deepcopy(data)
-    #print len(peak_list['amp'])
-    #print peak_list['pos']
+   
     #calculate first sigma 
     sigma = funcSeqAll.optimizeOneSigma(data_dc[1],peak_list['pos'],peak_list['amp'])
     
@@ -5782,7 +5499,6 @@ def fit_shape_gauss(dPeakList,data,isOptPos=True,controlA=None):
         peak_list1=peak_list
     #optimise all sigmas  
     peak_list1['wid']=funcSeqAll.optimizeAllSigma(data_dc[1],peak_list1,sigma)
-    ##print peak_list1['NPeak']
     #optimise amplitudes
     peak_list1['amp']=funcSeqAll.optimizeAmp(data_dc[1],peak_list1)
     
@@ -5792,24 +5508,17 @@ def fit_shape_gauss(dPeakList,data,isOptPos=True,controlA=None):
     
     return peak_list1
         
-def area_calculator(peak_list):
-    """
-    Calculate peak areas in partitioned data
-    """
-    
-    peak_list1=deepcopy(peak_list)
-    
-    peak_list1['area']=np.abs(peak_list1['amp']*peak_list1['averW'])
-    
-    return peak_list1
     
 def find_nearest_ind(array, value):
     """
-    find the nearest peak to a particular position:
+    Find the nearest peak to a particular position
     
-    calculate the differences between the array elements and target value
-    work out the minimum difference 
-    take the index with the minimum difference to the value
+    Args: 
+        array (array): Array of peak positions
+        value (float): Particular position
+    
+    Returns:
+        ind (int): The position of the nearest peak
     """
     
     array1 = np.asarray(array)
@@ -5830,15 +5539,14 @@ def find_nearest_ind(array, value):
 def shoulder_finder(peak_arr,data,ind,i):
     
     """
-    shoulder finding method:
+    Find shoulders in a trace 
     
-    find the trough between a pair of peaks
-    split the data between the peaks into two halfs dependent on the position of the trough
-    take the derivative of the trace for each half
-    invert the derivative of the data to the right of the peak.
-    find the position of peaks in the derivatives of the data. 
-    find the corresponding amplitude of these points in the trace.
-    create a list of shoulder peak and position. 
+    Args:
+        peak_arr (list): peakList object containing peaks in investigated trace
+        data (array): Dataset under investigation
+        ind (int): index in the ensemble for the dataset under investigation
+    Returns:
+        shoulder_data (array): shoulder positions and amplitudes
     """
     
     shoulder_pos_arr = []
@@ -5945,11 +5653,13 @@ def gaussian_sequence_trace(bin_data_arr):
     
     """
     convert binary array into gaussian trace 
-    processes involved:
-    
-    generate gaussian function 
-    read through binary binning array
-    if 1 is detected in binary array add guassian to output trace 
+  
+    Args:
+        bin_data_arr (array): binary array
+    Returns:
+        (tuple) Tuple containing:
+            x (array): x positions of trace
+            trace_arr (array): Gaussian profile generated
     """
     
     #set position points
@@ -5989,15 +5699,17 @@ def gaussian_sequence_trace(bin_data_arr):
 def position_vote(partition_data,cut1,cut2,plot=0,clip=350):
     
     """
-    position voting function 
-    processes involved:
+    position voting over the ensemble 
     
-    read through partition arrays 
-    convert each to a binary array based on cutoff. 
-    calculate pairwise correlations between binary arrays 
-    add arrays together
-    reinterpret as binary array based on secondary cutoff point
-    return final voting array
+    
+    Args: 
+        partition_data (list): Partitioned sequence traces across ensemble
+        cut1 (float): Value of first cutoff used to convert each partitioned trace into a binary sequence
+        cut2 (float): Threshold ratio for voting 
+    Returns:
+        (tuple) Tuple containing:
+            correl_return (float): mean correlation between binary arrays in ensemble
+            ballot_box (array): Consensus binary array
     """
     
     vote_arr = []
@@ -6052,11 +5764,13 @@ def position_vote(partition_data,cut1,cut2,plot=0,clip=350):
     
 def sequence_content(seq_file, nuc = 'T'):
     """
-    determine content of a specific nucleotide:
+    determine content of a specific nucleotide
     
-    read in fasta file (seqIO.parse)
-    count those cases of the nucleotide observed
-    divide the number of occurences by the number of total bases and times by 100 to produce the nucleotide percentage 
+    Args:
+        seq_file (str): Name of reference sequence fasta file
+        nuc (chr): The nucleotide under investigation
+    Returns:
+        perc (float): Percentage of the target nucleotide in sequence
     """ 
     
     #read the fasta file 
@@ -6076,10 +5790,12 @@ def seq_to_bin(seq_arr,nuc = 'T'):
     
     """
     convert sequence array to binary based on nucleotide 
-    processes involved:
     
-    if elements are equal add to count
-    divide the count by the length of the vote array
+    Args: 
+        seq_arr (str): Nucleotide sequence
+        nuc (chr): The nucleotide under investigation
+    Returns:
+        bin_seq (array): binary representation of sequence
     """ 
     #convert sequence to binary
     for i in range(len(seq_arr)):
@@ -6101,14 +5817,18 @@ def sequence_search(seq_file, ballot_box,top=10000,bottom=0,Nuc='T'):
 
     """
     sequence searching function 
-    processes involved:
     
-    open sequence file to obtain reference sequence
-    convert each to a binary array based on cutoff 
-    convert sequence to binary array  
-    search through sequence binary array and determine correlations with vote array
-    extract the start position of the subarry of binary 
-    seq array with largest correlation to vote array
+    Args:
+        seq_file (str): Name of reference sequence fasta file
+        ballot_box (array): Consensus binary representation of sequence from data
+        top (int): Highest nucleotide position considered
+        bottom (int): Lowest nucleotide position considered
+        Nuc (chr): The nucleotide under investigation
+    Returns:
+        (tuple) Tuple containing:
+            signif (float): Z score for maximum correlation value
+            corr_argmax (int): Index for max correlation
+            corr_max (float): Max correlation
 
     """
     #initialise correlation array
@@ -6142,7 +5862,6 @@ def sequence_search(seq_file, ballot_box,top=10000,bottom=0,Nuc='T'):
                 correl = get_cov(seq_sec,ballot_box[::-1])
 
                 accuracy = accuracy_measure(seq_sec,ballot_box[::-1])
-            ##print accuracy
             else:
                 correl=0
                 accuracy=0
@@ -6157,25 +5876,25 @@ def sequence_search(seq_file, ballot_box,top=10000,bottom=0,Nuc='T'):
         
         signif = signif_assessor(correl_rec)
         
-        #plt.hist(accuracy_rec)
-        #plt.show()
-        #print correl_rec[3782] 
-        #return maximum correlation and coordinates
         return signif, np.argmax(correl_rec),np.max(correl_rec)
     
     
 def sequence_search_area(seq_file, ballot_box,start,window,Nuc='T'):
 
     """
-    sequence searching function 
-    processes involved:
+    sequence searching function over specific area 
     
-    open sequence file to obtain reference sequence
-    convert each to a binary array based on cutoff 
-    convert sequence to binary array  
-    search through sequence binary array and determine correlations with vote array
-    extract the start position of the subarry of binary 
-    seq array with largest correlation to vote array
+    Args:
+        seq_file (str): Name of reference sequence fasta file
+        ballot_box (array): Consensus binary representation of sequence from data
+        start (int): start of rejoin to scan over
+        window (int): size of area to search over
+        Nuc (chr): The nucleotide under investigation
+    Returns:
+        (tuple) Tuple containing:
+            signif (float): Z score for maximum correlation value
+            corr_argmax (int): Index for max correlation
+            corr_max (float): Max correlation
 
     """
     #initialise correlation array
@@ -6199,13 +5918,11 @@ def sequence_search_area(seq_file, ballot_box,start,window,Nuc='T'):
             
             #calculate correlation between sub array and voting matrix
             
-            ##print len(ballot_box),len(seq_sec)
             
             if len(ballot_box)==len(seq_sec):
                 correl = get_cov(seq_sec,ballot_box[::-1])
 
                 accuracy = accuracy_measure(seq_sec,ballot_box[::-1])
-            ##print accuracy
             else:
                 correl=0
                 accuracy=0
@@ -6220,21 +5937,22 @@ def sequence_search_area(seq_file, ballot_box,start,window,Nuc='T'):
         
         signif = signif_assessor(correl_rec)
         
-        #plt.hist(accuracy_rec)
-        #plt.show()
-            
+    
         #return maximum correlation and coordinates
         return signif, start+np.argmax(correl_rec),np.max(correl_rec)
         
 def renormalisation(area_arr):
     
     """
-    renormalises data for two or more reactivity datasets
-    processes involved:
+    Renormalises data for two or more reactivity datasets
     
-    combine area diff values for the two or more datasets into one array
-    perform normalisation calculations on combined data (funcSeqAll.findPOutlierBox)
-    renormalise each array based on the new parameters calculated (funcSeqAll.normSimple)
+    Args:
+        area_arr (list): area arrays to be combined
+    
+    Returns:
+        (tuple) Tuple containing:
+            new_area_arr (list): Normalised reactivities for datasets supplied
+            new_aver (array): Normalisation factors produced
     """
     
     
@@ -6263,17 +5981,21 @@ def renormalisation(area_arr):
         
         new_aver=np.append(new_aver,aver)
         
-    return new_area_arr,aver
+    return new_area_arr,new_aver
               
     
 def accuracy_measure(seq_arr,vote_arr):
     
     """
     calculates the accuracy of the sequence alignment 
-    processes involved:
     
-    if elements are equal add to count
-    divide the count by the length of the vote array
+    Args: 
+        seq_arr (array): Binary representation of 
+        sequence
+        vote_arr (array): Binary consensus sequence from data
+    
+    Returns: 
+        accuracy (float): accuracy of consensus sequence
     """
     
     count=0
@@ -6289,10 +6011,16 @@ def correl_assessor(data_arr,ind):
     
     """
     correlation matrix determination 
-    processes involved:
+   
+    Args: 
+        data_arr (list): Datasets in the ensemble
+        ind (int): Index specifying the trace under investigation
     
-    calculate pairwise correlations (get_cov) 
-    bin into matrix
+    Returns:
+        (tuple) Tuple containing:
+            correl_list (array): list of correlation values
+            correl_mat (array): matrix correlation values
+            
     """
     
     correl_arr = np.empty([len(data_arr),len(data_arr)])
@@ -6329,19 +6057,21 @@ def count_correl_above(correl_mat,limit):
     
     """
     count numbers of correlation matrix elements above a certain threshold
-    processes involved:
     
-    count number of entries above threshold
-    determine the percentage of entries above threshold
+    Args:
+        correl_mat (array): Matrix correlation values
+        limit: Threshold for counting
+    
+    Returns: 
+        percentage (float): Percentage of correlations above the limit
+
     """
     
     correl_list = correl_mat.flatten()
     
     full_len = len(correl_list)
     
-    ##print full_len
     above_len = len([p for p in correl_list if p>limit])
-    #print above_len
     
     return float(above_len)/float(full_len)*100
 
@@ -6349,7 +6079,14 @@ def count_correl_above(correl_mat,limit):
 def get_cov(array1,array2):
     
     """
-    calculate correlation between two arrays 
+    Calculate correlation between two arrays 
+    
+    Args: 
+        array1 (array): First array
+        array2 (array): Second array
+    
+    Returns:
+        corr (float): correlation value
     """
     import numpy as np
 
@@ -6359,7 +6096,13 @@ def get_cov(array1,array2):
 def signif_assessor(data_arr):
     
     """
-    calculate Z-score of max value
+    Calculate Z-score of max value
+    
+    Args:
+        data_arr (array): array of correlation values
+    
+    Returns: 
+        sigma_2 (float): Z-score of max correlation value
     """
     
     max_val = np.max(data_arr)
@@ -6371,62 +6114,28 @@ def signif_assessor(data_arr):
     
     sigma_2 = (max_val-mean)/std
     
-    #data_arr2=np.delete(data_arr,3782)
-    #mean2=np.mean(data_arr2)
-    #std2=np.std(data_arr2)
-    
-    #print (data_arr[3782]-mean2)/std2
-    
     return sigma_2
 
 
-def scanned_correl(partition_arr,ind_arr,window=10):
-    
-    """
-    scanning correlation assessor:
-    
-    extract the datasets you want to work with (max 3)
-    calculate moving correlations between different datasets.
-    bin correlations    
-    """
-    
-    #extract datasets
-    partA=partition_arr[ind_arr[0]]
-    
-    partB=partition_arr[ind_arr[1]]
-    
-    partC=partition_arr[ind_arr[2]]
-    
-    #initialise correl bins
-    correlsAB=[]
-    correlsAC=[]
-    correlsBC=[]
-    
-    #iterate through the data
-    for i in range(len(partC['amp'])-window):
-        
-        #calculate correlations across windows
-        correlAB=get_cov(partA['amp'][i:((i+1)*window)],partB['amp'][i:((i+1)*window)])
-        correlAC=get_cov(partA['amp'][i:((i+1)*window)],partC['amp'][i:((i+1)*window)])
-        correlBC=get_cov(partC['amp'][i:((i+1)*window)],partB['amp'][i:((i+1)*window)])
-        
-        #bin correlations
-        correlsAB=np.append(correlsAB,correlAB)
-        correlsAC=np.append(correlsAC,correlAC)
-        correlsBC=np.append(correlsBC,correlBC)
-    
-    #return binned correlations
-    return correlsAB,correlsAC,correlsBC
         
 def sequence_snapshots(xcoord,ycoord,yerr,col,window=100,virus='',primer='',condition='',treatment='',diff=False):
     
     """
-    Produces snapshots of primer region with reactivities calculated:
+    Produces snapshots reactivity profile in primer region 
     
-    calculate top and bottome bounds in sequence
-    partition data into windows
-    plot data and errors in window
-    save as png
+    Args:
+        xcoord (array): xcoordinates of reactivity data
+        ycoord (array): ycoordinates of reactivity data
+        yerr (array): Errors on reactivities
+        col (chr): Colour used for
+        window (int): Window size for snapshots
+        virus (str): Virus under investigation
+        primer (str): Primer used
+        condition (str): Treatment condition
+        treatment (str): treatment exposure time
+        diff (bool): specify whether difference map is being plotted
+    Returns:
+        None
     """
     
     
@@ -6451,7 +6160,7 @@ def sequence_snapshots(xcoord,ycoord,yerr,col,window=100,virus='',primer='',cond
         #plot and save data
         ax1.bar(xcoord,ycoord[::-1],color=col)
         
-        if type(yerr) is np.ndarray:
+        if yerr!=None:
             ax1.errorbar(xcoord,ycoord[::-1],yerr=yerr[::-1],color='k',fmt=None,elinewidth=1,capsize=None)
         ax1.set_xlim(start,end)
         if diff:
@@ -6510,12 +6219,19 @@ def RX_calculator_replicates(partition,data_arr,inds,single_0=False,get_correls=
 def RX_correction(area_RX,area_BG,scaling):
     
     """
-    Background correction of reactivities and normalisation:
+    Background correction of reactivities and normalisation
     
-    Calculate corrected area
-    Find percentage oultiers and average (funcSeqAll.findPOutlierBox)
-    Normalise areas (funcSeqAll.normSimple) 
-    Remove all values below zero
+    Args:
+        area_RX (array): Array of areas for treatment 
+        area_BG (array): Array of areas for background
+        scaling (array): scaling factors between RX and BG
+    
+    Returns:
+        (tuple) Tuple containing:
+            area_diff (array): Unnormalised reactivites
+            norm_area_diff (array): Normalised reactivities
+            aver (float): Normalisation factor
+        
     """
     
     #calculate corrected reactivities
@@ -6532,25 +6248,22 @@ def RX_correction(area_RX,area_BG,scaling):
     
     return area_diff,norm_area_diff,aver
 
-def orthogonal_proj(zfront, zback):
-    """
-    Calculate orthogonal projection
-    """
-
-    a = (zfront+zback)/(zfront-zback)
-    b = -2*(zfront*zback)/(zfront-zback)
-    return np.array([[1,0,0,0],
-                        [0,1,0,0],
-                        [0,0,a,b],
-                        [0,0,-0.000,zback]])
 
 def raw_trace_plotter(file_list):
     
+    """
+    plots the raw electropherograms to pngs
+    
+    Args:
+        file_list (list): list of all the data files in the ensemble
+        
+    Returns:
+        None
+    """
+    
     for i,file in enumerate(file_list):
         data = pd.read_csv(file.strip('\n')+'_raw.csv')
-        
-        
-        plt.plot(data['Position'],data['ReactionChannel#1'],'b',label='RX')
+         plt.plot(data['Position'],data['ReactionChannel#1'],'b',label='RX')
         plt.plot(data['Position'],data['SequenceChannel#1'],'r',label='ddA')
         plt.plot(data['Position'],data['SequenceChannel#2'],'g',label='ddC')
         plt.plot(data['Position'],data['SizeMarker'],'k',label='SM')
@@ -6559,6 +6272,18 @@ def raw_trace_plotter(file_list):
         plt.close()
         
 def sm_plotter(data_arr,TM_peaks,file_list):
+    
+    """
+    Plot size marker traces and positions of size markers determined by peak_finder
+    
+    Args: 
+        data_arr (list): Datasets in the ensemble
+        TM_peaks (list): Size marker peak positions
+        file_list (list): file names of datasets in the ensemble
+    
+    Returns:
+        None
+    """
     
     for i in range(len(data_arr)):
         peaks=TM_peaks[i]
@@ -6572,17 +6297,5 @@ def sm_plotter(data_arr,TM_peaks,file_list):
         plt.savefig(file.strip('\n')+'_TM.png')
         plt.close()
             
-def RX_assessor(RX_data):
-    
-    data=deepcopy(RX_data)
-    
-    RX_std=np.std(data)
-    RX_mean=np.mean(data)
-    
-    RX_a1=np.count_nonzero(data>1)/float(len(data))
-    
-    RX_a5=np.count_nonzero(data>5)/float(len(data))
-    
-    
-    #print RX_mean,RX_std,RX_a1,RX_a5
+
     
