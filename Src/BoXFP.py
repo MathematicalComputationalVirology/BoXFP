@@ -1,5 +1,8 @@
 import os
 import sys
+
+sys.path.append(os.path.abspath('/Users/mqbppsc3/Desktop/externalLibraries'))
+
 import numpy as np
 import math
 from copy import deepcopy
@@ -51,7 +54,7 @@ def sequence_converter_gaussians(seq_file,letter1='T',letter2='C',height1=100.0,
         sep (float): The distances between the centres of gaussians in the profile
     
     Returns:
-        (tuple):tuple containing:
+        (tuple):
             seq_arr (np.ndarray): guassian profile
             nt_arr (np.ndarray): locations of nucleotides across profile 
         
@@ -115,7 +118,7 @@ def preprocess(data_arr,smooth=4,TM_smooth=1):
         smooth (int): Width of triangular smoothing of main data traces
         TM_smooth (int): Width of triangular smoothing for size marker
     Returns:
-        data_arr1 (list): List containing the processed chromatograph data
+        (list): List containing the processed chromatograph data
     """
     data_arr1 = []
 
@@ -153,7 +156,7 @@ def mobility_shift(data_arr):
         data_arr (list): List containing the preprocessed chromatograph data
         
     Return: 
-        data_arr1 (list): List containg the mobility shift corrected chromatograph data
+        (list): List containg the mobility shift corrected chromatograph data
     """
     
     data_arr1 = []
@@ -179,7 +182,7 @@ def signal_alignment(data,align_data,move1,move2,fifcorr = True):
         fifcorr (bool): Use correlations in alignment process
         
     Returns:
-        new_data (array): array of data for first dataset aligned to the second
+       (array): array of data for first dataset aligned to the second
     """
     
     #align RX data
@@ -214,7 +217,7 @@ def trace_align(data_arr,ind,ref,samp =False,ifmob=True,ifdtw=True,ifpeak=True,g
         gap1 (float): gap penalty
     
     Returns:
-        data_arr3 (list): List containing the ensemble with all datasets aligned to each other
+        (list): List containing the ensemble with all datasets aligned to each other
         
     """
     
@@ -284,7 +287,7 @@ def normalise(data):
         
     
     Returns: 
-        data_out (array): Array containing normalised data profile
+        (array): Array containing normalised data profile
     """
     
     data_deep  = deepcopy(data)
@@ -306,7 +309,7 @@ def find_DTW_match(align_data,data):
         data (array): Second chromatograph dataset
         
     Returns: 
-        (tuple) tuple containing:
+        (tuple):
             linkX0 (array): Array containing the warping path for the alignment dataset
             linkX1 (array): Array containing the warping path for the secondary dataset
     
@@ -337,7 +340,7 @@ def find_peak_match_X(align_data,data,gap=-0.2):
         data (array): Chromatograph data to be realigned
         
     Returns:
-        (tuple) tuple containing:
+        (tuple):
             linkX0 (array): Array containing the warping path for the alignment dataset
             linkX1 (array): Array containing the warping path for the secondary dataset
         
@@ -384,7 +387,7 @@ def data_reader(file_list,top,bottom):
         top (int): The highest elution time point in the region of interest
         bottom: the lowest elution time point in the region of interest
     returns: 
-        data_arr (list): List containing the chromatograph datasets from the ensemble
+        (list): List containing the chromatograph datasets from the ensemble
         
     """
     
@@ -457,7 +460,7 @@ def data_tidy(data,top,bottom):
         top (int): Integer specifying the highest elution time point for the ROI
         bottom (int): Integer specifying the lowest elution time point for the ROI
     Returns:
-        data_out (array): data array containing the 
+        (array): data array containing the 
         electropherogram data for the ROI only
         
     """
@@ -483,7 +486,7 @@ def remove_outliers(x,y, outlierConstant=1.5):
         y (array): Array containing y coordinates of trace
         outlierConstant (float): IQR multiplier used for outlier determination
     Returns:
-        (tuple) Tuple containing: 
+        (tuple): 
             resultListx (array): Array of x coordinates in trace with outliers removed
             
             resultListy (array): Array of y coordinates in trace with outliers removed
@@ -516,7 +519,7 @@ def peak_finder(data_arr,ind,perc,TM=0,pn=21,cap=None,lower_limit=0):
         cap (int): Cap specifying the highest peak amplitude considered in peak finding 
         lower limit (int): Lowest elution time point considered in peak finding
     Returns:
-        peak_array (list): List of recorded peak values for each dataset
+        (list): List of recorded peak values for each dataset
         
     """
     
@@ -614,7 +617,7 @@ def peak_diffs(peak_arr):
     Args:
         peak_arr (list): Peak lists for the datasets in ensemble
     Returns:
-        (tuple) Tuple containing:
+        (tuple):
             peak_diff_av (array): Average distances between peaks in ensemble
             peak_diff_arr (list): All the peak differences for the entire ensemble
     """
@@ -655,7 +658,7 @@ def find_first(a,b):
         a (array): Larger array 
         b (array): sub array
     Returns:
-        i (int): first postion of array where sub array occurs
+       (int): first postion of array where sub array occurs
     """
     #calculate length of sub array
     len_b = len(b)
@@ -688,7 +691,7 @@ def S1_partitioning(data_arr,ind):
         data_arr (list): All of the datasets in the ensemble
         ind (int): Sequence channel in data for consideration
     Return:
-        reduced_peaks (list): Partitioned sequence trace peaks for all the datasets in the ensemble
+        (list): Partitioned sequence trace peaks for all the datasets in the ensemble
          
     """
     
@@ -930,7 +933,7 @@ def RX_partitioning_single(data_arr,ind,file_list,ll=0,perc=0.25,tm=False,tm_cut
         tm_cutoff (int): Highest peak marker to consider 
         
     Return:
-        (tuple) Tuple containg:
+        (tuple):
             data_out (list): The partitioned footprinted data traces in numpy.ndarray format
             data_out2 (list): The partitioned footprinted data traces peakList format
             
@@ -1527,7 +1530,7 @@ def RX_partitioning_single_500(data_arr0,ind,file_list,ll=0,perc=0.25,tm=0,tm_cu
         tm_cutoff (int): Highest peak marker to consider 
         
     Return:
-        (tuple) Tuple containg:
+        (tuple):
             data_out (list): The partitioned footprinted data traces in numpy.ndarray format
             data_out2 (list): The partitioned footprinted data traces peakList format
             
@@ -2122,7 +2125,7 @@ def RX_partitioning_replicates(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutoff=21
         tm_cutoff (int): Highest peak marker to consider 
         
     Return:
-        (tuple) Tuple containg:
+        (tuple):
             data_out (list): The initial bin allocations for footprinting partition
             data_out2 (list): The partitioned footprinting data in discrete packets dictated by the size marker regions
             data_out3 (list): Peaklists of footprinting data for al datasets in the ensemble. 
@@ -2660,7 +2663,7 @@ def RX_partitioning_replicates_500(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutof
         tm_cutoff (int): Highest peak marker to consider 
         
     Return:
-        (tuple) Tuple containg:
+        (tuple):
             data_out (list): The initial bin allocations for footprinting partition
             data_out2 (list): The partitioned footprinting data in discrete packets dictated by the size marker regions
             data_out3 (list): Peaklists of footprinting data for al datasets in the ensemble. 
@@ -3201,7 +3204,7 @@ def RX_partitioning_replicates_extended(data_arr,ind,perc,Cap=None,ll=0,tm=0):
      
         
     Return:
-        (tuple) Tuple containg:
+        (tuple):
             data_out (list): The initial bin allocations for footprinting partition
             data_out2 (list): The partitioned footprinting data in discrete packets dictated by the size marker regions
             data_out3 (list): Peaklists of footprinting data for al datasets in the ensemble. 
@@ -3751,7 +3754,7 @@ def RX_partition_realignment(partition, bin_alloc1,peak_info1,inds,data_arr1,fl=
         tm_cutoff (int): Highest peak marker to consider 
         
     Return:
-        peak_infos (list): The aligned partitioned footprinted stored as a peakList object
+        (list): The aligned partitioned footprinted stored as a peakList object
             
     """
     
@@ -3984,7 +3987,7 @@ def RX_partition_realignment_500(partition, bin_alloc1,peak_info1,inds,data_arr1
         Pn (int): specific number of peaks to find
         
     Return:
-        peak_infos (list): The aligned partitioned footprinted stored as a peakList object
+        (list): The aligned partitioned footprinted stored as a peakList object
             
     """
     
@@ -4214,7 +4217,7 @@ def RX_partition_realignment_extended(partition, bin_alloc1,peak_info1,inds,data
         
         
     Return:
-        peak_infos (list): The aligned partitioned footprinted stored as a peakList object
+        (list): The aligned partitioned footprinted stored as a peakList object
             
     """
     
@@ -4424,7 +4427,7 @@ def final_realignment(new_traces2,data_arr1,starts,ends,bins1,inds1,labs,corr=0.
         
         
     Return:
-        new_traces (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.
+        (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.
             
     """
     #deepcopy data    
@@ -4499,7 +4502,7 @@ def fr_subprocess(new_traces2,data_arr1,starts,ends,bins1,inds1,labs,corr=0.95,c
         
         
     Return:
-        new_traces1 (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.
+        (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.
             
     """
     hispace=[]
@@ -4573,7 +4576,7 @@ def trace_align3(spaces,new_array):
         new_array (list): List containing new NW alignments for each replicate
         
     Return:
-        new_traces (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.   
+        (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.   
     """
     
     cov_arr=[]
@@ -4697,7 +4700,7 @@ def trace_align3_v2(spaces,new_array,data_arr,inds,bins, starts, ends,peak_inds,
         inspect (bool): Specify whether inspection of data is required
         
     Returns:
-        new_traces (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.   
+        (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.   
     """
     
     cov_arr=[]
@@ -5030,7 +5033,7 @@ def nan_remover(arr,start,end):
         
         
     Returns:
-        new_arr (arr): Peak positions with nan and zero values removed   
+        (arr): Peak positions with nan and zero values removed   
     """
     
     new_arr=arr
@@ -5125,7 +5128,7 @@ def trace_align2(spaces,new_array):
         new_array (list): List containing new NW alignments for each replicate
         
     Return:
-        new_traces (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.   
+        (list): The aligned partitioned footprinted data for each replicate in the specific part of size marker region.   
     """
     
     
@@ -5192,7 +5195,7 @@ def nw_align(bars,bins,labels):
         labels (list): Replicate labels
         
     Returns:
-        (tuple) Tuple containing:
+        (tuple):
             output (list): Aligned barcodes
             lens_out (list): Number of aligned barcodes generated for each replicate
     
@@ -5288,7 +5291,7 @@ def indexes(string,character='-'):
         string (str): The aligned barcodes
         character (chr): the character to find
     Returns:
-        output (array): indices where the chosen characters occurs
+        (array): indices where the chosen characters occurs
     """
     
     output=[]
@@ -5305,7 +5308,7 @@ def notindexes(string,character='-'):
         string (str): The aligned barcodes
         character (chr): the character to find
     Returns:
-        output (array): indices where the chosen characters does not occur
+        (array): indices where the chosen characters does not occur
     """
     
     output=[]
@@ -5322,7 +5325,7 @@ def barcode_generator(array):
     Args: 
         array (array): Profile of the partition footprinting data
     Returns:
-        string (str): Barcode based on profile
+        (str): Barcode based on profile
         
     """
     #print array
@@ -5350,7 +5353,7 @@ def coarse_grainer(array):
     Args: 
         array (array): Profile of the partition footprinting data
     Returns:
-        cg_arr (array): coarse graining of profile
+        (array): coarse graining of profile
     """
     max_val=np.max(array)
     
@@ -5379,7 +5382,7 @@ def RX_calculator_single(partition_RX,data_arr,RX):
         RX (int): Index of dataset under investigation
         
     Returns:
-        new_peak_list (list): PeakList object containing calculated peak areas and widths
+        (list): PeakList object containing calculated peak areas and widths
     
     """
    
@@ -5401,7 +5404,7 @@ def error_propagation(arr1,arr2):
         arr2 (array): Second array of errors
     
     Returns:
-        new_errs (array): Combined errors
+        (array): Combined errors
     """
     sq_sum_err=np.add(np.square(arr1),np.square(arr2))
     
@@ -5419,7 +5422,7 @@ def distance_determiner(arr1,arr2):
         arr2 (array): Second array of indices
     
     Returns:
-        arr_out (array): distances between the selected indices in the two arrays
+        (array): distances between the selected indices in the two arrays
     
     """
     
@@ -5451,7 +5454,7 @@ def travel_determiner(arr1,arr2):
         arr2 (array): Positions of peaks post alignment
     
     Returns:
-        arr_out (array): Distances travelled in nucleotides by peaks
+        (array): Distances travelled in nucleotides by peaks
     
     """
     
@@ -5482,7 +5485,7 @@ def fit_shape_gauss(dPeakList,data,isOptPos=True,controlA=None):
         isOptPos (bool): Specify whether position should be optimised  
         controlA (float): control values for optimizePosition function
     Returns:
-        peak_list1 (list): peak information with reactivities (peak areas) calculated
+        (list): peak information with reactivities (peak areas) calculated
     """
     #deepcopy peak list
     peak_list=deepcopy(dPeakList)
@@ -5518,7 +5521,7 @@ def find_nearest_ind(array, value):
         value (float): Particular position
     
     Returns:
-        ind (int): The position of the nearest peak
+        (int): The position of the nearest peak
     """
     
     array1 = np.asarray(array)
@@ -5546,7 +5549,7 @@ def shoulder_finder(peak_arr,data,ind,i):
         data (array): Dataset under investigation
         ind (int): index in the ensemble for the dataset under investigation
     Returns:
-        shoulder_data (array): shoulder positions and amplitudes
+        (array): shoulder positions and amplitudes
     """
     
     shoulder_pos_arr = []
@@ -5657,7 +5660,7 @@ def gaussian_sequence_trace(bin_data_arr):
     Args:
         bin_data_arr (array): binary array
     Returns:
-        (tuple) Tuple containing:
+        (tuple):
             x (array): x positions of trace
             trace_arr (array): Gaussian profile generated
     """
@@ -5707,7 +5710,7 @@ def position_vote(partition_data,cut1,cut2,plot=0,clip=350):
         cut1 (float): Value of first cutoff used to convert each partitioned trace into a binary sequence
         cut2 (float): Threshold ratio for voting 
     Returns:
-        (tuple) Tuple containing:
+        (tuple):
             correl_return (float): mean correlation between binary arrays in ensemble
             ballot_box (array): Consensus binary array
     """
@@ -5770,7 +5773,7 @@ def sequence_content(seq_file, nuc = 'T'):
         seq_file (str): Name of reference sequence fasta file
         nuc (chr): The nucleotide under investigation
     Returns:
-        perc (float): Percentage of the target nucleotide in sequence
+        (float): Percentage of the target nucleotide in sequence
     """ 
     
     #read the fasta file 
@@ -5795,7 +5798,7 @@ def seq_to_bin(seq_arr,nuc = 'T'):
         seq_arr (str): Nucleotide sequence
         nuc (chr): The nucleotide under investigation
     Returns:
-        bin_seq (array): binary representation of sequence
+        (array): binary representation of sequence
     """ 
     #convert sequence to binary
     for i in range(len(seq_arr)):
@@ -5825,7 +5828,7 @@ def sequence_search(seq_file, ballot_box,top=10000,bottom=0,Nuc='T'):
         bottom (int): Lowest nucleotide position considered
         Nuc (chr): The nucleotide under investigation
     Returns:
-        (tuple) Tuple containing:
+        (tuple):
             signif (float): Z score for maximum correlation value
             corr_argmax (int): Index for max correlation
             corr_max (float): Max correlation
@@ -5891,7 +5894,7 @@ def sequence_search_area(seq_file, ballot_box,start,window,Nuc='T'):
         window (int): size of area to search over
         Nuc (chr): The nucleotide under investigation
     Returns:
-        (tuple) Tuple containing:
+        (tuple):
             signif (float): Z score for maximum correlation value
             corr_argmax (int): Index for max correlation
             corr_max (float): Max correlation
@@ -5950,7 +5953,7 @@ def renormalisation(area_arr):
         area_arr (list): area arrays to be combined
     
     Returns:
-        (tuple) Tuple containing:
+        (tuple):
             new_area_arr (list): Normalised reactivities for datasets supplied
             new_aver (array): Normalisation factors produced
     """
@@ -5995,7 +5998,7 @@ def accuracy_measure(seq_arr,vote_arr):
         vote_arr (array): Binary consensus sequence from data
     
     Returns: 
-        accuracy (float): accuracy of consensus sequence
+        (float): accuracy of consensus sequence
     """
     
     count=0
@@ -6017,7 +6020,7 @@ def correl_assessor(data_arr,ind):
         ind (int): Index specifying the trace under investigation
     
     Returns:
-        (tuple) Tuple containing:
+        (tuple):
             correl_list (array): list of correlation values
             correl_mat (array): matrix correlation values
             
@@ -6063,7 +6066,7 @@ def count_correl_above(correl_mat,limit):
         limit: Threshold for counting
     
     Returns: 
-        percentage (float): Percentage of correlations above the limit
+        (float): Percentage of correlations above the limit
 
     """
     
@@ -6086,7 +6089,7 @@ def get_cov(array1,array2):
         array2 (array): Second array
     
     Returns:
-        corr (float): correlation value
+        (float): correlation value
     """
     import numpy as np
 
@@ -6102,7 +6105,7 @@ def signif_assessor(data_arr):
         data_arr (array): array of correlation values
     
     Returns: 
-        sigma_2 (float): Z-score of max correlation value
+        (float): Z-score of max correlation value
     """
     
     max_val = np.max(data_arr)
@@ -6178,9 +6181,21 @@ def sequence_snapshots(xcoord,ycoord,yerr,col,window=100,virus='',primer='',cond
         i+=1
 
 
-def RX_calculator_replicates(partition,data_arr,inds,single_0=False,get_correls=False):
+def RX_calculator_replicates(partition,data_arr,inds,get_correls=False):
     """
-    calculate average and standard error of areas and average of signal amplitude.
+    Calculate average and standard error of areas and average of signal amplitude
+    
+    Args: 
+        partition (list): Partitioned footprinting data
+        data_arr (list): Preprocessed datasets in the ensemble
+        inds (list): Indices indicating the locations of the replicates in the ensemble data list
+        get_correls (bool): Specify whether correlations should be calculated
+    
+    Returns: 
+        (tuple):
+            amp_av (array): Average amplitudes of partitioned data
+            area_av (array): Average peak areas of partitioned data
+            area_sd (array): Standard deviations on areas
     """
     
     areas=[]
@@ -6227,7 +6242,7 @@ def RX_correction(area_RX,area_BG,scaling):
         scaling (array): scaling factors between RX and BG
     
     Returns:
-        (tuple) Tuple containing:
+        (tuple):
             area_diff (array): Unnormalised reactivites
             norm_area_diff (array): Normalised reactivities
             aver (float): Normalisation factor
@@ -6263,7 +6278,7 @@ def raw_trace_plotter(file_list):
     
     for i,file in enumerate(file_list):
         data = pd.read_csv(file.strip('\n')+'_raw.csv')
-         plt.plot(data['Position'],data['ReactionChannel#1'],'b',label='RX')
+        plt.plot(data['Position'],data['ReactionChannel#1'],'b',label='RX')
         plt.plot(data['Position'],data['SequenceChannel#1'],'r',label='ddA')
         plt.plot(data['Position'],data['SequenceChannel#2'],'g',label='ddC')
         plt.plot(data['Position'],data['SizeMarker'],'k',label='SM')
@@ -6273,8 +6288,7 @@ def raw_trace_plotter(file_list):
         
 def sm_plotter(data_arr,TM_peaks,file_list):
     
-    """
-    Plot size marker traces and positions of size markers determined by peak_finder
+    """Plot size marker traces and positions of size markers determined by peak_finder
     
     Args: 
         data_arr (list): Datasets in the ensemble

@@ -1,0 +1,1619 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>BoXFP module &#8212; BoXFP 2019 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-BoXFP">
+<span id="boxfp-module"></span><h1>BoXFP module<a class="headerlink" href="#module-BoXFP" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="BoXFP.DR_windowing">
+<code class="descclassname">BoXFP.</code><code class="descname">DR_windowing</code><span class="sig-paren">(</span><em>file_list</em>, <em>TM_peaks</em>, <em>name</em>, <em>top=20</em>, <em>bottom=0</em>, <em>increment=5</em>, <em>windows=10</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.DR_windowing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs preprocessing over several ROI windows</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_list</strong> (<em>list</em>) – List containg the file names for the datasets in the ensemble</li>
+<li><strong>TM_peaks</strong> (<em>list</em>) – List containing all of the size marker peak positions in the datasets</li>
+<li><strong>name</strong> (<em>str</em>) – String indicating the common name for the .obj pickle files</li>
+<li><strong>top</strong> (<em>int</em>) – The highest peak in the peak list used</li>
+<li><strong>bottom</strong> (<em>int</em>) – The lowest peak in the peak lists used</li>
+<li><strong>increment</strong> (<em>int</em>) – Integer specifying the number of elution points by which the ROI windows change on either end</li>
+<li><strong>windows</strong> (<em>int</em>) – Integer specifying the number of windows to be used.</li>
+<li><strong>Returns</strong> – None</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_calculator_replicates">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_calculator_replicates</code><span class="sig-paren">(</span><em>partition</em>, <em>data_arr</em>, <em>inds</em>, <em>get_correls=False</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_calculator_replicates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate average and standard error of areas and average of signal amplitude</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>partition</strong> (<em>list</em>) – Partitioned footprinting data</li>
+<li><strong>data_arr</strong> (<em>list</em>) – Preprocessed datasets in the ensemble</li>
+<li><strong>inds</strong> (<em>list</em>) – Indices indicating the locations of the replicates in the ensemble data list</li>
+<li><strong>get_correls</strong> (<em>bool</em>) – Specify whether correlations should be calculated</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">amp_av (array): Average amplitudes of partitioned data
+area_av (array): Average peak areas of partitioned data
+area_sd (array): Standard deviations on areas</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_calculator_single">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_calculator_single</code><span class="sig-paren">(</span><em>partition_RX</em>, <em>data_arr</em>, <em>RX</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_calculator_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate reactivities of single replicate</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>Partition_RX</strong> (<em>list</em>) – Partitioned footprinting data profile in peakList object</li>
+<li><strong>data_arr</strong> (<em>list</em>) – All of the preprocessed datasets in the ensemble</li>
+<li><strong>RX</strong> (<em>int</em>) – Index of dataset under investigation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">PeakList object containing calculated peak areas and widths</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_correction">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_correction</code><span class="sig-paren">(</span><em>area_RX</em>, <em>area_BG</em>, <em>scaling</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Background correction of reactivities and normalisation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>area_RX</strong> (<em>array</em>) – Array of areas for treatment</li>
+<li><strong>area_BG</strong> (<em>array</em>) – Array of areas for background</li>
+<li><strong>scaling</strong> (<em>array</em>) – scaling factors between RX and BG</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">area_diff (array): Unnormalised reactivites
+norm_area_diff (array): Normalised reactivities
+aver (float): Normalisation factor</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_partition_realignment">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_partition_realignment</code><span class="sig-paren">(</span><em>partition</em>, <em>bin_alloc1</em>, <em>peak_info1</em>, <em>inds</em>, <em>data_arr1</em>, <em>fl=None</em>, <em>corr_b=0.7</em>, <em>inspect=1000</em>, <em>Cap=None</em>, <em>perc=0.25</em>, <em>tm=0</em>, <em>tm_cutoff=21</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_partition_realignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Realign partitioned footprinting data based on up to 3 replicates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>partition</strong> (<em>list</em>) – Partitioned footprinting data produced by RX_partitioning_replicates</li>
+<li><strong>data_arr</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>peak_info1</strong> (<em>list</em>) – Peaklists of footprinting data for all datasets in the ensemble</li>
+<li><strong>inds</strong> (<em>int</em>) – Indices in the ensemble indicating the location of the replicates</li>
+<li><strong>data_arr1</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>fl</strong> (<em>list</em>) – File names for the datasets in the ensemble</li>
+<li><strong>corr_b</strong> (<em>float</em>) – Correlation value indicating the minimum pairwise pearson correlation considered in realignment process</li>
+<li><strong>ll</strong> (<em>int</em>) – Lower limit of elution time points to be considered for size marker trace</li>
+<li><strong>Cap</strong> – Maximum peak intensity considered for peak finding function</li>
+<li><strong>perc</strong> (<em>float</em>) – Ratio of maximum peak intensity for cutoff</li>
+<li><strong>inspect</strong> (<em>int</em>) – Specify a particular dataset that you want to inspect</li>
+<li><strong>tm</strong> (<em>bool</em>) – Set to find specific number of peaks</li>
+<li><strong>tm_cutoff</strong> (<em>int</em>) – Highest peak marker to consider</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The aligned partitioned footprinted stored as a peakList object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_partition_realignment_500">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_partition_realignment_500</code><span class="sig-paren">(</span><em>partition</em>, <em>bin_alloc1</em>, <em>peak_info1</em>, <em>inds</em>, <em>data_arr1</em>, <em>fl=None</em>, <em>corr_b=0.7</em>, <em>inspect=1000</em>, <em>Cap=None</em>, <em>perc=0.25</em>, <em>tm=0</em>, <em>tm_cutoff=21</em>, <em>Pn=21</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_partition_realignment_500" title="Permalink to this definition">¶</a></dt>
+<dd><p>Realign partitioned footprinting data based on up to 3 replicates given ROX 500 size marker set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>partition</strong> (<em>list</em>) – Partitioned footprinting data produced by RX_partitioning_replicates</li>
+<li><strong>data_arr</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>peak_info1</strong> (<em>list</em>) – Peaklists of footprinting data for all datasets in the ensemble</li>
+<li><strong>inds</strong> (<em>int</em>) – Indices in the ensemble indicating the location of the replicates</li>
+<li><strong>data_arr1</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>fl</strong> (<em>list</em>) – File names for the datasets in the ensemble</li>
+<li><strong>corr_b</strong> (<em>float</em>) – Correlation value indicating the minimum pairwise pearson correlation considered in realignment process</li>
+<li><strong>ll</strong> (<em>int</em>) – Lower limit of elution time points to be considered for size marker trace</li>
+<li><strong>Cap</strong> – Maximum peak intensity considered for peak finding function</li>
+<li><strong>perc</strong> (<em>float</em>) – Ratio of maximum peak intensity for cutoff</li>
+<li><strong>inspect</strong> (<em>int</em>) – Specify a particular dataset that you want to inspect</li>
+<li><strong>tm</strong> (<em>bool</em>) – Set to find specific number of peaks</li>
+<li><strong>tm_cutoff</strong> (<em>int</em>) – Highest peak marker to consider</li>
+<li><strong>Pn</strong> (<em>int</em>) – specific number of peaks to find</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The aligned partitioned footprinted stored as a peakList object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_partition_realignment_extended">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_partition_realignment_extended</code><span class="sig-paren">(</span><em>partition</em>, <em>bin_alloc1</em>, <em>peak_info1</em>, <em>inds</em>, <em>data_arr1</em>, <em>peaks_TM1</em>, <em>corr_b=0.7</em>, <em>inspect=1000</em>, <em>Cap=None</em>, <em>perc=0.25</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_partition_realignment_extended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Realign partitioned footprinting data based on up to 3 replicates with size marker region extended by 10 nucleotides on either side</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>partition</strong> (<em>list</em>) – Partitioned footprinting data produced by RX_partitioning_replicates</li>
+<li><strong>data_arr</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>peak_info1</strong> (<em>list</em>) – Peaklists of footprinting data for all datasets in the ensemble</li>
+<li><strong>inds</strong> (<em>int</em>) – Indices in the ensemble indicating the location of the replicates</li>
+<li><strong>data_arr1</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>Peaks_TM1</strong> (<em>list</em>) – peak positions for size marker traces of the datasets in the ensemble</li>
+<li><strong>corr_b</strong> (<em>float</em>) – Correlation value indicating the minimum pairwise pearson correlation considered in realignment process</li>
+<li><strong>Cap</strong> – Maximum peak intensity considered for peak finding function</li>
+<li><strong>perc</strong> (<em>float</em>) – Ratio of maximum peak intensity for cutoff</li>
+<li><strong>inspect</strong> (<em>int</em>) – Specify a particular dataset that you want to inspect</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The aligned partitioned footprinted stored as a peakList object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_partitioning_replicates">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_partitioning_replicates</code><span class="sig-paren">(</span><em>data_arr</em>, <em>ind</em>, <em>perc</em>, <em>Cap=None</em>, <em>tm=0</em>, <em>ll=0</em>, <em>tm_cutoff=21</em>, <em>fl=None</em>, <em>Pn=21</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_partitioning_replicates" title="Permalink to this definition">¶</a></dt>
+<dd><p>partition footprinted trace for up to 3 replicates</p>
+<p>Partitioning function for the sequencing traces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>ind</strong> (<em>int</em>) – Footprint channel in datasets</li>
+<li><strong>fl</strong> (<em>list</em>) – File names for the datasets in the ensemble</li>
+<li><strong>ll</strong> (<em>int</em>) – Lower limit of elution time points to be considered for size marker trace</li>
+<li><strong>perc</strong> (<em>float</em>) – ratio of maximum peak intensity for cutoff</li>
+<li><strong>tm</strong> (<em>bool</em>) – Set to find specific number of peaks</li>
+<li><strong>Pn</strong> (<em>int</em>) – specific number of peaks to find in peak_finder function</li>
+<li><strong>tm_cutoff</strong> (<em>int</em>) – Highest peak marker to consider</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">data_out (list): The initial bin allocations for footprinting partition
+data_out2 (list): The partitioned footprinting data in discrete packets dictated by the size marker regions
+data_out3 (list): Peaklists of footprinting data for al datasets in the ensemble.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_partitioning_replicates_500">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_partitioning_replicates_500</code><span class="sig-paren">(</span><em>data_arr</em>, <em>ind</em>, <em>perc</em>, <em>Cap=None</em>, <em>tm=0</em>, <em>ll=0</em>, <em>tm_cutoff=21</em>, <em>fl=None</em>, <em>Pn=21</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_partitioning_replicates_500" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partition footprinted trace for up to 3 replicates given ROX 500 size marker set</p>
+<p>Partitioning function for the sequencing traces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>ind</strong> (<em>int</em>) – Footprint channel in datasets</li>
+<li><strong>fl</strong> (<em>list</em>) – File names for the datasets in the ensemble</li>
+<li><strong>ll</strong> (<em>int</em>) – Lower limit of elution time points to be considered for size marker trace</li>
+<li><strong>perc</strong> (<em>float</em>) – ratio of maximum peak intensity for cutoff</li>
+<li><strong>tm</strong> (<em>bool</em>) – Set to find specific number of peaks</li>
+<li><strong>Pn</strong> (<em>int</em>) – specific number of peaks to find in peak_finder function</li>
+<li><strong>tm_cutoff</strong> (<em>int</em>) – Highest peak marker to consider</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">data_out (list): The initial bin allocations for footprinting partition
+data_out2 (list): The partitioned footprinting data in discrete packets dictated by the size marker regions
+data_out3 (list): Peaklists of footprinting data for al datasets in the ensemble.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_partitioning_replicates_extended">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_partitioning_replicates_extended</code><span class="sig-paren">(</span><em>data_arr</em>, <em>ind</em>, <em>perc</em>, <em>Cap=None</em>, <em>ll=0</em>, <em>tm=0</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_partitioning_replicates_extended" title="Permalink to this definition">¶</a></dt>
+<dd><p>partition footprinted trace for up to 3 replicates with extension of 10 nucleotides either side of the trace.</p>
+<p>Partitioning function for the sequencing traces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>ind</strong> (<em>int</em>) – Footprint channel in datasets</li>
+<li><strong>fl</strong> (<em>list</em>) – File names for the datasets in the ensemble</li>
+<li><strong>ll</strong> (<em>int</em>) – Lower limit of elution time points to be considered for size marker trace</li>
+<li><strong>perc</strong> (<em>float</em>) – ratio of maximum peak intensity for cutoff</li>
+<li><strong>tm</strong> (<em>bool</em>) – Set to find specific number of peaks</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">data_out (list): The initial bin allocations for footprinting partition
+data_out2 (list): The partitioned footprinting data in discrete packets dictated by the size marker regions
+data_out3 (list): Peaklists of footprinting data for al datasets in the ensemble.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_partitioning_single">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_partitioning_single</code><span class="sig-paren">(</span><em>data_arr</em>, <em>ind</em>, <em>file_list</em>, <em>ll=0</em>, <em>perc=0.25</em>, <em>tm=False</em>, <em>tm_cutoff=21</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_partitioning_single" title="Permalink to this definition">¶</a></dt>
+<dd><p>partition footprinted trace for single replicates</p>
+<p>Partitioning function for the sequencing traces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>ind</strong> (<em>int</em>) – Footprint channel in datasets</li>
+<li><strong>file_list</strong> (<em>list</em>) – File names for the datasets in the ensemble</li>
+<li><strong>ll</strong> (<em>int</em>) – Lower limit of elution time points to be considered for size marker trace</li>
+<li><strong>perc</strong> (<em>float</em>) – ratio of maximum peak intensity for cutoff</li>
+<li><strong>tm</strong> (<em>bool</em>) – Set to find specific number of peaks</li>
+<li><strong>tm_cutoff</strong> (<em>int</em>) – Highest peak marker to consider</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">data_out (list): The partitioned footprinted data traces in numpy.ndarray format
+data_out2 (list): The partitioned footprinted data traces peakList format</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.RX_partitioning_single_500">
+<code class="descclassname">BoXFP.</code><code class="descname">RX_partitioning_single_500</code><span class="sig-paren">(</span><em>data_arr0</em>, <em>ind</em>, <em>file_list</em>, <em>ll=0</em>, <em>perc=0.25</em>, <em>tm=0</em>, <em>tm_cutoff=21</em>, <em>Pn=21</em>, <em>Cap=None</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.RX_partitioning_single_500" title="Permalink to this definition">¶</a></dt>
+<dd><p>partition footprinted trace for single replicates using ROX 500 size marker set</p>
+<p>Partitioning function for the sequencing traces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>ind</strong> (<em>int</em>) – Footprint channel in datasets</li>
+<li><strong>file_list</strong> (<em>list</em>) – File names for the datasets in the ensemble</li>
+<li><strong>ll</strong> (<em>int</em>) – Lower limit of elution time points to be considered for size marker trace</li>
+<li><strong>perc</strong> (<em>float</em>) – ratio of maximum peak intensity for cutoff</li>
+<li><strong>tm</strong> (<em>bool</em>) – Set to find specific number of peaks</li>
+<li><strong>tm_cutoff</strong> (<em>int</em>) – Highest peak marker to consider</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">data_out (list): The partitioned footprinted data traces in numpy.ndarray format
+data_out2 (list): The partitioned footprinted data traces peakList format</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.S1_partitioning">
+<code class="descclassname">BoXFP.</code><code class="descname">S1_partitioning</code><span class="sig-paren">(</span><em>data_arr</em>, <em>ind</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.S1_partitioning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partitioning function for the sequencing traces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>ind</strong> (<em>int</em>) – Sequence channel in data for consideration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Partitioned sequence trace peaks for all the datasets in the ensemble</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.accuracy_measure">
+<code class="descclassname">BoXFP.</code><code class="descname">accuracy_measure</code><span class="sig-paren">(</span><em>seq_arr</em>, <em>vote_arr</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.accuracy_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates the accuracy of the sequence alignment</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>seq_arr</strong> (<em>array</em>) – Binary representation of</li>
+<li><strong>sequence</strong> – </li>
+<li><strong>vote_arr</strong> (<em>array</em>) – Binary consensus sequence from data</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">accuracy of consensus sequence</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(float)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.barcode_generator">
+<code class="descclassname">BoXFP.</code><code class="descname">barcode_generator</code><span class="sig-paren">(</span><em>array</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.barcode_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Barcode generator</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>array</strong> (<em>array</em>) – Profile of the partition footprinting data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Barcode based on profile</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(str)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.coarse_grainer">
+<code class="descclassname">BoXFP.</code><code class="descname">coarse_grainer</code><span class="sig-paren">(</span><em>array</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.coarse_grainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>coarse grained profile generator</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>array</strong> (<em>array</em>) – Profile of the partition footprinting data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">coarse graining of profile</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(array)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.correl_assessor">
+<code class="descclassname">BoXFP.</code><code class="descname">correl_assessor</code><span class="sig-paren">(</span><em>data_arr</em>, <em>ind</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.correl_assessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>correlation matrix determination</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – Datasets in the ensemble</li>
+<li><strong>ind</strong> (<em>int</em>) – Index specifying the trace under investigation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">correl_list (array): list of correlation values
+correl_mat (array): matrix correlation values</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.count_correl_above">
+<code class="descclassname">BoXFP.</code><code class="descname">count_correl_above</code><span class="sig-paren">(</span><em>correl_mat</em>, <em>limit</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.count_correl_above" title="Permalink to this definition">¶</a></dt>
+<dd><p>count numbers of correlation matrix elements above a certain threshold</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>correl_mat</strong> (<em>array</em>) – Matrix correlation values</li>
+<li><strong>limit</strong> – Threshold for counting</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Percentage of correlations above the limit</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(float)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.data_reader">
+<code class="descclassname">BoXFP.</code><code class="descname">data_reader</code><span class="sig-paren">(</span><em>file_list</em>, <em>top</em>, <em>bottom</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.data_reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic data reader</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_list</strong> (<em>list</em>) – List of the file names for datasets in the ensembles</li>
+<li><strong>top</strong> (<em>int</em>) – The highest elution time point in the region of interest</li>
+<li><strong>bottom</strong> – the lowest elution time point in the region of interest</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List containing the chromatograph datasets from the ensemble</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.data_tidy">
+<code class="descclassname">BoXFP.</code><code class="descname">data_tidy</code><span class="sig-paren">(</span><em>data</em>, <em>top</em>, <em>bottom</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.data_tidy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all data not in the region of interest (ROI)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>array</em>) – Data array containing the electropherogram data</li>
+<li><strong>top</strong> (<em>int</em>) – Integer specifying the highest elution time point for the ROI</li>
+<li><strong>bottom</strong> (<em>int</em>) – Integer specifying the lowest elution time point for the ROI</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">data array containing the
+electropherogram data for the ROI only</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.distance_determiner">
+<code class="descclassname">BoXFP.</code><code class="descname">distance_determiner</code><span class="sig-paren">(</span><em>arr1</em>, <em>arr2</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.distance_determiner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distance calculator between different nucleotide positions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>arr1</strong> (<em>array</em>) – first array of indices</li>
+<li><strong>arr2</strong> (<em>array</em>) – Second array of indices</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">distances between the selected indices in the two arrays</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.error_propagation">
+<code class="descclassname">BoXFP.</code><code class="descname">error_propagation</code><span class="sig-paren">(</span><em>arr1</em>, <em>arr2</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.error_propagation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trigonometric error propogation</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>arr1</strong> (<em>array</em>) – First array of errors</li>
+<li><strong>arr2</strong> (<em>array</em>) – Second array of errors</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Combined errors</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.final_realignment">
+<code class="descclassname">BoXFP.</code><code class="descname">final_realignment</code><span class="sig-paren">(</span><em>new_traces2</em>, <em>data_arr1</em>, <em>starts</em>, <em>ends</em>, <em>bins1</em>, <em>inds1</em>, <em>labs</em>, <em>corr=0.95</em>, <em>corr_b=0.7</em>, <em>inspect=False</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.final_realignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Final realignment wrapper function (only called by RX_realignment functions)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>new_traces2</strong> (<em>list</em>) – List containing partitioned footprinting data package between size marker positions</li>
+<li><strong>data_arr1</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>starts</strong> (<em>list</em>) – Size marker peaks at the start of the packaged region for each replicate</li>
+<li><strong>ends</strong> (<em>list</em>) – Size marker peaks at the end of the packaged region for each replicate</li>
+<li><strong>inds1</strong> (<em>int</em>) – Indices in the ensemble indicating the location of the replicates</li>
+<li><strong>data_arr1</strong> – All of the datasets in the ensemble</li>
+<li><strong>labs</strong> (<em>list</em>) – Replicate labels</li>
+<li><strong>corr</strong> (<em>float</em>) – Starting correlation value for alignment process</li>
+<li><strong>corr_b</strong> (<em>float</em>) – Correlation value indicating the minimum pairwise pearson correlation considered in realignment process</li>
+<li><strong>inspect</strong> (<em>bool</em>) – Specify whether inspection of data is required</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The aligned partitioned footprinted data for each replicate in the specific part of size marker region.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.find_DTW_match">
+<code class="descclassname">BoXFP.</code><code class="descname">find_DTW_match</code><span class="sig-paren">(</span><em>align_data</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.find_DTW_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find optimal dynamic time warp (DTW) path</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>align_data</strong> (<em>array</em>) – Dataset of chromatograph data to align the second dataset too.</li>
+<li><strong>data</strong> (<em>array</em>) – Second chromatograph dataset</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">linkX0 (array): Array containing the warping path for the alignment dataset
+linkX1 (array): Array containing the warping path for the secondary dataset</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.find_first">
+<code class="descclassname">BoXFP.</code><code class="descname">find_first</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.find_first" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the first occurence of sub array on array
+:param a: Larger array
+:type a: array
+:param b: sub array
+:type b: array</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">first postion of array where sub array occurs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">(int)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.find_nearest_ind">
+<code class="descclassname">BoXFP.</code><code class="descname">find_nearest_ind</code><span class="sig-paren">(</span><em>array</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.find_nearest_ind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the nearest peak to a particular position</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>array</strong> (<em>array</em>) – Array of peak positions</li>
+<li><strong>value</strong> (<em>float</em>) – Particular position</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The position of the nearest peak</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(int)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.find_peak_match_X">
+<code class="descclassname">BoXFP.</code><code class="descname">find_peak_match_X</code><span class="sig-paren">(</span><em>align_data</em>, <em>data</em>, <em>gap=-0.2</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.find_peak_match_X" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alignment of two datasets based on peak matching</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>align_data</strong> (<em>array</em>) – Chromatograph data used for alignment</li>
+<li><strong>data</strong> (<em>array</em>) – Chromatograph data to be realigned</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">linkX0 (array): Array containing the warping path for the alignment dataset
+linkX1 (array): Array containing the warping path for the secondary dataset</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.fit_shape_gauss">
+<code class="descclassname">BoXFP.</code><code class="descname">fit_shape_gauss</code><span class="sig-paren">(</span><em>dPeakList</em>, <em>data</em>, <em>isOptPos=True</em>, <em>controlA=None</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.fit_shape_gauss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the reactivities for each peak in the footprinting data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dPeakList</strong> (<em>list</em>) – peakList object containing footprinting data</li>
+<li><strong>data</strong> (<em>array</em>) – Corresponding preprocesed</li>
+<li><strong>dataset</strong> – </li>
+<li><strong>isOptPos</strong> (<em>bool</em>) – Specify whether position should be optimised</li>
+<li><strong>controlA</strong> (<em>float</em>) – control values for optimizePosition function</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">peak information with reactivities (peak areas) calculated</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.fr_subprocess">
+<code class="descclassname">BoXFP.</code><code class="descname">fr_subprocess</code><span class="sig-paren">(</span><em>new_traces2</em>, <em>data_arr1</em>, <em>starts</em>, <em>ends</em>, <em>bins1</em>, <em>inds1</em>, <em>labs</em>, <em>corr=0.95</em>, <em>corr_b=0.7</em>, <em>inspect=False</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.fr_subprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Final realignment sub process (only called by final_realignment wrapper function)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>new_traces2</strong> (<em>list</em>) – List containing partitioned footprinting data package between size marker positions</li>
+<li><strong>data_arr1</strong> (<em>list</em>) – All of the datasets in the ensemble</li>
+<li><strong>starts</strong> (<em>list</em>) – Size marker peaks at the start of the packaged region for each replicate</li>
+<li><strong>ends</strong> (<em>list</em>) – Size marker peaks at the end of the packaged region for each replicate</li>
+<li><strong>bins1</strong> (<em>array</em>) – number of bins (i.e. number of nucleotides between size markers) expected in each part of the size marker set.</li>
+<li><strong>inds1</strong> (<em>int</em>) – Indices in the ensemble  indicating the location of the replicates</li>
+<li><strong>data_arr1</strong> – All of the datasets in the ensemble</li>
+<li><strong>labs</strong> (<em>list</em>) – Replicate labels</li>
+<li><strong>corr</strong> (<em>float</em>) – Starting correlation value for alignment process</li>
+<li><strong>corr_b</strong> (<em>float</em>) – Correlation value indicating the minimum pairwise pearson correlation considered in realignment process</li>
+<li><strong>inspect</strong> (<em>bool</em>) – Specify whether inspection of data is required</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The aligned partitioned footprinted data for each replicate in the specific part of size marker region.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.gaussian_sequence_trace">
+<code class="descclassname">BoXFP.</code><code class="descname">gaussian_sequence_trace</code><span class="sig-paren">(</span><em>bin_data_arr</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.gaussian_sequence_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert binary array into gaussian trace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>bin_data_arr</strong> (<em>array</em>) – binary array</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">x (array): x positions of trace
+trace_arr (array): Gaussian profile generated</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(tuple)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.get_cov">
+<code class="descclassname">BoXFP.</code><code class="descname">get_cov</code><span class="sig-paren">(</span><em>array1</em>, <em>array2</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.get_cov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate correlation between two arrays</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>array1</strong> (<em>array</em>) – First array</li>
+<li><strong>array2</strong> (<em>array</em>) – Second array</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">correlation value</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(float)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.indexes">
+<code class="descclassname">BoXFP.</code><code class="descname">indexes</code><span class="sig-paren">(</span><em>string</em>, <em>character='-'</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.indexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the insertion points from aligned sequences</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>str</em>) – The aligned barcodes</li>
+<li><strong>character</strong> (<em>chr</em>) – the character to find</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">indices where the chosen characters occurs</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.mobility_shift">
+<code class="descclassname">BoXFP.</code><code class="descname">mobility_shift</code><span class="sig-paren">(</span><em>data_arr</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.mobility_shift" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mobility shift between footprinting trace and the ddA sequence trace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_arr</strong> (<em>list</em>) – List containing the preprocessed chromatograph data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">List containg the mobility shift corrected chromatograph data</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.nan_remover">
+<code class="descclassname">BoXFP.</code><code class="descname">nan_remover</code><span class="sig-paren">(</span><em>arr</em>, <em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.nan_remover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove nans and zero values from peak position lists.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>arr</strong> (<em>arr</em>) – Array of values</li>
+<li><strong>start</strong> (<em>int</em>) – Size marker peak at the start of the packaged region</li>
+<li><strong>end</strong> (<em>int</em>) – Size marker peak at the end of the packaged region</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Peak positions with nan and zero values removed</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(arr)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.normalise">
+<code class="descclassname">BoXFP.</code><code class="descname">normalise</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.normalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalise data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>array</em>) – Array containing unnormalised  data profile</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Array containing normalised data profile</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(array)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.notindexes">
+<code class="descclassname">BoXFP.</code><code class="descname">notindexes</code><span class="sig-paren">(</span><em>string</em>, <em>character='-'</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.notindexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the non insertion points from aligned sequences</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>string</strong> (<em>str</em>) – The aligned barcodes</li>
+<li><strong>character</strong> (<em>chr</em>) – the character to find</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">indices where the chosen characters does not occur</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.nw_align">
+<code class="descclassname">BoXFP.</code><code class="descname">nw_align</code><span class="sig-paren">(</span><em>bars</em>, <em>bins</em>, <em>labels</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.nw_align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Needleman-Wunsch alignment of barcodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bars</strong> (<em>list</em>) – Barcodes for partitioned footprint data before alignment</li>
+<li><strong>bins</strong> (<em>array</em>) – Number of bins (i.e. number of nucleotides between size markers) expected in each part of the size marker set</li>
+<li><strong>labels</strong> (<em>list</em>) – Replicate labels</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">output (list): Aligned barcodes
+lens_out (list): Number of aligned barcodes generated for each replicate</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.peak_diffs">
+<code class="descclassname">BoXFP.</code><code class="descname">peak_diffs</code><span class="sig-paren">(</span><em>peak_arr</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.peak_diffs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate differences between adjacent peak positions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>peak_arr</strong> (<em>list</em>) – Peak lists for the datasets in ensemble</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">peak_diff_av (array): Average distances between peaks in ensemble
+peak_diff_arr (list): All the peak differences for the entire ensemble</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(tuple)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.peak_finder">
+<code class="descclassname">BoXFP.</code><code class="descname">peak_finder</code><span class="sig-paren">(</span><em>data_arr</em>, <em>ind</em>, <em>perc</em>, <em>TM=0</em>, <em>pn=21</em>, <em>cap=None</em>, <em>lower_limit=0</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.peak_finder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Peak finding function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – List containing the chromatograph data</li>
+<li><strong>ind</strong> (<em>int</em>) – Integer specifying the trace channel</li>
+<li><strong>perc</strong> (<em>float</em>) – Ratio of max peak intensity used as cutoff criterion</li>
+<li><strong>TM</strong> (<em>int</em>) – Set to find the specific number of peaks</li>
+<li><strong>pn</strong> (<em>int</em>) – Specific number of peaks to find</li>
+<li><strong>cap</strong> (<em>int</em>) – Cap specifying the highest peak amplitude considered in peak finding</li>
+<li><strong>limit</strong> (<em>lower</em>) – Lowest elution time point considered in peak finding</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of recorded peak values for each dataset</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.position_vote">
+<code class="descclassname">BoXFP.</code><code class="descname">position_vote</code><span class="sig-paren">(</span><em>partition_data</em>, <em>cut1</em>, <em>cut2</em>, <em>plot=0</em>, <em>clip=350</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.position_vote" title="Permalink to this definition">¶</a></dt>
+<dd><p>position voting over the ensemble</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>partition_data</strong> (<em>list</em>) – Partitioned sequence traces across ensemble</li>
+<li><strong>cut1</strong> (<em>float</em>) – Value of first cutoff used to convert each partitioned trace into a binary sequence</li>
+<li><strong>cut2</strong> (<em>float</em>) – Threshold ratio for voting</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">correl_return (float): mean correlation between binary arrays in ensemble
+ballot_box (array): Consensus binary array</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.preprocess">
+<code class="descclassname">BoXFP.</code><code class="descname">preprocess</code><span class="sig-paren">(</span><em>data_arr</em>, <em>smooth=4</em>, <em>TM_smooth=1</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.preprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>preprocess chromatographs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – List containing the raw chromotograph data</li>
+<li><strong>smooth</strong> (<em>int</em>) – Width of triangular smoothing of main data traces</li>
+<li><strong>TM_smooth</strong> (<em>int</em>) – Width of triangular smoothing for size marker</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List containing the processed chromatograph data</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.raw_trace_plotter">
+<code class="descclassname">BoXFP.</code><code class="descname">raw_trace_plotter</code><span class="sig-paren">(</span><em>file_list</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.raw_trace_plotter" title="Permalink to this definition">¶</a></dt>
+<dd><p>plots the raw electropherograms to pngs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_list</strong> (<em>list</em>) – list of all the data files in the ensemble</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.remove_outliers">
+<code class="descclassname">BoXFP.</code><code class="descname">remove_outliers</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>outlierConstant=1.5</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.remove_outliers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove outliers from trace based on amplitude</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<em>array</em>) – Array containing x coordinates of trace</li>
+<li><strong>y</strong> (<em>array</em>) – Array containing y coordinates of trace</li>
+<li><strong>outlierConstant</strong> (<em>float</em>) – IQR multiplier used for outlier determination</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>resultListx (array): Array of x coordinates in trace with outliers removed</p>
+<p>resultListy (array): Array of y coordinates in trace with outliers removed</p>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.renormalisation">
+<code class="descclassname">BoXFP.</code><code class="descname">renormalisation</code><span class="sig-paren">(</span><em>area_arr</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.renormalisation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renormalises data for two or more reactivity datasets</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>area_arr</strong> (<em>list</em>) – area arrays to be combined</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">new_area_arr (list): Normalised reactivities for datasets supplied
+new_aver (array): Normalisation factors produced</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(tuple)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.seq_to_bin">
+<code class="descclassname">BoXFP.</code><code class="descname">seq_to_bin</code><span class="sig-paren">(</span><em>seq_arr</em>, <em>nuc='T'</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.seq_to_bin" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert sequence array to binary based on nucleotide</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>seq_arr</strong> (<em>str</em>) – Nucleotide sequence</li>
+<li><strong>nuc</strong> (<em>chr</em>) – The nucleotide under investigation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">binary representation of sequence</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.sequence_content">
+<code class="descclassname">BoXFP.</code><code class="descname">sequence_content</code><span class="sig-paren">(</span><em>seq_file</em>, <em>nuc='T'</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.sequence_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>determine content of a specific nucleotide</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>seq_file</strong> (<em>str</em>) – Name of reference sequence fasta file</li>
+<li><strong>nuc</strong> (<em>chr</em>) – The nucleotide under investigation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Percentage of the target nucleotide in sequence</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(float)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.sequence_converter_gaussians">
+<code class="descclassname">BoXFP.</code><code class="descname">sequence_converter_gaussians</code><span class="sig-paren">(</span><em>seq_file</em>, <em>letter1='T'</em>, <em>letter2='C'</em>, <em>height1=100.0</em>, <em>height2=50.0</em>, <em>width=2.0</em>, <em>low_height=10.0</em>, <em>sep=10</em>, <em>plot=True</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.sequence_converter_gaussians" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert nucleotide sequence into profile of gaussians</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>seq_file</strong> (<em>str</em>) – The path of the reference genome fasta file</li>
+<li><strong>letter1</strong> (<em>chr</em>) – The nucleotide associated with the higher gaussian</li>
+<li><strong>letter2</strong> (<em>chr</em>) – The nucleotide associated with the medium gaussian</li>
+<li><strong>height1</strong> (<em>float</em>) – The amplitude of the highest gaussian</li>
+<li><strong>height2</strong> (<em>float</em>) – The amplitude of the medium gaussian</li>
+<li><strong>width</strong> (<em>float</em>) – The width of the gaussians</li>
+<li><strong>low_height</strong> (<em>float</em>) – The amplitude of gaussians associated with the non specific nucleotides</li>
+<li><strong>sep</strong> (<em>float</em>) – The distances between the centres of gaussians in the profile</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">seq_arr (np.ndarray): guassian profile
+nt_arr (np.ndarray): locations of nucleotides across profile</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.sequence_search">
+<code class="descclassname">BoXFP.</code><code class="descname">sequence_search</code><span class="sig-paren">(</span><em>seq_file</em>, <em>ballot_box</em>, <em>top=10000</em>, <em>bottom=0</em>, <em>Nuc='T'</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.sequence_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>sequence searching function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>seq_file</strong> (<em>str</em>) – Name of reference sequence fasta file</li>
+<li><strong>ballot_box</strong> (<em>array</em>) – Consensus binary representation of sequence from data</li>
+<li><strong>top</strong> (<em>int</em>) – Highest nucleotide position considered</li>
+<li><strong>bottom</strong> (<em>int</em>) – Lowest nucleotide position considered</li>
+<li><strong>Nuc</strong> (<em>chr</em>) – The nucleotide under investigation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">signif (float): Z score for maximum correlation value
+corr_argmax (int): Index for max correlation
+corr_max (float): Max correlation</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.sequence_search_area">
+<code class="descclassname">BoXFP.</code><code class="descname">sequence_search_area</code><span class="sig-paren">(</span><em>seq_file</em>, <em>ballot_box</em>, <em>start</em>, <em>window</em>, <em>Nuc='T'</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.sequence_search_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>sequence searching function over specific area</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>seq_file</strong> (<em>str</em>) – Name of reference sequence fasta file</li>
+<li><strong>ballot_box</strong> (<em>array</em>) – Consensus binary representation of sequence from data</li>
+<li><strong>start</strong> (<em>int</em>) – start of rejoin to scan over</li>
+<li><strong>window</strong> (<em>int</em>) – size of area to search over</li>
+<li><strong>Nuc</strong> (<em>chr</em>) – The nucleotide under investigation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">signif (float): Z score for maximum correlation value
+corr_argmax (int): Index for max correlation
+corr_max (float): Max correlation</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(tuple)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.sequence_snapshots">
+<code class="descclassname">BoXFP.</code><code class="descname">sequence_snapshots</code><span class="sig-paren">(</span><em>xcoord</em>, <em>ycoord</em>, <em>yerr</em>, <em>col</em>, <em>window=100</em>, <em>virus=''</em>, <em>primer=''</em>, <em>condition=''</em>, <em>treatment=''</em>, <em>diff=False</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.sequence_snapshots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces snapshots reactivity profile in primer region</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>xcoord</strong> (<em>array</em>) – xcoordinates of reactivity data</li>
+<li><strong>ycoord</strong> (<em>array</em>) – ycoordinates of reactivity data</li>
+<li><strong>yerr</strong> (<em>array</em>) – Errors on reactivities</li>
+<li><strong>col</strong> (<em>chr</em>) – Colour used for</li>
+<li><strong>window</strong> (<em>int</em>) – Window size for snapshots</li>
+<li><strong>virus</strong> (<em>str</em>) – Virus under investigation</li>
+<li><strong>primer</strong> (<em>str</em>) – Primer used</li>
+<li><strong>condition</strong> (<em>str</em>) – Treatment condition</li>
+<li><strong>treatment</strong> (<em>str</em>) – treatment exposure time</li>
+<li><strong>diff</strong> (<em>bool</em>) – specify whether difference map is being plotted</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.shoulder_finder">
+<code class="descclassname">BoXFP.</code><code class="descname">shoulder_finder</code><span class="sig-paren">(</span><em>peak_arr</em>, <em>data</em>, <em>ind</em>, <em>i</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.shoulder_finder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find shoulders in a trace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>peak_arr</strong> (<em>list</em>) – peakList object containing peaks in investigated trace</li>
+<li><strong>data</strong> (<em>array</em>) – Dataset under investigation</li>
+<li><strong>ind</strong> (<em>int</em>) – index in the ensemble for the dataset under investigation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">shoulder positions and amplitudes</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.signal_alignment">
+<code class="descclassname">BoXFP.</code><code class="descname">signal_alignment</code><span class="sig-paren">(</span><em>data</em>, <em>align_data</em>, <em>move1</em>, <em>move2</em>, <em>fifcorr=True</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.signal_alignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Align traces in chromatographs to each other based on trace alignment sequence outlined in trace_align</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>array</em>) – data array containing chromatograph data</li>
+<li><strong>align_data</strong> (<em>array</em>) – data array containing chromotograph data used for alignment</li>
+<li><strong>move1</strong> (<em>array</em>) – Sequence of warping path used on the non align dataset</li>
+<li><strong>move2</strong> (<em>array</em>) – Sequence of warping path used on the align dataset</li>
+<li><strong>fifcorr</strong> (<em>bool</em>) – Use correlations in alignment process</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">array of data for first dataset aligned to the second</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.signif_assessor">
+<code class="descclassname">BoXFP.</code><code class="descname">signif_assessor</code><span class="sig-paren">(</span><em>data_arr</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.signif_assessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Z-score of max value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_arr</strong> (<em>array</em>) – array of correlation values</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Z-score of max correlation value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(float)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.sm_plotter">
+<code class="descclassname">BoXFP.</code><code class="descname">sm_plotter</code><span class="sig-paren">(</span><em>data_arr</em>, <em>TM_peaks</em>, <em>file_list</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.sm_plotter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot size marker traces and positions of size markers determined by peak_finder</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – Datasets in the ensemble</li>
+<li><strong>TM_peaks</strong> (<em>list</em>) – Size marker peak positions</li>
+<li><strong>file_list</strong> (<em>list</em>) – file names of datasets in the ensemble</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.trace_align">
+<code class="descclassname">BoXFP.</code><code class="descname">trace_align</code><span class="sig-paren">(</span><em>data_arr</em>, <em>ind</em>, <em>ref</em>, <em>samp=False</em>, <em>ifmob=True</em>, <em>ifdtw=True</em>, <em>ifpeak=True</em>, <em>gap1=-0.2</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.trace_align" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aligns traces to each other according to a reference data_set (align_data) and specific trace [ind]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data_arr</strong> (<em>list</em>) – list containing all of the datasets in the ensemble</li>
+<li><strong>ind</strong> (<em>int</em>) – integer specifying the trace used for the alignment process</li>
+<li><strong>ref</strong> – reference dataset used for alignment</li>
+<li><strong>samp</strong> (<em>bool</em>) – specify whether a sample of the ensemble should be used instead of the whole ensemble</li>
+<li><strong>ifmob</strong> (<em>bool</em>) – specify whether mobility shift should be performed</li>
+<li><strong>ifdtw</strong> (<em>bool</em>) – specify whether dynamic time warp should be performed</li>
+<li><strong>ifpeak</strong> (<em>bool</em>) – specify whether peak aliggment should be performed</li>
+<li><strong>gap1</strong> (<em>float</em>) – gap penalty</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List containing the ensemble with all datasets aligned to each other</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.trace_align2">
+<code class="descclassname">BoXFP.</code><code class="descname">trace_align2</code><span class="sig-paren">(</span><em>spaces</em>, <em>new_array</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.trace_align2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partitioned data alignment process for 2 replicates (secondary function)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>spaces</strong> (<em>list</em>) – unaligned partitioned footprinting data for each replicate</li>
+<li><strong>new_array</strong> (<em>list</em>) – List containing new NW alignments for each replicate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The aligned partitioned footprinted data for each replicate in the specific part of size marker region.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.trace_align3">
+<code class="descclassname">BoXFP.</code><code class="descname">trace_align3</code><span class="sig-paren">(</span><em>spaces</em>, <em>new_array</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.trace_align3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partitioned data alignment process for 3 replicates (secondary function)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>spaces</strong> (<em>list</em>) – unaligned partitioned footprinting data for each replicate</li>
+<li><strong>new_array</strong> (<em>list</em>) – List containing new NW alignments for each replicate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The aligned partitioned footprinted data for each replicate in the specific part of size marker region.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.trace_align3_v2">
+<code class="descclassname">BoXFP.</code><code class="descname">trace_align3_v2</code><span class="sig-paren">(</span><em>spaces</em>, <em>new_array</em>, <em>data_arr</em>, <em>inds</em>, <em>bins</em>, <em>starts</em>, <em>ends</em>, <em>peak_inds</em>, <em>inspect=False</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.trace_align3_v2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Partitioned data alignment process for 3 replicates (secondary function)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>spaces</strong> (<em>list</em>) – Unaligned partitioned footprinting data for each replicate</li>
+<li><strong>new_array</strong> (<em>list</em>) – List containing new NW alignments for each replicate</li>
+<li><strong>data_arr</strong> (<em>list</em>) – All the preprocessed data in the ensemble</li>
+<li><strong>inds</strong> (<em>list</em>) – Indices indicating the positions of the replicates in the ensemble list</li>
+<li><strong>bins</strong> (<em>array</em>) – number of bins (i.e. number of nucleotides between size markers) expected in each part of the size marker set.</li>
+<li><strong>starts</strong> (<em>list</em>) – Size marker peaks at the start of the packaged region for each replicate</li>
+<li><strong>ends</strong> (<em>list</em>) – Size marker peaks at the end of the packaged region for each replicate</li>
+<li><strong>peak_inds</strong> (<em>int</em>) – Position of bins with assigned peaks before realignment.</li>
+<li><strong>inspect</strong> (<em>bool</em>) – Specify whether inspection of data is required</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The aligned partitioned footprinted data for each replicate in the specific part of size marker region.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="BoXFP.travel_determiner">
+<code class="descclassname">BoXFP.</code><code class="descname">travel_determiner</code><span class="sig-paren">(</span><em>arr1</em>, <em>arr2</em><span class="sig-paren">)</span><a class="headerlink" href="#BoXFP.travel_determiner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate distance that a peak has shifted following realignment</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>arr1</strong> (<em>array</em>) – Initial positions of peaks</li>
+<li><strong>arr2</strong> (<em>array</em>) – Positions of peaks post alignment</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Distances travelled in nucleotides by peaks</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(array)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">BoXFP</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Sam Clark.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/Docs/source/BoXFP.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
