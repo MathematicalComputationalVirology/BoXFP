@@ -50,7 +50,7 @@ if __name__ == '__main__':
     data_arr1=BoXFP.mobility_shift(data_arr)
     
     #find peaks in TM traces
-    peka,peaksTM=BoXFP.peak_finder(data_arr1,4,.25,cap=7000)
+    peaksTM=BoXFP.peak_finder(data_arr1,4,.25,cap=7000)
     data_arr=[]
     
     #list all those peask that have a disproportionate number of SM peaks

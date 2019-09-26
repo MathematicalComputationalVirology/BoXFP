@@ -82,7 +82,7 @@ if __name__ == '__main__':
         data_arr2=pickle.load(file_1)
        
        #find peaks in SM 
-        peka,peaksTM=BoXFP.peak_finder(data_arr2,4,.25,TM=1,lower_limit=1400)
+        peaksTM=BoXFP.peak_finder(data_arr2,4,.25,TM=1,lower_limit=1400)
 
         #plot peaks in SM with position outlined
         BoXFP.sm_plotter(data_arr2,peaksTM,file_list)

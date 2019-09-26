@@ -128,7 +128,7 @@ if __name__ == '__main__':
 
 
         #perform peak finding and plot peaks
-        peka,peaksTM=BoXFP.peak_finder(data_arr2,4,.25,TM=1)
+        peaksTM=BoXFP.peak_finder(data_arr2,4,.25,TM=1)
 
         BoXFP.sm_plotter(data_arr2,peaksTM,file_list)
 

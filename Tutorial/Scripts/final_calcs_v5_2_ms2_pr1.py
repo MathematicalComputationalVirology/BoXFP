@@ -84,7 +84,7 @@ if __name__ == '__main__':
         data_arr2=pickle.load(file_1)
 
         #calculate size marker peaks positions 
-        peka,peaksTM=BoXFP.peak_finder(data_arr2,4,.25,lower_limit=1400)
+        peaksTM=BoXFP.peak_finder(data_arr2,4,.25,lower_limit=1400)
         
         #plot size marker positions on size marker traces. 
         BoXFP.sm_plotter(data_arr2,peaksTM,file_list)
