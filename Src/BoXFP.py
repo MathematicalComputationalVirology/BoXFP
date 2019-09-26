@@ -700,7 +700,7 @@ def S1_partitioning(data_arr,ind):
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,.25,TM=1)
+    peaksTM = peak_finder_v2(data_arr,4,.25,TM=1)
     
     #array of nucleotide position
     nuc_pos = np.arange(351)
@@ -944,7 +944,7 @@ def RX_partitioning_single(data_arr,ind,file_list,ll=0,perc=0.25,tm=False,tm_cut
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,lower_limit=ll)
+    peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,lower_limit=ll)
     sam_funcs.sm_plotter(data_arr,peaksTM,file_list)
     #array of nucleotide position
     nuc_pos = np.arange(351)
@@ -1542,7 +1542,7 @@ def RX_partitioning_single_500(data_arr0,ind,file_list,ll=0,perc=0.25,tm=0,tm_cu
     marker_sizes = [50, 75, 100, 139, 150, 160, 200, 250,300, 340, 350, 400,450,490,500]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,lower_limit=ll,cap=Cap,pn=Pn)
+    peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,lower_limit=ll,cap=Cap,pn=Pn)
     sam_funcs.sm_plotter(data_arr,peaksTM,file_list)
     #array of nucleotide position
     nuc_pos = np.arange(351)
@@ -2137,7 +2137,7 @@ def RX_partitioning_replicates(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutoff=21
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
+    peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
     
     if fl!=None:
         sam_funcs.sm_plotter(data_arr,peaksTM,fl)
@@ -2675,7 +2675,7 @@ def RX_partitioning_replicates_500(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutof
     marker_sizes = [50, 75, 100, 139, 150, 160, 200, 250,300, 340, 350, 400,450,490,500]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
+    peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
     
     if fl!=None:
         sam_funcs.sm_plotter(data_arr,peaksTM,fl)
@@ -3217,7 +3217,7 @@ def RX_partitioning_replicates_extended(data_arr,ind,perc,Cap=None,ll=0,tm=0):
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=1,cap=Cap,lower_limit=ll)
+    peaksTM = peak_finder_v2(data_arr,4,perc,TM=1,cap=Cap,lower_limit=ll)
     
     ##print peaksTM
     #array of nucleotide position
@@ -3773,7 +3773,7 @@ def RX_partition_realignment(partition, bin_alloc1,peak_info1,inds,data_arr1,fl=
     data_arr=deepcopy(data_arr1)
     bin_alloc=deepcopy(bin_alloc1)
     
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap)
+    peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap)
     
     
     if fl!=None:
@@ -4006,7 +4006,7 @@ def RX_partition_realignment_500(partition, bin_alloc1,peak_info1,inds,data_arr1
     data_arr=deepcopy(data_arr1)
     bin_alloc=deepcopy(bin_alloc1)
     
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap,pn=Pn)
+    peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap,pn=Pn)
     
     
     if fl!=None:
