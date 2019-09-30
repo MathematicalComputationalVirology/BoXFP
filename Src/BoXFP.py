@@ -16,8 +16,8 @@ import funcToolsAll
 import funcByRef
 import funcGeneral
 import funcTimeWarp
-import sam_funcs
 from random import sample
+import struct
 
 import matplotlib.ticker as plticker
 
@@ -700,7 +700,7 @@ def S1_partitioning(data_arr,ind):
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,.25,TM=1)
+    peaksTM = peak_finder(data_arr,4,.25,TM=1)
     
     #array of nucleotide position
     nuc_pos = np.arange(351)
@@ -944,7 +944,7 @@ def RX_partitioning_single(data_arr,ind,file_list,ll=0,perc=0.25,tm=False,tm_cut
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,lower_limit=ll)
+    peaksTM = peak_finder(data_arr,4,perc,TM=tm,lower_limit=ll)
     sam_funcs.sm_plotter(data_arr,peaksTM,file_list)
     #array of nucleotide position
     nuc_pos = np.arange(351)
@@ -1542,7 +1542,7 @@ def RX_partitioning_single_500(data_arr0,ind,file_list,ll=0,perc=0.25,tm=0,tm_cu
     marker_sizes = [50, 75, 100, 139, 150, 160, 200, 250,300, 340, 350, 400,450,490,500]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,lower_limit=ll,cap=Cap,pn=Pn)
+    peaksTM = peak_finder(data_arr,4,perc,TM=tm,lower_limit=ll,cap=Cap,pn=Pn)
     sam_funcs.sm_plotter(data_arr,peaksTM,file_list)
     #array of nucleotide position
     nuc_pos = np.arange(351)
@@ -2137,7 +2137,7 @@ def RX_partitioning_replicates(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutoff=21
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
+    peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
     
     if fl!=None:
         sam_funcs.sm_plotter(data_arr,peaksTM,fl)
@@ -2675,7 +2675,7 @@ def RX_partitioning_replicates_500(data_arr,ind,perc,Cap=None,tm=0,ll=0,tm_cutof
     marker_sizes = [50, 75, 100, 139, 150, 160, 200, 250,300, 340, 350, 400,450,490,500]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
+    peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap,lower_limit=ll,pn=Pn)
     
     if fl!=None:
         sam_funcs.sm_plotter(data_arr,peaksTM,fl)
@@ -3217,7 +3217,7 @@ def RX_partitioning_replicates_extended(data_arr,ind,perc,Cap=None,ll=0,tm=0):
     marker_sizes = [50, 60, 90, 100, 120, 150, 160, 180, 190, 200, 220, 240, 260, 280, 290, 300, 320, 340, 360, 380]
     
     #find peaks in tape measure
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=1,cap=Cap,lower_limit=ll)
+    peaksTM = peak_finder(data_arr,4,perc,TM=1,cap=Cap,lower_limit=ll)
     
     ##print peaksTM
     #array of nucleotide position
@@ -3773,7 +3773,7 @@ def RX_partition_realignment(partition, bin_alloc1,peak_info1,inds,data_arr1,fl=
     data_arr=deepcopy(data_arr1)
     bin_alloc=deepcopy(bin_alloc1)
     
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap)
+    peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap)
     
     
     if fl!=None:
@@ -4006,7 +4006,7 @@ def RX_partition_realignment_500(partition, bin_alloc1,peak_info1,inds,data_arr1
     data_arr=deepcopy(data_arr1)
     bin_alloc=deepcopy(bin_alloc1)
     
-    peka,peaksTM = peak_finder_v2(data_arr,4,perc,TM=tm,cap=Cap,pn=Pn)
+    peaksTM = peak_finder(data_arr,4,perc,TM=tm,cap=Cap,pn=Pn)
     
     
     if fl!=None:
@@ -5298,7 +5298,7 @@ def indexes(string,character='-'):
     for i,c in enumerate(string):
         if c==character:
             output = np.append(output,i)
-    return output
+    return np.array(output).astype(int)
 
 def notindexes(string,character='-'):
     """
@@ -5315,7 +5315,7 @@ def notindexes(string,character='-'):
     for i,c in enumerate(string):
         if c!=character:
             output = np.append(output,i)
-    return output
+    return np.array(output).astype(int)
                 
         
 def barcode_generator(array):
@@ -5588,7 +5588,7 @@ def shoulder_finder(peak_arr,data,ind,i):
             fh_trace_dx = funcGeneral.deriv1(first_half[:,ind])
 
             #find peaks in derivative
-            fh_dx_peaks = funcPeakAlign.peakDetection_v2(fh_trace_dx,isY=False)
+            fh_dx_peaks = funcPeakAlign.peakDetection(fh_trace_dx,isY=False)
             
         
             #if peaks have been found
@@ -5621,7 +5621,7 @@ def shoulder_finder(peak_arr,data,ind,i):
 
 
             #find peaks in the derivative trace
-            sh_dx_peaks = funcPeakAlign.peakDetection_v2(mod_sh_trace_dx,isY=False)
+            sh_dx_peaks = funcPeakAlign.peakDetection(mod_sh_trace_dx,isY=False)
        
             
             #check that peaks have been found
@@ -6203,7 +6203,7 @@ def RX_calculator_replicates(partition,data_arr,inds,get_correls=False):
     #calculate areas 
     for k in range(len(partition)):
         
-        peak_list=reac_calculator(partition[k],data_arr,inds[k])
+        peak_list=RX_calculator_single(partition[k],data_arr,inds[k])
         
         areas.append(peak_list)
     
@@ -6321,4 +6321,282 @@ def findStdW(peakX,rate=0.33,minR=0.4,maxR=1.5):
     stdW = np.std(diffW[s:e])
     
     return stdW
+
+
+ABIF_TYPES = {1: 'byte', 2: 'char', 3: 'word', 4: 'short', 5: 'long', 7: 'float', 8: 'double',\
+        10: 'date', 11: 'time', 12: 'thumb', 13: 'bool', 18: 'pString', 19: 'cString'}
+
+class ABIFReader:
+    def __init__(self, fn):
+        self.filename = fn
+        self.file = open(fn, 'rb')
+        self.type = self.readNextString(4)
+        if self.type != 'ABIF':
+            self.close()
+            raise SystemExit("error: No ABIF file '%s'" % fn)
+        self.version = self.readNextShort()
+        dir = DirEntry(self)
+        self.seek(dir.dataoffset)
+        self.entries = [DirEntry(self) for i in range(dir.numelements)]
+
+    def getData(self, name, num = 1):
+        entry = self.getEntry(name, num)
+        if not entry:
+            raise SystemExit("error: Entry '%s (%i)' not found in '%s'" % (name, num, self.filename))
+        self.seek(entry.mydataoffset())
+        data = self.readData(entry.elementtype, entry.numelements)
+        if data != NotImplemented and len(data) == 1:
+            return data[0]
+        else:
+            return data
+
+    def showEntries(self):
+        for e in self.entries:
+            print e
+
+    def getEntry(self, name, num):
+        for e in self.entries:
+            if e.name == name and e.number == num:
+                return e
+        return None
+
+    def readData(self, type, num):
+        if type == 1:
+            return [self.readNextByte() for i in range(num)]
+        elif type == 2:
+            return self.readNextString(num)
+        elif type == 3:
+            return [self.readNextUnsignedInt() for i in range(num)]
+        elif type == 4:
+            return [self.readNextShort() for i in range(num)]
+        elif type == 5:
+            return [self.readNextLong() for i in range(num)]
+        elif type == 7:
+            return [self.readNextFloat() for i in range(num)]
+        elif type == 8:
+            return [self.readNextDouble() for i in range(num)]
+        elif type == 10:
+            return [self.readNextDate() for i in range(num)]
+        elif type == 11:
+            return [self.readNextTime() for i in range(num)]
+        elif type == 12:
+            return [self.readNextThumb() for i in range(num)]
+        elif type == 13:
+            return [self.readNextBool() for i in range(num)]
+        elif type == 18:
+            return self.readNextpString()
+        elif type == 19:
+            return self.readNextcString()
+        elif type >= 1024:
+            return self.readNextUserData(type, num)
+        else:
+            return NotImplemented
+
+    def readNextBool(self):
+        return self.readNextByte() == 1
+
+    def readNextByte(self):
+        return self.primUnpack('B', 1)
+
+    def readNextChar(self):
+        return self.primUnpack('c', 1)
+
+    def readNextcString(self):
+        chars = []
+        while True:
+            c = self.readNextChar()
+            if ord(c) == 0:
+                return ''.join(chars)
+            else:
+                chars.append(c)
+
+    def readNextDate(self):
+        return datetime.date(self.readNextShort(), self.readNextByte(), self.readNextByte())
+
+    def readNextDouble(self):
+        return self.primUnpack('>d', 8)
+
+    def readNextInt(self):
+        return self.primUnpack('>i', 4)
+
+    def readNextFloat(self):
+        return self.primUnpack('>f', 4)
+
+    def readNextLong(self):
+        return self.primUnpack('>l', 4)
+
+    def readNextpString(self):
+        nb = self.readNextByte()
+        chars = [self.readNextChar() for i in range(nb)]
+        return ''.join(chars)
+
+    def readNextShort(self):
+        return self.primUnpack('>h', 2)
+
+    def readNextString(self, size):
+        chars = [self.readNextChar() for i in range(size)]
+        return ''.join(chars)
     
+    def readNextThumb(self):
+        return (self.readNextLong(), self.readNextLong(), self.readNextByte(), self.readNextByte())
+
+    def readNextTime(self):
+        return datetime.time(self.readNextByte(), self.readNextByte(), self.readNextByte(), self.readNextByte())
+
+    def readNextUnsignedInt(self):
+        return self.primUnpack('>I', 4)
+    
+    def readNextUserData(self, type, num):
+
+        return NotImplemented
+
+    def primUnpack(self, format, nb):
+        val=self.file.read(nb)
+        x = struct.unpack(format, val )
+        return x[0]
+    
+    def close(self):
+        self.file.close()
+
+    def seek(self, pos):
+        self.file.seek(pos)
+
+    def tell(self):
+        return self.file.tell()
+
+class DirEntry:
+    def __init__(self, reader):
+        self.name = reader.readNextString(4)
+        self.number = reader.readNextInt()
+        self.elementtype = reader.readNextShort()
+        self.elementsize = reader.readNextShort()
+        self.numelements = reader.readNextInt()
+        self.datasize = reader.readNextInt()
+        self.dataoffsetpos = reader.tell()
+        self.dataoffset = reader.readNextInt()
+        self.datahandle = reader.readNextInt()
+
+    def __str__(self):
+        return "%s (%i) / %s (%i)" % (self.name, self.number, self.mytype(), self.numelements)
+
+    def mydataoffset(self):
+        if self.datasize <= 4:
+            return self.dataoffsetpos
+        else:
+            return self.dataoffset
+
+    def mytype(self):
+        if self.elementtype < 1024:
+            return ABIF_TYPES.get(self.elementtype, 'unknown')
+        else:
+            return 'user'
+        
+
+def write_out_raw_csv(data_bloc, data_list):
+    """
+    Writes out the CSV data from the raw FSA file.
+    """
+    for i,data_file in enumerate(data_list):
+            data = data_bloc[i]
+	    f = open('%s' % data_file.replace('.fsa', '_raw.csv'), 'w')
+	    f.write('Position,ReactionChannel#1,SequenceChannel#1,SequenceChannel#2,SizeMarker\n')
+	    for position in range(len(data)):
+		f.write('%d,%d,%d,%d,%d\n' % (position+1,
+		                              data[position][0],    # reaction channel #1
+		                              data[position][1],    # sequencing channel #1
+		                              data[position][2],    # reaction channel #2
+		                              data[position][3]))   # sequencing channel #2
+	    f.close()
+
+def readABI(dir_list):
+    data_bloc = []
+    for fsa_file in dir_list:
+            reader = ABIFReader(fsa_file)
+	    col0 = reader.getData('DATA',1)
+	    col1 = reader.getData('DATA',2)
+	    col2 = reader.getData('DATA',3)
+	    col3 = reader.getData('DATA',4)
+	    
+	    data=np.zeros([len(col0),4],dtype='f4')
+	    data[:,0]=np.array(col0)
+	    data[:,1]=np.array(col1)
+	    data[:,2]=np.array(col2)
+	    data[:,3]=np.array(col3)
+	    data_bloc.append(data)
+    return data_bloc
+
+def signal_assessor(dir_list):
+    dir_name = os.path.basename(os.getcwd())
+
+    f = open(dir_name+'_signal_assess.csv','w+')
+    f.write('sample,av_RC,sd_RC,av_SC1,sd_SC1,av_SC2,sd_SC2\n')
+
+    for fsa_file in dir_list:
+
+        sample_id = fsa_file.strip('.fsa')
+
+        print sample_id
+
+        csv_file = sample_id + '_raw.csv'
+
+
+
+        data_temp = open(csv_file,'r').readlines()
+
+        data_1 = []
+
+        labels = ['Position','ReactionChannel#1','SequenceChannel#1','SequenceChannel#2','SizeMarker']
+
+        for line in data_temp[1:]:
+            data_1.append([int(i) for i in line.strip('\n').split(',')])
+
+
+
+        data = [[i[j] for i in data_1] for j in range(5)] 
+
+        if np.argmax(data[1]) > 5000:
+
+            quit()
+
+        data = [i[np.argmax(data[1]):] for i in data] 
+
+        sub_samples = [[data[k][j:j+1000] for j in range(0,len(data[k]),1000)] for k in range(5)] 
+
+
+        avg_arr = [[],[],[],[]]
+
+        for k in range(1,4+1):
+            for sample in sub_samples[k]:
+                tmp_arr = sample 
+                tmp_arr.sort()
+                avg_min = round(np.mean(tmp_arr[:250]),3)
+                avg_max = round(np.mean(tmp_arr[-250:]),3)
+
+                avg_arr[k-1].append([avg_min,avg_max,sub_samples[0][sub_samples[k].index(sample)][0],sub_samples[0][sub_samples[k].index(sample)][-1]])
+
+
+
+
+
+
+        for k in range(0,4):
+            avg_arr[k].pop(np.argmax([i[1] for i in avg_arr[k]])) # - highest high
+            avg_arr[k].pop(np.argmin([i[1] for i in avg_arr[k]])) # - lowest high ?
+
+
+
+
+        sig_strength = np.mean([avg_arr[0][i][1]-avg_arr[0][i][0] for i in range(len(avg_arr[0]))])
+        seq_strength = np.mean([avg_arr[1][i][1]-avg_arr[1][i][0] for i in range(len(avg_arr[0]))])
+        seq2_strength = np.mean([avg_arr[2][i][1]-avg_arr[2][i][0] for i in range(len(avg_arr[0]))])
+
+        sig_strength2 = np.std([avg_arr[0][i][1]-avg_arr[0][i][0] for i in range(len(avg_arr[0]))])
+        seq_strength2 = np.std([avg_arr[1][i][1]-avg_arr[1][i][0] for i in range(len(avg_arr[0]))])
+        seq2_strength2 = np.std([avg_arr[2][i][1]-avg_arr[2][i][0] for i in range(len(avg_arr[0]))])
+
+
+
+        f.write('%s,%f,%f,%f,%f,%f,%f\n'% (sample_id,round(sig_strength,3),round(sig_strength2,3),round(seq_strength,3),round(seq_strength2,3),round(seq2_strength,3),round(seq2_strength2,3)))
+		
+		
+    f.close()
