@@ -6277,7 +6277,7 @@ def raw_trace_plotter(file_list):
     """
     
     for i,file in enumerate(file_list):
-        data = pd.read_csv(file.strip('\n')+'_raw.csv')
+        data = pd.read_csv(file.strip('.fsa')+'_raw.csv')
         plt.plot(data['Position'],data['ReactionChannel#1'],'b',label='RX')
         plt.plot(data['Position'],data['SequenceChannel#1'],'r',label='ddA')
         plt.plot(data['Position'],data['SequenceChannel#2'],'g',label='ddC')
