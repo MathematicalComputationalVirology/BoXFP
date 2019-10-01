@@ -36,7 +36,7 @@ After this process the pearson correlation coefficients between the replicates a
 
 Reactivities for each nucleus are calculated as the area of the peak associated with that nucleotide. This is acheived using two different functions depending on the number of replicates used. `RX_calculator_single` is used to calculate areas for data with only a single replicate. `RX_calculator_replicates` is used to calculate average peak areas over upto 3 replicates. it also calculates the standard deviations of the peak areas and the average amplitudes of peaks associated with each nucleotide position. 
 
-Following this calculated reactivities must me corrected for background. The scaling factor of the background treatment (0 ms) to the other treatments is calculated using the function `scaleShapeDataWindow` from the QuShape package `funcSeqAll`. The corrected reactivities are then calculated using the function `reactivity_correction`, which produces a normalised reactivity profile and the normalisation factor used to produce it. The normalisation factors for each 
+Following this calculated reactivities must me corrected for background. The scaling factor of the background treatment (0 ms) to the other treatments is calculated using the function `scaleShapeDataWindow` from the QuShape package `funcSeqAll`. The corrected reactivities are then calculated using the `RX_correction` functions, which produces a normalised reactivity profile and the normalisation factor used to produce it. The normalisation factors for are stored and later output into files. 
 
 Errors from the background and the footprinted datasets are propogated using the function `error_propagation`. These errors are then normalised using the normalisation factors used for the reactivity profile. 
 
