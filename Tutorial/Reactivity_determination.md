@@ -10,7 +10,14 @@ Input data should be provided as the `.obj` pickle data files created during pre
 
 ## Output data
 
-`.csv` files containing reactivities per nucleotide. 
+- `data_ad.csv` files containing unnormalised reactivities per nucleotide.
+- `data.csv` files containing normalised reactivities per nucleotide.
+- `cor.csv` files containing pairwise correlations between replicates.
+- `mean_cors.csv` files containing mean pairwise correlations of different preprocessing windows. 
+- `cor_mat` files containing all the pairwise correlations of data from different windows. 
+- `avers.csv` files containing normalisation factors. 
+- `.png` files containing snapshots of the reactivities. 
+
 
 ##  Reactivity trace partitioning
 
