@@ -4,6 +4,6 @@ The `BoXFP.py` should be stored in the same folder as the QuShape packages and t
 
 `sys.path.append(os.path.abspath('package_directory_path'))`
 
-The following line in the QuShape `funcByRef` and `funcGeneral` should also be commented out:
+The following line in the QuShape `funcByRef` and `funcGeneral` packages should also be commented out:
 
 `from imports import QtGui, QtCore`
