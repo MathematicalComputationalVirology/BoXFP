@@ -6312,7 +6312,17 @@ def sm_plotter(data_arr,TM_peaks,file_list):
         plt.close()
             
 
-def findStdW(peakX,rate=0.33,minR=0.4,maxR=1.5):
+def findStdW(peakX,rate=0.33):
+    """
+    Find standard deviation of peak widths
+    
+    Args:
+        peakX (array): array of peak positions 
+        rate (float): central percentage of ordered peak widths to calculate standard deviations over
+    Returns:
+        (float): standard deviations of widths
+    
+    """
     NPeak=len(peakX)
     diffW=peakX[1:]-peakX[:-1]
     diffW=np.sort(diffW)
@@ -6494,7 +6504,13 @@ class DirEntry:
 
 def write_out_raw_csv(data_bloc, data_list):
     """
-    Writes out the CSV data from the raw FSA file.
+    Writes out the CSV data from the raw FSA file
+    
+    Args:
+        data_bloc (array): Array of unpacked data from ABIF files
+        data_list (list): List of data file names
+    Returns:
+        None
     """
     for i,data_file in enumerate(data_list):
             data = data_bloc[i]
@@ -6509,6 +6525,15 @@ def write_out_raw_csv(data_bloc, data_list):
 	    f.close()
 
 def readABI(dir_list):
+    """
+    Read ABIF files for output into other forms
+    
+    Args:
+        dir_list (list): list of datafiles
+    Returns:
+        (array): array of unpacked data
+        
+    """
     data_bloc = []
     for fsa_file in dir_list:
             reader = ABIFReader(fsa_file)
@@ -6526,6 +6551,16 @@ def readABI(dir_list):
     return data_bloc
 
 def signal_assessor(dir_list):
+    
+    """
+    Signal assessment function
+    
+    Args:
+        dir_list (list): list of datafiles
+    
+    Returns: 
+        None
+    """
     dir_name = os.path.basename(os.getcwd())
 
     f = open(dir_name+'_signal_assess.csv','w+')
@@ -6600,3 +6635,58 @@ def signal_assessor(dir_list):
 		
 		
     f.close()
+
+    
+def DM_generator(data1,data2):
+    
+    """
+    Difference map calculations
+    
+    Args:
+        data1 (array): First data array
+        data2 (array): Second data array 
+    Returns:
+        (tuple):
+            data_out_arr (array): Data array of difference maps
+            avers_arr (array): Array of normalisation factors 
+    """
+    
+    data_v1=data1.values
+    
+    data_v2=data2.values
+    
+    data_out_arr=data_v1[:,0].reshape((350,1))
+    
+    
+    for i in range(1,data1.shape[1],2):
+        
+        
+        comb_data=np.append(data_v1[:,i],data_v2[:,i])
+        
+        Pout,Pav=funcSeqAll.findPOutlierBox(comb_data)
+        
+        data_n1,aver1=funcSeqAll.normSimple(data_v1[:,i],Pout,Pav)
+        
+        data_n1[data_n1<0]=0
+        
+        data_n2,aver2=funcSeqAll.normSimple(data_v2[:,i],Pout,Pav)
+        
+        data_n2[data_n2<0]=0
+        
+        avers=np.array([aver1,aver2])
+        
+        data_o=data_n2-data_n1
+        
+        err_o=error_propagation(data_v1[:,i+1]/aver1,data_v2[:,i+1]/aver2)
+        
+        
+        data_out=np.transpose([data_o,err_o])
+        #print data_out
+        if i==1:
+            avers_arr=avers
+        else:
+            avers_arr=np.append(avers_arr,avers)
+        
+        
+        data_out_arr=np.append(data_out_arr,data_out,axis=1)
+    return data_out_arr,avers_arr
