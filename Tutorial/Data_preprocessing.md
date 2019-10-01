@@ -12,7 +12,7 @@ Input data should be provided as `_raw.csv` files for each dataset in the ensemb
 
 In the first instance a text file listing all of the datasets in the ensemble. this can be created by typing the following command in the  command line:
 
-`for i in *raw.csv; do echo $i | sed -e "s/.fsa//g" ; done > data_files.fl`
+`for i in *.fsa; do echo $i | sed -e "s/.fsa//g" ; done > data_files.fl`
 
 this data file is then read in as an array which is used to open all of the dataset files intially using the function `data_reader`. This function requires the specification of the start and end of the initial region of interest (ROI), which should cover the peaks of the size marker trace for all datasets in the ensemble: 
 
