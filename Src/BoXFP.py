@@ -1,7 +1,7 @@
 import os
 import sys
 
-#sys.path.append(os.path.abspath('/Users/mqbppsc3/Desktop/externalLibraries'))
+sys.path.append(os.path.abspath('/Users/mqbppsc3/Desktop/externalLibraries'))
 
 import numpy as np
 import math
