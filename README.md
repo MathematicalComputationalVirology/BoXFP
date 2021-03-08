@@ -19,4 +19,4 @@ BoXFP has been developed as an add-on package to the QuShape software packages d
  
 ## Python requirements
 
-This software package has been compiled and run on **Python 2.7**
+This software package has been compiled and run on **Python 3.7**
