@@ -8,12 +8,12 @@ import numpy as np
 matplotlib.use('TkAgg')
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,NavigationToolbar2Tk)
 from matplotlib.figure import Figure
-import sam_funcs_v3 as sam_funcs
+import BoXFP as xfp
 
 
 	
 def set_cwd():
-    file_path=fentry.get()
+    file_path=fentry.get().strip('\n')
     foutput.delete(0.0,END)
     if os.path.exists(file_path):
         os.chdir(file_path)
@@ -29,15 +29,14 @@ def preprocess_wrap():
     end=eentry.get()
     wlab=wentry.get()
 
-    data_arr0 = sam_funcs.data_reader(file_list,end,start)
+    data_arr0 = xfp.data_reader(file_list,end,start)
 
-    data_arr = sam_funcs.preprocess(data_arr0)
-    n=len(data_arr0)
+    data_arr = xfp.preprocess(data_arr0)
 
-    data_arr1=sam_funcs.mobility_shift(data_arr)
+    data_arr1=xfp.mobility_shift(data_arr)
     
     #find peaks in TM traces
-    peaksTM=sam_funcs.peak_finder(data_arr1,4,.12,cap=3000,TM=1)
+    peaksTM=xfp.peak_finder(data_arr1,4,.12,cap=3000,TM=1)
 
     
     #list all those peask that have a disproportionate number of SM peaks
@@ -49,16 +48,16 @@ def preprocess_wrap():
             print (file_list[i]+' '+str(i))
     
     #plot the SM traces with the peak positions marked to make sure the peak finder function has found the right peaks.
-    sam_funcs.sm_plotter(data_arr1,peaksTM,file_list)
+    xfp.sm_plotter(data_arr1,peaksTM,file_list)
     
     #run the data reader version two that carries out the windowing and stores the windows in a pickle .obj file
-    sam_funcs.DR_windowing(file_list,peaksTM,wlab,top=None) 
+    xfp.DR_windowing(file_list,peaksTM,wlab,top=None) 
 
 def plot_check():
     file_list=glob.glob('*.fsa')
     start=sentry.get()
     end=eentry.get()
-    data_arr0 = sam_funcs.data_reader(file_list,end,start)
+    data_arr0 = xfp.data_reader(file_list,end,start)
 
     n=len(data_arr0)
     #plot the size marker traces to ensure that all peaks have been captured
