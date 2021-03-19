@@ -21,7 +21,7 @@ This package is supported for *macOS* and *Linux*. The package has been tested o
 + Linux: Ubuntu 16.04
 
 ### Python Dependencies
-`BoXFP` requires the following packages:
+`BoXFP` runs on python 2.7 and requires the following packages:
 
 - `NumPy`: *1.16.3* 
 - `Pandas`: *0.24.2*
@@ -30,7 +30,6 @@ This package is supported for *macOS* and *Linux*. The package has been tested o
 - `SciPy`: *1.2.1*
 - `Bio`: *1.73*
 - `pyqtgraph`: *0.10.0*
-
 
 # Installation guide
 
@@ -51,11 +50,6 @@ Or download the `tarball`_:
 Given the requirements outlined above are met installation time will take less than 30 seconds
 
 ## Usage
-
-### Graphical User Interface (GUI)
-
-GUIs for the Preprocessing, Reactivity determination, and Sequence analysis processes have been provided.
-All that is required is to run the `Preprocessing.py`, `XFPAnalysis.py` and `SeqAnalysis.py` scripts respectively. 
 
 ### Python Module
 
