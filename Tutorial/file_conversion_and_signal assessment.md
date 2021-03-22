@@ -6,7 +6,7 @@ The scripts given for this tutorial are `file_converter_signal_assessor_v1.py`
 
 ## Input data
 
-Input data should be provided as the `.fsa` chromatography files.
+Input data should be provided as the `.fsa` ABIF chromatography files.
 
 ## Output data
 
