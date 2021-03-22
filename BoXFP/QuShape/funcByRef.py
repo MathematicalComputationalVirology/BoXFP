@@ -1,4 +1,3 @@
-from __future__ import print_function
 from copy import deepcopy
 
 from funcSeqAll import findPOutlierBox,normSimple, normBox
@@ -102,12 +101,12 @@ def applyAllToolsAuto1(dProject, dProjRef):
     dProject['isSatd']=True
     
 ### SMOOTHING  
-    for key in list(dProjOut['dData'].keys()):
+    for key in dProjOut['dData'].keys():
         if len(dProjOut['dData'][key])>0:
             dProjOut['dData'][key] = smoothTriangle(dProjOut['dData'][key])
    
 ### BASELINE ADJUSTMENT
-    for key in list(dProject['dData'].keys()):
+    for key in dProject['dData'].keys():
         dProjOut['dData'][key] = baselineAdjust(dProjOut['dData'][key])
  #   print 'baseline adjusted'   
              
@@ -125,23 +124,23 @@ def applyAllToolsAuto1(dProject, dProjRef):
     dyeNR=dProject['dyeN']['RX']
     dyeNS=dProject['dyeN']['RXS1']
     dProjOut['dData']['RXS1']=fMobilityShift(dProjOut['dData']['RX'],dProjOut['dData']['RXS1'],dyeNR,dyeNS)
-    if 'RXS2' in list(dProject['dData'].keys()):
+    if 'RXS2' in dProject['dData'].keys():
         dyeWS=dDyesWL[dProject['dyeN']['RXS2']]
         dProjOut['dData']['RXS2']=fMobilityShift(dProjOut['dData']['RX'],dProjOut['dData']['RXS2'],dyeNR,dyeNS)
    
     dyeNR=dProject['dyeN']['BG']
     dyeNS=dProject['dyeN']['BGS1']
     dProjOut['dData']['BGS1']=fMobilityShift(dProjOut['dData']['BG'],dProjOut['dData']['BGS1'],dyeNR,dyeNS)
-    if 'BGS2' in list(dProject['dData'].keys()):
+    if 'BGS2' in dProject['dData'].keys():
         dyeWS=dDyesWL[dProject['dyeN']['BGS2']]
         dProjOut['dData']['BGS2']=fMobilityShift(dProjOut['dData']['BG'],dProjOut['dData']['BGS2'],dyeNR,dyeNS)         
  
 ### BASELINE ADJUSTMENT
-    for key in list(dProject['dData'].keys()):
+    for key in dProject['dData'].keys():
         dProjOut['dData'][key] = baselineAdjust(dProjOut['dData'][key])
         
 ### SIGNAL DECAY        
-    for key in list(dProject['dData'].keys()):
+    for key in dProject['dData'].keys():
         dProjOut['dData'][key]=autoDecaySum(dProjOut['dData'][key])
 ### SIGNAL ALIGNMENT
     usedSeq=['RXS1','BGS1','RXS2','BGS2'] 
@@ -155,31 +154,31 @@ def applyAllToolsAuto0(dataIn, dataRef,SatdS):
     dataR=deepcopy(dataRef)
 
 #""" Saturation Correction """   
-    print('saturation correction') 
+    print 'saturation correction' 
     dataS=correctSatd(dataS,SatdS)
 #""" Smoothing """    
-    print('Smoothing')   
+    print 'Smoothing'   
     dataS=smoothRect(dataS)
 #""" Baseline Adjustment """     
     dataS = baselineAdjust(dataS)
-    print('Baseline') 
+    print 'Baseline' 
 #""" Normalization """
     dataR = normBox(dataR, 1000)
     dataS = normBox(dataS, 1000)
 #""" Auto Region of Interest """   
-    print('Auto ROI') 
+    print 'Auto ROI' 
     start, end , dtwM = autoROIwDTW(dataS,dataR)
-    print((start, end))
+    print start, end
     dataS=dataS[start-5:end+10]
 #""" Signal Decay Correction""" 
-    print('Signal Decay')    
+    print 'Signal Decay'    
     dataS=autoDecaySum(dataS,100) 
 #""" Signal Alignment """
-    print('Signal Alignment')   
+    print 'Signal Alignment'   
    # linkXR,linkXS=findPeakMatchX(dataR,dataS)
     linkXR,linkXS = findMatchX_DTW(dataR,dataS)
-    print(linkXR)
-    print(linkXS)
+    print linkXR
+    print linkXS
     dataS=splineSampleData(dataS,dataR,linkXR,linkXS)
     
  #   averS=np.average(dataS)

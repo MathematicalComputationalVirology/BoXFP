@@ -1,7 +1,6 @@
 """
 Dynamic Time Warping.
 """
-from __future__ import print_function
 
 import numpy as np
 from funcPeakAlign import deriv1, peakDetection
@@ -204,7 +203,7 @@ def optimalWarpingPath3(dtw):
             i,j = pathAppend0(dtw,i,j)
         pathX.append(i)
         pathY.append(j)
-        print((i,j))
+        print i,j
            
     argM=np.zeros(3)       
     while i>5 or j>5:
@@ -309,7 +308,7 @@ def myDTW(X, Y, derivative=False, costMType='0',D=0.02, bandType = "noband", r=3
     if gap:
         pathX,pathY=optimalWarpingPath(dtwM)
     else:
-        print(gap)
+        print gap
         pathX,pathY=optimalWarpingPath3(dtwM)
             
     

@@ -1,4 +1,3 @@
-from __future__ import print_function
 import numpy as np
 from ABIFReader import ABIFReader
 
@@ -34,7 +33,7 @@ def readBaseFile(fName,RNAflag=True):
         sequence=readSeqGenbank(fName)
     else:
         sequence=''
-        print('This file format can not be read')
+        print 'This file format can not be read'
         
     validBases='UCAG' if RNAflag else 'TCAG'
     baseSeq=''

@@ -139,7 +139,7 @@ def globalVars():
        
 def maxLenF(dData):
     maxLen=len(dData['RX'])
-    for key in list(dData.keys()):
+    for key in dData.keys():
         try:
             len1=len(dData[key])
         except:
@@ -150,7 +150,7 @@ def maxLenF(dData):
 
 def minLenF(dData):
     minLen=len(dData['RX'])
-    for key in list(dData.keys()):
+    for key in dData.keys():
         if len(dData[key])>0:
             len1=len(dData[key])
             if len1<minLen:
@@ -256,16 +256,16 @@ def findAxesYLim(dData,drawType):
     minData={}
     maxData={}
     dAxesYLim={}
-    for key in list(dData.keys()):
+    for key in dData.keys():
         minData[key]=np.min(dData[key])
         maxData[key]=np.max(dData[key])
         dAxesYLim[key]=[minData[key],maxData[key]]
-    if 'RXS2' in list(dData.keys()):
+    if 'RXS2' in dData.keys():
         if minData['RXS2']<minData['RXS1']:
             minData['RXS1']=minData['RXS2']
         if maxData['RXS2']>maxData['RXS1']:
             maxData['RXS1']=maxData['RXS2']
-    if 'BGS2' in list(dData.keys()):
+    if 'BGS2' in dData.keys():
         if minData['BGS2']<minData['BGS1']:
             minData['BGS1']=minData['BGS2']
         if maxData['BGS2']>maxData['BGS1']:
@@ -306,7 +306,7 @@ def setRcParams(rcParams):
  
 dyesName=['5-FAM','6-FAM','TET','HEX','JOE','NED','VIC','TAMRA','PET','ROX']#,'LIZ']
 dyesWL=[517,522,538,553,554,555,575,583,595,607]#,655]
-dDyesWL=dict(list(zip(dyesName,dyesWL)))#  {'5-FAM':517,'6-FAM':522,'TET':538,'HEX':553,'JOE':554,'VIC':555,'NED':575,'TAMRA':583,'PET':595,'ROX':607}#,'LIZ':655}
+dDyesWL=dict(zip(dyesName,dyesWL))#  {'5-FAM':517,'6-FAM':522,'TET':538,'HEX':553,'JOE':554,'VIC':555,'NED':575,'TAMRA':583,'PET':595,'ROX':607}#,'LIZ':655}
 #print dDyesWL
 
 def deriv2(array):
@@ -435,7 +435,7 @@ def fitLinear(x,y,NData):
 def equalLen(dDataIn):
     dDataOut=deepcopy(dDataIn)
     minLen=minLenF(dDataIn)#  np.min(np.array([len(dData['RX']),len(dData['BG']),len(dData['RXS']),len(dData['BGS'])]))
-    for key in list(dDataIn.keys()):
+    for key in dDataIn.keys():
         dDataOut[key]=dDataIn[key][:minLen]
     return dDataOut
 

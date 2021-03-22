@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Python implementation of an ABIF file reader according to Applied Biosystems' specificatons,
 # see http://www.appliedbiosystems.com/support/software_community/ABIF_File_Format.pdf
 #
@@ -71,7 +70,7 @@ class ABIFReader:
 
     def showEntries(self):
         for e in self.entries:
-            print(e)
+            print e
 
     def getEntry(self, name, num):
         for e in self.entries:
