@@ -29,7 +29,7 @@ from scipy.stats.stats import spearmanr
 from scipy.optimize import curve_fit
 import glob
 
-def RX_preprocess(primer,start,end,wlab,Top=999):
+def RX_preprocess(primer,start,end,wlab,Top=999,wins=10,inc=5):
 
     """
     preprocess chromatographs
@@ -39,7 +39,9 @@ def RX_preprocess(primer,start,end,wlab,Top=999):
         start (int): First position in chromatographs to consider in preprocessing
         end (int): Last position in chromatographs to consider in preprocessing
         wlab (str): Name of files into which preprocessed data is deposited
-	Top (int): Define the end the position from which the top boundary of the windowing is taken (999 indicates the reference point is the position of the final size marker, n indicates the reference point is the nth size marker and None indicates the end of the chromatograph is the reference point)
+        Top (int): Define the end the position from which the top boundary of the windowing is taken (999 indicates the reference point is the position of the final size marker, n indicates the reference point is the nth size marker and None indicates the end of the chromatograph is the reference point)
+        wins (int): Number of different windows used for preprocessing
+        inc (int): Increment of sizes between windows in elution points	
     Returns:
         (None): Preprocessed data for each window is exported as a pickle .obj file
     """
@@ -74,7 +76,7 @@ def RX_preprocess(primer,start,end,wlab,Top=999):
     sm_plotter(data_arr1,peaksTM,file_list)
     
     #run the data reader version two that carries out the windowing and stores the windows in a pickle .obj file
-    DR_windowing(file_list,peaksTM,wlab,top=Top) 
+    DR_windowing(file_list,peaksTM,wlab,top=Top,increment=inc,windows=wins) 
 
     
 def preprocess(data_arr,smooth=4,TM_smooth=1):
