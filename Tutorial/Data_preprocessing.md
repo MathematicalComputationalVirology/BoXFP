@@ -26,15 +26,15 @@ Preprocessing is performed for all datasets in which the same primer has been us
 
 `xfp.RX_preprocess('B1',1350,None,'test',Top=None)`
 
-the first argument specifies the primer to be under investigation. 
++ The first argument specifies the primer to be under investigation. 
 
-the second and third arguments specify the start and end of the initial search region. if the third argument is specified as None then the end of the intial search region is the end of the chromatograph. This is mainly to be used if extrapolation beyond the size marker is required. 
++ The second and third arguments specify the start and end of the initial search region. if the third argument is specified as None then the end of the intial search region is the end of the chromatograph. This is mainly to be used if extrapolation beyond the size marker is required. 
 
-the second and third arguments specify the start and end of the initial search region. if the third argument is specified as None then the end of the intial search region is the end of the chromatograph. This is mainly to be used if extrapolation beyond the size marker is required. 
++ The second and third arguments specify the start and end of the initial search region. if the third argument is specified as None then the end of the intial search region is the end of the chromatograph. This is mainly to be used if extrapolation beyond the size marker is required. 
 
-The fourth argument specificies the prefix to be used to identify the `.obj` data files. 
++ The fourth argument specificies the prefix to be used to identify the `.obj` data files. 
 
-the Top argument specifies the size marerk peak to use as reference point for the end of the ROI. it the exit peak is located within the set of size marker peaks then a peak below the exit peak should be chosen. if Top is not specified the last size marker peak is taken as the reference. if Top is set to None the enbd of the chromatograph is taken as the reference point. 
++ The Top argument specifies the size marerk peak to use as reference point for the end of the ROI. it the exit peak is located within the set of size marker peaks then a peak below the exit peak should be chosen. if Top is not specified the last size marker peak is taken as the reference. if Top is set to None the enbd of the chromatograph is taken as the reference point. 
 
 Other Arguments that can be specified in the function `RX_preprocess` are:
 
