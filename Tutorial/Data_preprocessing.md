@@ -34,12 +34,14 @@ Preprocessing is performed for all datasets in which the same primer has been us
 
 + The fourth argument specificies the prefix to be used to identify the `.obj` data files. 
 
-+ The Top argument specifies the size marerk peak to use as reference point for the end of the ROI. it the exit peak is located within the set of size marker peaks then a peak below the exit peak should be chosen. if Top is not specified the last size marker peak is taken as the reference. if Top is set to None the enbd of the chromatograph is taken as the reference point. 
++ The `Top` argument specifies the size marerk peak to use as reference point for the end of the ROI. it the exit peak is located within the set of size marker peaks then a peak below the exit peak should be chosen. if `Top` is not specified the last size marker peak is taken as the reference. if Top is set to None the end of the chromatograph is taken as the reference point. 
 
 Other Arguments that can be specified in the function `RX_preprocess` are:
 
-+ wins: The number of windows used in preprocessing
-+ inc: the increment in elution points of window size between the windows
++ `wins`: The number of windows used in preprocessing. Default is 10.
++ `inc`: The increment in elution points of window size between the windows. Default is 5. 
+
+
 
 
 
