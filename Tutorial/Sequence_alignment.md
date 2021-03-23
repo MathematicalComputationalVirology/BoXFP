@@ -42,22 +42,22 @@ This consensus sequence is then scanned across a binary representation of the re
 
 ## RX_position
 
-All of the above processes can be run in sequence using the wrapper function `RX_position`. In the example given we are using `RX_position` to find the first nucleotide position in the size marker trace. Using the information on the primer, we already know the start position of the primer (2647), and we know the length of the size marker trace based on the set being used (ROX-400), so we can therefore assume that the start of the size marker trace should be around the 2247 nt position. However due to mobility shifting The exact position may be up to 5 nts from that position. To get the exact position 'RX_position' is used in the following manner:
+All of the above processes can be run in sequence using the wrapper function `RX_position`. In the example given we are using `RX_position` to find the first nucleotide position in the size marker trace. Using the information on the primer, we already know the start position of the primer (2647), and we know the length of the size marker trace based on the set being used (ROX-400), so we can therefore assume that the start of the size marker trace should be around the 2247 nt position. However due to mobility shifting The exact position may be up to 5 nts from that position. To get the exact position `RX_position` is used in the following manner:
 
 `xfp.RX_position('210316_tcv_B1_0.obj','TCV_ref_genome.fasta',searchStart=2242,searchSpan=10)`
 
 + The first argument specifies the preprocessed data file to be used. Note that for position determination only one of the preprocessed data files is required. 
 + The second argument specifies the name of the reference genome file that the ddA ladders will be compared to.
-+ The third argument specifies where in the reference genome to start the search. The default value for searchStart is 0.
-+ The fourth argument specifies how many nts positions after the start position are to be analysed. Note that if SearchSpan is not specified the entire genome will be searched. 
++ The third argument specifies where in the reference genome to start the search. The default value for `searchStart` is 0.
++ The fourth argument specifies how many nts positions after the start position are to be analysed. Note that if `SearchSpan` is not specified the entire genome will be searched. 
 
-Other Arguments that can be used in 'RX_position' are:
+Other Arguments that can be used in `RX_position` are:
 
-+ seqInd: specify which channel in the chromatograph contains the sequence ladder to use. Default 2nd channel.
-+ dinds: specify which datasets are to be used. Default all datasets are used. 
-+ clip: specify how much of the size marker region is to be used for the position determination. Defaults to the entire size marker region. 
-+ corr: Correlation cutoff for ignoring poorly correlating sequence traces. Default is 0.7.
-+ voteInc: Specify how many intervals between 0 and 100% the x1 and x2 cutoffs should be iterated through. Default value is 20. 
++ `seqInd`: specify which channel in the chromatograph contains the sequence ladder to use. Default 2nd channel.
++ `dinds`: specify which datasets are to be used. Default all datasets are used. 
++ `clip`: specify how much of the size marker region is to be used for the position determination. Defaults to the entire size marker region. 
++ `corr`: Correlation cutoff for ignoring poorly correlating sequence traces. Default is 0.7.
++ `voteInc`: Specify how many intervals between 0 and 100% the `x1` and `x2` cutoffs should be iterated through. Default value is 20. 
 
 Note that if you are extrapolating beyond the given size marker the start position produced needs to be offset to reflect this. For instance in the case of the primer B1 example, the final reactivity profile will extend 150 nts beyond the size marker region, so the postion determined must be shifted -150 nts. 
 
