@@ -2,7 +2,7 @@
 
 ## Script
 
-The script given for this tutorial is `sequence_alignment_v1_TCV_pr1.py`
+The script given for this tutorial is `sequence_alignment_tcv_prB1.py`
 
 ## Input data
 
