@@ -6,13 +6,6 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 import pandas as pd
 import pickle
-import funcFile
-import funcPeakAlign
-import funcSeqAll
-import funcToolsAll
-import funcByRef
-import funcGeneral
-import funcTimeWarp
 import shutil
 from random import sample
 from Qushape import *
