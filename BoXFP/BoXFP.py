@@ -4473,7 +4473,7 @@ def sm_plotter(data_arr,TM_peaks,file_list=None):
             
        
 
-def RX_analyse(wfiles,indsBG,indsRX,virus,primer,start_pos,condition,exposure,issues=[],skip=False,wrange=[0,10],sm_extend=0,snapshot=False,ss_col='blue',ignore=[]):
+def RX_analyse(wfiles,indsBG,indsRX,virus,primer,start_pos,condition,exposure,skip=[],wrange=[0,10],sm_extend=0,wcut=0.7):
 
     """
     Wrapper algorithm for reactivity analysis 
@@ -4487,14 +4487,13 @@ def RX_analyse(wfiles,indsBG,indsRX,virus,primer,start_pos,condition,exposure,is
         start_pos (int): Position of first nucleotide in the reactivity profile
         condition (str): Treatment name
         exposure (int): X-ray exposure time
-        issues (list): Indices in the ensemble for particular datasets that have none standard size marker traces
-        skip (bool): Indicate whether the issue datasets should be ignored or not
+        skip (list): Indicate which datasets should be ignored
         wrange (list): List of preprocessed windowed datasets for examination
-        sm_extension (int): number of size marker points (each representing +10 nts) by which to extend the size marker trace. a negaitve value indicates that less than the normal number of markers are being used (-n indicates that only the first n size marker peaks are to be used)
-
+        sm_extension (int): Number of size marker points (each representing +10 nts) by which to extend the size marker trace. a negaitve value indicates that less than the normal number of markers are being used (-n indicates that only the first n size marker peaks are to be used)
+	wcut (float): Cutoff correlation for windowing 
 
     Returns:
-        None
+        None: data deposited in various .csv files
     """
 
     cor_AB=[]
@@ -4504,13 +4503,15 @@ def RX_analyse(wfiles,indsBG,indsRX,virus,primer,start_pos,condition,exposure,is
     avers=[] 
 
     
-    wcut=0.7   
-    for i in range(wrange[0],wrange[1]):
-	if i in ignore:
-		continue
-	print wrange[0]
-	wpath=wfiles+"_"+str(i)+".obj"
-	print wpath
+    if len(wrange)==0:
+	wlist=glob.glob(wfiles+'*')
+    else:
+	wlist=[]
+	for w in wrange:
+		wlist.append(wfiles+'_'str(w)+'.obj'
+		
+    for i in range(len(wlist)):
+	wpath=wlist[i]
 	#open data file
         file_1= open(wpath,'rb')
 
