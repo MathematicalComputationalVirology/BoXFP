@@ -4,6 +4,8 @@
 
 The scripts given for this tutorial are `file_converter_signal_assessor_v1.py`
 
+The data files for this tutorial can be found in the folder File_conversion/
+
 ## Input data
 
 Input data should be provided as the `.fsa` ABIF chromatography files.
