@@ -1,8 +1,9 @@
 # Reactivity determination
 
-## Scripts
+## Scripts and data
 
 The scripts given for this tutorial are `final_calcs_tcv_priB1.py`
+The data files for this tutorial can be found in the folder Reactivity_and_postioning/
 
 ## Input data
 
@@ -60,24 +61,31 @@ The unnormalised and normalised reactivities are then output as `.csv` files
 A wrapper function has been created that can perform all of the above processes sequentially using `RX_analyse`. In the example reactivity profiles are being generated for primer B1 extensions of TCV RNA extracted from virion in TCV buffer.
 
 The first step required is to define which of the datasets in the ensemble are the background (0 ms) samples and the exposed reactivity samples (in this case the 25 ms exposure samples):
+
 `
 #list indices in data file that correspond to each dataset
 A_0=[0,1,2]
 A_25=[3,4,5]
 `
+
 As can be seen this involves listing the indicies for each, and as such it is often helpful to generate a list of the datasets under investigation. In this tutorial that list is provided in the file `tcv_priB1_data_files.fl`. 
 
 The nucleotide position for the first position in the profile is then specified:
+
 `
 nuc_start=2097  
 `
+
 note that this value is based on the value generated using the python script file `sequence_alignment_tcv_priB1.py`. Given that the value produced by this script relates to the end of the size marker peaks and we are extrpolating 150 nts beyond the end of the size marker peaks, the `nuc_start` should be the number produced by `sequence_alignment_tcv_priB1.py` minus 150 nts. 
 
+
 `RX_analyse` can then be called:
+
 `
 #Run realignment on partitioned data
 xfp.RX_analyse('210316_tcv_B1',A_0,A_25,'TCV','B1',nuc_start,'Extracted_tb',25,sm_extend=15)
 `
+
 + The first argument details the prefix of the `.obj` preprocessed data files. 
 + The second and third arguments are the lists detailing the background and reactivity datasets in the ensemble
 + The fourth and fifth arguments detail the virus and primer under investigation. 
@@ -87,5 +95,6 @@ xfp.RX_analyse('210316_tcv_B1',A_0,A_25,'TCV','B1',nuc_start,'Extracted_tb',25,s
 
 Other arguments that can be used in `RX_analyse` are:
 
-+ Skip: List of indices of datasets to be disregarded. Default is an empty list. 
-+ wrange: Specifies the preprocessed data files to be used. Defaults to all datafiles used. 
++ `skip`: List of indices of datasets to be disregarded. Default is an empty list. 
++ `wrange`: Specifies the preprocessed data files to be used. Defaults to all datafiles used. 
++ `wcut`: cutoff correlation for windowing. Default is 0.7. 
