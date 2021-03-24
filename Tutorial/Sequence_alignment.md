@@ -4,6 +4,8 @@
 
 The script given for this tutorial is `sequence_alignment_tcv_prB1.py`
 
+The data files for this tutorial can be found in the folder Reactivity_and_positioning/
+
 ## Input data
 
 Input data should be from one of the pickle `.obj` files created during preprocessing of the data. 
