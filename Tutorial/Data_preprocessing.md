@@ -43,6 +43,8 @@ Other Arguments that can be specified in the function `RX_preprocess` are:
 + `wins`: The number of windows used in preprocessing. Default is 10.
 + `inc`: The increment in elution points of window size between the windows. Default is 5. 
 
+Running on standard hardware and software the script should take 15-30 minutes to run. 
+
 
 
 
