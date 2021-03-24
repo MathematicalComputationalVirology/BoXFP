@@ -54,7 +54,7 @@ Given the requirements outlined above are met installation time will take less t
 ### Python Module
 
 For greater user input options, and for processing multiple datasets at once, the `BoXFP` module can be imported.
-FOr more information about scripting using the imported BoXFP module see the [Tutorial](https://github.com/PsamClark/BoXFP/tree/python3_update/Tutorial)
+For more information about scripting using the imported BoXFP module see the [Tutorial](https://github.com/PsamClark/BoXFP/tree/python3_update/Tutorial)
 
 ## Support and Contacts
 
