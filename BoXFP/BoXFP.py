@@ -13,7 +13,6 @@ import funcToolsAll
 import funcByRef
 import funcGeneral
 import funcTimeWarp
-import sam_funcs
 import shutil
 from random import sample
 from Qushape import *
@@ -4691,16 +4690,16 @@ def RX_analyse(wfiles,indsBG,indsRX,virus,primer,start_pos,condition,exposure,sk
 
     full_df=pd.DataFrame(full_arr,columns=col_names)
 
-    reacNormDir=virus+'_pri'+primer+'_reacsNorm'
-    if not os.path.exists(reacNormDir):
-    	os.makedirs(reacNormDir)
+    reacDir=virus+'_pri'+primer+'_reacs'
+    if not os.path.exists(reacDir):
+    	os.makedirs(reacDir)
 
-    full_df.to_csv(reacNormDir+'/'+virus+'_pri'+primer+'_'+condition+'_'+str(exposure)+'ms_reacsNorm.csv',sep=',',index=False)
+    full_df.to_csv(reacDir+'/'+virus+'_pri'+primer+'_'+condition+'_'+str(exposure)+'ms_reacsNorm.csv',sep=',',index=False)
 
 
     full_df_ad=pd.DataFrame(full_arr_ad,columns=col_names_ad)
 
-    full_df_ad.to_csv(reacNormDir+'/'+virus+'_pri'+primer+'_'+condition+'_'+str(exposure)+'ms_reacs.csv',sep=',',index=False)
+    full_df_ad.to_csv(reacDir+'/'+virus+'_pri'+primer+'_'+condition+'_'+str(exposure)+'ms_reacs.csv',sep=',',index=False)
 
 
     avers_arr=np.transpose([avers])
@@ -4729,4 +4728,185 @@ def RX_analyse(wfiles,indsBG,indsRX,virus,primer,start_pos,condition,exposure,sk
     mean_cor_df=pd.DataFrame(mean_cor_arr,columns=mean_cor_labs)
 
     mean_cor_df.to_csv(windDir+'/'+virus+'_pri'+primer+'_'+condition+'_'+str(exposure)+'ms_windCorrs.csv',sep=',',index=False)
+
+def DM_generator(data1,data2):
+    
+    """
+    Difference map calculations
+    
+    Args:
+        data1 (array): First data array
+        data2 (array): Second data array 
+    Returns:
+        (tuple):
+            data_out_arr (array): Data array of difference maps
+            avers_arr (array): Array of normalisation factors 
+    """
+    
+    data_v1=data1.values
+    
+    data_v2=data2.values
+    
+    data_out_arr=data_v1[:,0].reshape((350,1))
+    
+    
+    for i in range(1,data1.shape[1],2):
+        
+        
+        comb_data=np.append(data_v1[:,i],data_v2[:,i])
+        
+        Pout,Pav=funcSeqAll.findPOutlierBox(comb_data)
+        
+        data_n1,aver1=funcSeqAll.normSimple(data_v1[:,i],Pout,Pav)
+        
+        data_n1[data_n1<0]=0
+        
+        data_n2,aver2=funcSeqAll.normSimple(data_v2[:,i],Pout,Pav)
+        
+        data_n2[data_n2<0]=0
+        
+        avers=np.array([aver1,aver2])
+        
+        data_o=data_n2-data_n1
+        
+        err_o=error_propagation(data_v1[:,i+1]/aver1,data_v2[:,i+1]/aver2)
+        
+        
+        data_out=np.transpose([data_o,err_o])
+        #print data_out
+        if i==1:
+            avers_arr=avers
+        else:
+            avers_arr=np.append(avers_arr,avers)
+        
+        
+        data_out_arr=np.append(data_out_arr,data_out,axis=1)
+    return data_out_arr,avers_arr
+			     
+			     
+def write_out_raw_csv(data_bloc, data_list):
+    """
+    Writes out the CSV data from the raw FSA file
+    
+    Args:
+        data_bloc (array): Array of unpacked data from ABIF files
+        data_list (list): List of data file names
+    Returns:
+        None
+    """
+    for i,data_file in enumerate(data_list):
+            data = data_bloc[i]
+	    f = open('%s' % data_file.replace('.fsa', '_raw.csv'), 'w')
+	    f.write('Position,ReactionChannel#1,SequenceChannel#1,SequenceChannel#2,SizeMarker\n')
+	    for position in range(len(data)):
+		f.write('%d,%d,%d,%d,%d\n' % (position+1,
+		                              data[position][0],    # reaction channel #1
+		                              data[position][1],    # sequencing channel #1
+		                              data[position][2],    # reaction channel #2
+		                              data[position][3]))   # sequencing channel #2
+	    f.close()
+
+def readABI(dir_list):
+    """
+    Read ABIF files for output into other forms
+    
+    Args:
+        dir_list (list): list of datafiles
+    Returns:
+        (array): array of unpacked data
+        
+    """
+    data_bloc = []
+    for fsa_file in dir_list:
+            reader = ABIFReader.ABIFReader(fsa_file)
+	    col0 = reader.getData('DATA',1)
+	    col1 = reader.getData('DATA',2)
+	    col2 = reader.getData('DATA',3)
+	    col3 = reader.getData('DATA',4)
+	    
+	    data=np.zeros([len(col0),4],dtype='f4')
+	    data[:,0]=np.array(col0)
+	    data[:,1]=np.array(col1)
+	    data[:,2]=np.array(col2)
+	    data[:,3]=np.array(col3)
+	    data_bloc.append(data)
+    return data_bloc
+
+def signal_assessor(dir_list):
+    
+    """
+    Signal assessment function
+    
+    Args:
+        dir_list (list): list of datafiles
+    
+    Returns: 
+        None
+    """
+    dir_name = os.path.basename(os.getcwd())
+
+    f = open(dir_name+'_signal_assess.csv','w+')
+    f.write('sample,av_RC,sd_RC,av_SC1,sd_SC1,av_SC2,sd_SC2\n')
+
+    for fsa_file in dir_list:
+
+        sample_id = fsa_file.strip('.fsa')
+
+        print sample_id
+
+        csv_file = sample_id + '_raw.csv'
+
+        data_temp = open(csv_file,'r').readlines()
+
+        data_1 = []
+
+        labels = ['Position','ReactionChannel#1','SequenceChannel#1','SequenceChannel#2','SizeMarker']
+
+        for line in data_temp[1:]:
+            data_1.append([int(i) for i in line.strip('\n').split(',')])
+
+
+
+        data = [[i[j] for i in data_1] for j in range(5)] 
+
+        if np.argmax(data[1]) > 5000:
+
+            quit()
+
+        data = [i[np.argmax(data[1]):] for i in data] 
+
+        sub_samples = [[data[k][j:j+1000] for j in range(0,len(data[k]),1000)] for k in range(5)] 
+
+
+        avg_arr = [[],[],[],[]]
+
+        for k in range(1,4+1):
+            for sample in sub_samples[k]:
+                tmp_arr = sample 
+                tmp_arr.sort()
+                avg_min = round(np.mean(tmp_arr[:250]),3)
+                avg_max = round(np.mean(tmp_arr[-250:]),3)
+
+                avg_arr[k-1].append([avg_min,avg_max,sub_samples[0][sub_samples[k].index(sample)][0],sub_samples[0][sub_samples[k].index(sample)][-1]])
+
+
+        for k in range(0,4):
+            avg_arr[k].pop(np.argmax([i[1] for i in avg_arr[k]])) # - highest high
+            avg_arr[k].pop(np.argmin([i[1] for i in avg_arr[k]])) # - lowest high ?
+
+
+        sig_strength = np.mean([avg_arr[0][i][1]-avg_arr[0][i][0] for i in range(len(avg_arr[0]))])
+        seq_strength = np.mean([avg_arr[1][i][1]-avg_arr[1][i][0] for i in range(len(avg_arr[0]))])
+        seq2_strength = np.mean([avg_arr[2][i][1]-avg_arr[2][i][0] for i in range(len(avg_arr[0]))])
+
+        sig_strength2 = np.std([avg_arr[0][i][1]-avg_arr[0][i][0] for i in range(len(avg_arr[0]))])
+        seq_strength2 = np.std([avg_arr[1][i][1]-avg_arr[1][i][0] for i in range(len(avg_arr[0]))])
+        seq2_strength2 = np.std([avg_arr[2][i][1]-avg_arr[2][i][0] for i in range(len(avg_arr[0]))])
+
+
+
+        f.write('%s,%f,%f,%f,%f,%f,%f\n'% (sample_id,round(sig_strength,3),round(sig_strength2,3),round(seq_strength,3),round(seq_strength2,3),round(seq2_strength,3),round(seq2_strength2,3)))
+		
+		
+    f.close()
 
