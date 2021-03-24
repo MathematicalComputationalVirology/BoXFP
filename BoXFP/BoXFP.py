@@ -1,25 +1,20 @@
 import os
 import sys
 import numpy as np
-import math
-from copy import deepcopy
 import matplotlib.pyplot as plt
 import pandas as pd
 import pickle
 import shutil
-from random import sample
-from Qushape import *
+import glob
+
+import Bio.pairwise2 as pwise
 import matplotlib.ticker as plticker
 
 from Bio import SeqIO
-import Bio.pairwise2 as pwise
-from scipy import stats
-
+from copy import deepcopy
 from scipy.stats.stats import pearsonr
-
-from scipy.stats.stats import spearmanr
 from scipy.optimize import curve_fit
-import glob
+from Qushape import *
 
 def RX_preprocess(primer,start,end,wlab,Top=999,wins=10,inc=5):
 
