@@ -4,6 +4,8 @@
 
 The script given for this tutorial is `pre_processing_tcv_priB1.py`
 
+The data files for this tutorial can be found in the folder Preprocessing/
+
 ## Input data
 
 Input data should be provided as `_raw.csv` files for each dataset in the ensemble. 
