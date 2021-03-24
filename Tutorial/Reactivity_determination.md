@@ -28,6 +28,8 @@ Output data is deposited in several sub folders in the following manner:
 - normFactors/: Folder containing normalisation factors.
   - normFactors.csv: File containing normalisation factors. 
 
+These data files can be found in the tutorial data subfolder Expected_output/ 
+
 ##  Reactivity trace partitioning
 
 Each `.obj` data file is unpacked and the partitioned using the `RX_partitioning` functions. there are two functions created for partitioning of the reactivity traces; `RX_partitioning_replicates` and  `RX_partitioning_single`. 
@@ -59,7 +61,7 @@ The unnormalised and normalised reactivities are then output as `.csv` files
 
 ## RX_analyse:
  
-A wrapper function has been created that can perform all of the above processes sequentially using `RX_analyse`. In the example reactivity profiles are being generated for primer B1 extensions of TCV RNA extracted from virion in TCV buffer.
+A wrapper function has been created that can perform all of the above processes sequentially using `RX_analyse`. In the example reactivity profiles are being generated for primer B1 extensions of TCV RNA X-ray footprinted whilst _in virio_ in water.
 
 The first step required is to define which of the datasets in the ensemble are the background (0 ms) samples and the exposed reactivity samples (in this case the 25 ms exposure samples):
 
@@ -84,7 +86,7 @@ note that this value is based on the value generated using the python script fil
 
 `
 #Run realignment on partitioned data
-xfp.RX_analyse('210316_tcv_B1',A_0,A_25,'TCV','B1',nuc_start,'Extracted_tb',25,sm_extend=15)
+xfp.RX_analyse('210315_tcv_B1',A_0,A_25,'TCV','B1',nuc_start,'virion_water',25,sm_extend=15)
 `
 
 + The first argument details the prefix of the `.obj` preprocessed data files. 
@@ -99,3 +101,5 @@ Other arguments that can be used in `RX_analyse` are:
 + `skip`: List of indices of datasets to be disregarded. Default is an empty list. 
 + `wrange`: Specifies the preprocessed data files to be used. Defaults to all datafiles used. 
 + `wcut`: cutoff correlation for windowing. Default is 0.7. 
+
+Running on a standard hardware and software the script should take 30-60 mins to run.
