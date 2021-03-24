@@ -25,8 +25,8 @@ if __name__ == '__main__':
     import funcByRef
     import funcGeneral
     import funcTimeWarp
-    import sam_funcs_v3 as sam_funcs
+    import BoXFP as xfp
     
     np.set_printoptions(threshold=sys.maxsize)
     
-    sam_funcs.RX_position('210316_tcv_B1_0.obj','TCV_ref_genome.fasta',searchStart=2245,searchSpan=10)
+    xfp.RX_position('210316_tcv_B1_0.obj','TCV_ref_genome.fasta',searchStart=2245,searchSpan=10)
