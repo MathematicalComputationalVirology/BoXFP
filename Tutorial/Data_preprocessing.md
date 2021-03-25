@@ -2,43 +2,52 @@
 
 ## Script
 
-The script given for this tutorial is `pre_processing.py`
+The script given for this tutorial is `pre_processing_tcv_priB1.py`
+
+The data files for this tutorial can be found in the folder Preprocessing/
 
 ## Input data
 
 Input data should be provided as `_raw.csv` files for each dataset in the ensemble. 
 
-## Initial data read-in 
+## Preprocessing
 
-In the first instance a text file listing all of the datasets in the ensemble. this can be created by typing the following command in the  command line:
+Preprocessing involves, trace smoothing, baseline correction, decay correction, mobiility shifting and trace alignment between footprinting profile and the sequencing ladder.
+All of these processes are outlined in. 
 
-`for i in *.fsa; do echo $i | sed -e "s/.fsa//g" ; done > data_files.fl`
+THe most important factor in these preprocessing steps to consider is the region of the chromatograph over which the preprocessing is performed. Preprocessing should not be performed over the whole chromatograph as the high signal intensity of the entry peak (and exit peak if it exists) will disproportionately effect these processes, particularly the decay correction step. preprocessing should therefore be performed over what we define as the region of interest (ROI) after the entry peak (and before the exit peak if it exists). Despite these general rules of thumb some edge effects and signal anomalies may result in similar issues with preprocessing that requires very careful consideration of the ROI. in BoXFP the size marker peaks are used as a point of reference for the region of interest in each data set. To do so an initial searching region has to be deifined which encompass the size marker peaks. 
 
-this data file is then read in as an array which is used to open all of the dataset files intially using the function `data_reader`. This function requires the specification of the start and end of the initial region of interest (ROI), which should cover the peaks of the size marker trace for all datasets in the ensemble: 
 
-`data_arr0 = sam_funcs.data_reader(file_list,6000,1400)`
+To reduce the likehood of these preprocessing issues occuring preprocessing is performed over several regions of interest. Reactivity profiles are then generated for each of these preprocessing windows and correlations between profiles of windows are calculated pairwise. Those windows that have a poor correlation with the rest of windows on average are removed and an average over the remaining windows are taken. 
 
-correct placement of the ROI in the script provided is determined by plotting all of the size marker traces onto a sinlge plot, to ensure that size marker regions for each of the datasets is covered by the initial ROI:
+For each window the preprocessed data is deposited in to `.obj` pickle data files. 
 
-```
-n=len(data_arr0)
+All of the different processes performed during preprocessing can be performed by implementing a single wrapper function `RX_preprocess`.
 
-#plot the size marker traces to ensure that all peaks have been captured
-color=iter(plt.cm.rainbow(np.linspace(0,1,n)))
-for i in range(n):
-    col=next(color)
-    plt.plot(data_arr0[i]['Position'],data_arr0[i]['SizeMarker'],c=col)
-plt.show()
-```
-preprocessing is then carried out over this initial ROI for each dataset using the `preprocess` function. 
+Preprocessing is performed for all datasets in which the same primer has been used. in the example given the primer B1 TCV samples are being preprocessed:
 
-## ROI determination for individual datasets 
+`xfp.RX_preprocess('B1',1350,None,'test',Top=None)`
 
-Peak positions in the size marker trace are determined using the function `peak_finder`. The plotting function `sm_plotter` is then used to plot the size marker traces with the peak position annotated on it for reference. These plots should be consulted to make sure that the `peak_finder` function has correctly located all the peaks in the size marker trace. 
++ The first argument specifies the primer to be under investigation. 
 
-## Preprocessing over windows
++ The second and third arguments specify the start and end of the initial search region. if the third argument is specified as None then the end of the intial search region is the end of the chromatograph. This is mainly to be used if extrapolation beyond the size marker is required. 
 
-With the positions of the size marker peaks determined for each dataset in the ensemble, the function `DR_windowing` to generate preprocessed versions of the datasets in the ensemble over several windows in the data. This is performed to ensure that error due to preprocessing has been reduced. by defualt 10 windows are used that increase in size from 5 elution points either side of the size marker region to 50 elution points either side of the size marker region. The preprocessed data is then stored in several pickle `.obj` files, each with a specified name for the entire batch and an index t indicate the window. 
++ The second and third arguments specify the start and end of the initial search region. if the third argument is specified as None then the end of the intial search region is the end of the chromatograph. This is mainly to be used if extrapolation beyond the size marker is required. 
+
++ The fourth argument specificies the prefix to be used to identify the `.obj` data files. 
+
++ The `Top` argument specifies the size marerk peak to use as reference point for the end of the ROI. it the exit peak is located within the set of size marker peaks then a peak below the exit peak should be chosen. if `Top` is not specified the last size marker peak is taken as the reference. if Top is set to None the end of the chromatograph is taken as the reference point. 
+
+Other Arguments that can be specified in the function `RX_preprocess` are:
+
++ `wins`: The number of windows used in preprocessing. Default is 10.
++ `inc`: The increment in elution points of window size between the windows. Default is 5. 
+
+Running on standard hardware and software the script should take 15-30 minutes to run. 
+
+
+
+
 
 
 
