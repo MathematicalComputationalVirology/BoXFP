@@ -30,3 +30,10 @@ in the reduced size marker set (the first 4 DSS peaks cover 50 nts, therefore th
 
 
 ## Using an extended version of the DSS
+
+In the majority of cases the chromatographs do not contain exit peaks. If this is the case then, and there are no anomalous peaks in the chromatorgraph, then the majority of the chromatograph above the entry peak can be analysed. For the windowing process in the cases mentioned above we have used size marker peaks as a point of reference for the upper limit of the windows, in the case where no exit peak exists we can use the end of the chromatographs as the point of reference for the upper limits of the windows. To do so we need to set we do not need to specify the end argument but we do need to set the `Top` argument of `RX_preprocess` to `None`, indicating we are not using the DSS peak set as a reference point. 
+
+Although the positions of the DSS peaks will shift between different chromatographs, the distances between peaks exhibits minimal variation (variantion are usually <2 elution points). Because of this we can use the DSS peaks in the ensemble to to extrapolate beyond the original DSS peak set, generating a 'pseudo-set' of additional DSS peaks. In BoXFP, this extension is performed in sets of 10 nts and is performed in the reactivity calculation step. In the wrapper function `RX_analyse` the number of pseudo-peaks can be specified by setting the `sm_cutoff` argument to >0. Note that it is not advised to set `sm_cutoff` to a value greater than 15 (which results in an extra 150 nts in the reactivity profile).  
+
+Note that there is currently no option to extend the DSS peaks in the position determination step. To get the position for an extended reactivity profile, we have to determine the position using the full set of DSS peaks and then calculate back to determine the start with the extension (for a 150 nt extension this would mean taking the value calculated using the position determination step and then subtracting 150 from this value). 
+
