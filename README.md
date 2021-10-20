@@ -1,15 +1,15 @@
 # BoXFP
- **Tool box for analysis of capillary electrophoresis footprinting data**
+ **Toolbox for analysis of capillary electrophoresis foot printing data**
 
  ## What is BoXFP?
 
- BoxFP is a platform independent software package designed for quick, efficient and reliable analysis of capillary electrophoresis data of footprinted nucleic acid samples. 
+ BoXFP is a platform independent software package designed for quick, efficient, and reliable analysis of capillary electrophoresis data of footprinted nucleic acid samples. 
 
 ## What can BoXFP do? 
 
-BoXFP has been developed as an add-on package to the QuShape software packages developed by Dr Fethullah Karabiber of the Weeks Laboratory (https://weekslab.com/software/). It utilises a number of algorithms to effectively provide nucleotide specific reactivity information from both single experiments and  over several replicates. Capillary electrophoresis data from SHAPE, Hydroxyl-radical and enzyme based reactivity probing experiments can all be analysed using the package. Unlike previous reactivity profile calculation software, BoXFP utilises capillary electrophoresis dye size standards to effectively determine nucleotide positions in the reactivity profiles. 
+BoXFP has been developed as an add-on package to the QuShape software packages developed by Dr Fethullah Karabiber of the Weeks Laboratory (https://weekslab.com/software/). It utilises several algorithms to effectively provide nucleotide specific reactivity information from both single experiments and over several replicates. Capillary electrophoresis data from SHAPE, Hydroxyl-radical and enzyme-based reactivity probing experiments can all be analysed using the package. Unlike previous reactivity profile calculation software, BoXFP utilises capillary electrophoresis dye size standards to effectively determine nucleotide positions in the reactivity profiles. 
 
-It should be noted that BoXFP has been designed specifically around viral RNA X-ray footprinting, and as such a lot of the features regarding data labelling in the current release relate to viruses. Future releases will be designed more generally around reactivity profile generation using capillary electrophoresis. 
+It should be noted that BoXFP has been designed specifically around viral RNA X-ray foot printing, and as such a lot of the features regarding data labelling in the current release relate to viruses. Future releases will be designed more generally around reactivity profile generation using capillary electrophoresis. 
 
 # System Requirements
 
@@ -35,7 +35,7 @@ This package is supported for *macOS* and *Linux*. The package has been tested o
 
 # Installation guide
 
-BoXFP can be installed from source from the `Github Repo`_.
+BoXFP can be installed from source from the `GitHub Repo`_.
 
 You can either clone the public repository:
 
@@ -59,17 +59,17 @@ Reactivity profile determination using BoXFP can be broken down into 3 steps:
 2. Position determination
 3. Reactivity profile calculation
 
-The preprocessing step involves unpacking of the chromatograph data, signal quality determination, and data tidying processes such as smoothing and  baseline and decay correction. 
+The preprocessing step involves unpacking of the chromatograph data, signal quality determination, and data tidying processes such as smoothing and baseline and decay correction. 
 
 The position determination step involves analysis of sequencing ladders in the chromatograph to determine the exact position in the sample sequence of the reactivity profiles. 
 
 The reactivity profile calculation step uses replicate datasets for the X-ray footprinted samples and background samples, to generate an average, background corrected reactivity profile with errors. Information on normalisation factors and replicate correlations is also generated. 
 
-To reduce the errors created by improper handling of the chormatograph data during preprocessing, BoXFP utilises an innovative windowing method, in which preprocessing and reactivity calculation is performed on several different overlapping regions of the chromatographs, with the resulting reactivity profiles being compared with each other and a consensus generated. 
+To reduce the errors created by improper handling of the chromatograph data during preprocessing, BoXFP utilises an innovative windowing method, in which preprocessing and reactivity calculation is performed on several different overlapping regions of the chromatographs, with the resulting reactivity profiles being compared with each other and a consensus generated. 
 
 BoXFP is designed to work with 1 to 3 replicates in both the X-ray footprinted and background samples. 
 
-General rules of usage can be found in the [general rules](https://github.com/PsamClark/BoXFP/tree/python3_update/Tutorial/General_rules.md) section of the tutorial.
+General rules of usage can be found in the [general rules] (https://github.com/PsamClark/BoXFP/tree/python3_update/Tutorial/General_rules.md) section of the tutorial.
 
 ### Python Module
 
@@ -83,4 +83,4 @@ For more information about scripting using the imported BoXFP module see the [Tu
  
  - Further information can be obtained from the following email address:
  sam.clark@york.ac.uk
- 
+
