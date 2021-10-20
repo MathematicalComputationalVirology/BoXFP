@@ -32,36 +32,36 @@ These data files can be found in the tutorial data subfolder Expected_output/
 
 ##  Reactivity trace partitioning
 
-Each `.obj` data file is unpacked and the partitioned using the `RX_partitioning` functions. there are two functions created for partitioning of the reactivity traces; `RX_partitioning_replicates` and  `RX_partitioning_single`. 
+Each `.obj` data file is unpacked and the partitioned using the `RX_partitioning` functions. there are two functions created for partitioning of the reactivity traces: `RX_partitioning_replicates` and  `RX_partitioning_single`. 
 
 - `RX_partitioning_single` is designed for data with only a single replicate. 
-- `RX_partitioning_replicates` is designed for data with upto and including 3 replicates. 
+- `RX_partitioning_replicates` is designed for data with up to and including 3 replicates. 
 
 ### Reactivity profile alignment
 
-`RX_partitioning_replicates` outputs the partitioned reativity in several 'packets'. In this form, the data is input into the function `RX_partition_realignment`. This function aligns the partitioned reactivity profiles from the different replicates with each other.
+`RX_partitioning_replicates` outputs the partitioned reactivity in several 'packets'. In this form, the data is input into the function `RX_partition_realignment`. This function aligns the partitioned reactivity profiles from the different replicates with each other.
 
-After this process the pearson correlation coefficients between the replicates are calculated and stored in array which will later be output to a csv file. 
+After this process the Pearson correlation coefficients between the replicates are calculated and stored in array which will later be output to a csv file. 
 
 ## Reactivity calculations 
 
-Reactivities for each nucleus are calculated as the area of the peak associated with that nucleotide. This is acheived using two different functions depending on the number of replicates used. `RX_calculator_single` is used to calculate areas for data with only a single replicate. `RX_calculator_replicates` is used to calculate average peak areas over upto 3 replicates. it also calculates the standard deviations of the peak areas and the average amplitudes of peaks associated with each nucleotide position. 
+Reactivities for each nucleus are calculated as the area of the peak associated with that nucleotide. This is achieved using two different functions depending on the number of replicates used. `RX_calculator_single` is used to calculate areas for data with only a single replicate. `RX_calculator_replicates` is used to calculate average peak areas over up to 3 replicates. it also calculates the standard deviations of the peak areas and the average amplitudes of peaks associated with each nucleotide position. 
 
-Following this calculated reactivities must me corrected for background. The scaling factor of the background treatment (0 ms) to the other treatments is calculated using the function `scaleShapeDataWindow` from the QuShape package `funcSeqAll`. The corrected reactivities are then calculated using the `RX_correction` functions, which produces a normalised reactivity profile and the normalisation factor used to produce it. The normalisation factors for are stored and later output into files. 
+Following this calculated reactivities must be corrected for background. The scaling factor of the background treatment (0 ms) to the other treatments is calculated using the function `scaleShapeDataWindow` from the QuShape package `funcSeqAll`. The corrected reactivities are then calculated using the `RX_correction` functions, which produces a normalised reactivity profile and the normalisation factor used to produce it. The normalisation factors for are stored and later output into files. 
 
-Errors from the background and the footprinted datasets are propogated using the function `error_propagation`. These errors are then normalised using the normalisation factors used for the reactivity profile. 
+Errors from the background and the footprinted datasets are propagated using the function `error_propagation`. These errors are then normalised using the normalisation factors used for the reactivity profile. 
 
 ## Reactivity profiles averaged over windows
 
-The above processes are performed for each of the preprocessed datasets stored in the `.obj` files. For each preprocessed set the output reactivity profiles are stored in an array.
+The above processes are performed for each of the pre-processed datasets stored in the `.obj` files. For each pre-processed set the output reactivity profiles are stored in an array.
 
-Pearson correlations coefficients between the reactivity profiles are then calculated and the average correlation values are calculated for each window. Those preprocessed data with an average pearson correlation below 0.75 are discarded. The average over the remaining datasets for each profile is then taken as well as the standard error.
+Pearson correlations coefficients between the reactivity profiles are then calculated and the average correlation values are calculated for each window. Those pre-processed data with an average Pearson correlation below 0.75 are discarded. The average over the remaining datasets for each profile is then taken as well as the standard error.
 
 The unnormalised and normalised reactivities are then output as `.csv` files
 
 ## RX_analyse:
  
-A wrapper function has been created that can perform all of the above processes sequentially using `RX_analyse`. In the example reactivity profiles are being generated for primer B1 extensions of TCV RNA X-ray footprinted whilst _in virio_ in water.
+A wrapper function has been created that can perform all the above processes sequentially using `RX_analyse`. In the example reactivity profiles are being generated for primer B1 extensions of TCV RNA X-ray footprinted whilst _in virio_ in water.
 
 The first step required is to define which of the datasets in the ensemble are the background (0 ms) samples and the exposed reactivity samples (in this case the 25 ms exposure samples):
 
@@ -71,7 +71,7 @@ A_0=[0,1,2]
 A_25=[3,4,5]
 `
 
-As can be seen this involves listing the indicies for each, and as such it is often helpful to generate a list of the datasets under investigation. In this tutorial that list is provided in the file `tcv_priB1_data_files.fl`. 
+As can be seen this involves listing the indices for each, and as such it is often helpful to generate a list of the datasets under investigation. In this tutorial that list is provided in the file `tcv_priB1_data_files.fl`. 
 
 The nucleotide position for the first position in the profile is then specified:
 
@@ -79,7 +79,7 @@ The nucleotide position for the first position in the profile is then specified:
 nuc_start=2097  
 `
 
-note that this value is based on the value generated using the python script file `sequence_alignment_tcv_priB1.py`. Given that the value produced by this script relates to the end of the size marker peaks and we are extrpolating 150 nts beyond the end of the size marker peaks, the `nuc_start` should be the number produced by `sequence_alignment_tcv_priB1.py` minus 150 nts. 
+note that this value is based on the value generated using the python script file `sequence_alignment_tcv_priB1.py`. Given that the value produced by this script relates to the end of the size marker peaks and we are extrapolating 150 nts beyond the end of the size marker peaks, the `nuc_start` should be the number produced by `sequence_alignment_tcv_priB1.py` minus 150 nts. 
 
 
 `RX_analyse` can then be called:
@@ -89,7 +89,7 @@ note that this value is based on the value generated using the python script fil
 xfp.RX_analyse('210315_tcv_B1',A_0,A_25,'TCV','B1',nuc_start,'virion_water',25,sm_extend=15)
 `
 
-+ The first argument details the prefix of the `.obj` preprocessed data files. 
++ The first argument details the prefix of the `.obj` pre-processed data files. 
 + The second and third arguments are the lists detailing the background and reactivity datasets in the ensemble
 + The fourth and fifth arguments detail the virus and primer under investigation. 
 + The sixth argument gives the nucleotide position of the first position in the reactivity profile. 
@@ -99,7 +99,9 @@ xfp.RX_analyse('210315_tcv_B1',A_0,A_25,'TCV','B1',nuc_start,'virion_water',25,s
 Other arguments that can be used in `RX_analyse` are:
 
 + `skip`: List of indices of datasets to be disregarded. Default is an empty list. 
-+ `wrange`: Specifies the preprocessed data files to be used. Defaults to all datafiles used. 
-+ `wcut`: cutoff correlation for windowing. Default is 0.7. 
++ `wrange`: Specifies the pre-processed data files to be used. Defaults to all datafiles used. 
++ `wcut`: cut-off correlation for windowing. Default is 0.7. 
 
 Running on a standard hardware and software the script should take 30-60 mins to run.
+
+

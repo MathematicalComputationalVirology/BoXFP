@@ -4418,6 +4418,8 @@ def raw_trace_plotter(file_list):
         plt.plot(data['Position'],data['SequenceChannel#1'],'r',label='ddA')
         plt.plot(data['Position'],data['SequenceChannel#2'],'g',label='ddC')
         plt.plot(data['Position'],data['SizeMarker'],'k',label='SM')
+	plt.xlabel('Position (EP)')
+	plt.ylabel('Fluorescence (AU)')
         plt.legend()
         plt.savefig(file.strip('\n')+'_raw.png')
         plt.close()
@@ -4820,81 +4822,4 @@ def readABI(dir_list):
 	    data_bloc.append(data)
     return data_bloc
 
-def signal_assessor(dir_list):
-    
-    """
-    Signal assessment function
-    
-    Args:
-        dir_list (list): list of datafiles
-    
-    Returns: 
-        None
-    """
-    dir_name = os.path.basename(os.getcwd())
-
-    f = open(dir_name+'_signal_assess.csv','w+')
-    f.write('sample,av_RC,sd_RC,av_SC1,sd_SC1,av_SC2,sd_SC2\n')
-
-    for fsa_file in dir_list:
-
-        sample_id = fsa_file.strip('.fsa')
-
-        print sample_id
-
-        csv_file = sample_id + '_raw.csv'
-
-        data_temp = open(csv_file,'r').readlines()
-
-        data_1 = []
-
-        labels = ['Position','ReactionChannel#1','SequenceChannel#1','SequenceChannel#2','SizeMarker']
-
-        for line in data_temp[1:]:
-            data_1.append([int(i) for i in line.strip('\n').split(',')])
-
-
-
-        data = [[i[j] for i in data_1] for j in range(5)] 
-
-        if np.argmax(data[1]) > 5000:
-
-            quit()
-
-        data = [i[np.argmax(data[1]):] for i in data] 
-
-        sub_samples = [[data[k][j:j+1000] for j in range(0,len(data[k]),1000)] for k in range(5)] 
-
-
-        avg_arr = [[],[],[],[]]
-
-        for k in range(1,4+1):
-            for sample in sub_samples[k]:
-                tmp_arr = sample 
-                tmp_arr.sort()
-                avg_min = round(np.mean(tmp_arr[:250]),3)
-                avg_max = round(np.mean(tmp_arr[-250:]),3)
-
-                avg_arr[k-1].append([avg_min,avg_max,sub_samples[0][sub_samples[k].index(sample)][0],sub_samples[0][sub_samples[k].index(sample)][-1]])
-
-
-        for k in range(0,4):
-            avg_arr[k].pop(np.argmax([i[1] for i in avg_arr[k]])) # - highest high
-            avg_arr[k].pop(np.argmin([i[1] for i in avg_arr[k]])) # - lowest high ?
-
-
-        sig_strength = np.mean([avg_arr[0][i][1]-avg_arr[0][i][0] for i in range(len(avg_arr[0]))])
-        seq_strength = np.mean([avg_arr[1][i][1]-avg_arr[1][i][0] for i in range(len(avg_arr[0]))])
-        seq2_strength = np.mean([avg_arr[2][i][1]-avg_arr[2][i][0] for i in range(len(avg_arr[0]))])
-
-        sig_strength2 = np.std([avg_arr[0][i][1]-avg_arr[0][i][0] for i in range(len(avg_arr[0]))])
-        seq_strength2 = np.std([avg_arr[1][i][1]-avg_arr[1][i][0] for i in range(len(avg_arr[0]))])
-        seq2_strength2 = np.std([avg_arr[2][i][1]-avg_arr[2][i][0] for i in range(len(avg_arr[0]))])
-
-
-
-        f.write('%s,%f,%f,%f,%f,%f,%f\n'% (sample_id,round(sig_strength,3),round(sig_strength2,3),round(seq_strength,3),round(seq_strength2,3),round(seq2_strength,3),round(seq2_strength2,3)))
-		
-		
-    f.close()
 

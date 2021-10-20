@@ -18,8 +18,6 @@ if __name__ == '__main__':
 
     xfp.write_out_raw_csv(reference_data_bloc, reference_data_files)
 
-    xfp.signal_assessor(reference_data_files)
-
     xfp.raw_trace_plotter(reference_data_files)
 
     end = time.time()
