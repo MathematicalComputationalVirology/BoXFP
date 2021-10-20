@@ -36,6 +36,6 @@ In most cases the chromatographs do not contain exit peaks. If this is the case 
 Although the positions of the DSS peaks will shift between different chromatographs, the distances between peaks exhibits minimal variation (variation are usually <2 elution points). Because of this we can use the DSS peaks in the ensemble to extrapolate beyond the original DSS peak set, generating a 'pseudo-set' of additional DSS peaks. In BoXFP, this extension is performed in sets of 10 nts and is performed in the reactivity calculation step. In the wrapper function `RX_analyse` the number of pseudo-peaks can be specified by setting the `sm_cutoff` argument to >0. Note that it is not advised to set `sm_cutoff` to a value greater than 15 (which results in an extra 150 nts in the reactivity profile).  
 
 Note that there is currently no option to extend the DSS peaks in the position determination step. To get the position for an extended reactivity profile, we must determine the position using the full set of DSS peaks and then calculate back to determine the start with the extension (for a 150 nt extension this would mean taking the value calculated using the position determination step and then subtracting 150 from this value).
-![image](https://user-images.githubusercontent.com/30653403/138135244-c4b80ffc-b477-47a7-b79c-895a9788966b.png)
+
 
 
