@@ -13,7 +13,7 @@ if __name__ == '__main__':
     
     np.set_printoptions(threshold=sys.maxsize)
 
-    xfp.RX_preprocess('B1',1350,None,'test',Top=None)
+    xfp.RX_preprocess('B1',1350,None,'210315_tcv_B1',Top=None)
     
     end = time.time()
 

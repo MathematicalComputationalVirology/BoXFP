@@ -26,7 +26,7 @@ All the different processes performed during pre-processing can be performed by 
 
 Pre-processing is performed for all datasets in which the same primer has been used. in the example given the primer B1 TCV samples are being pre-processed:
 
-`xfp.RX_preprocess('B1',1350,None,'test',Top=None)`
+`xfp.RX_preprocess('B1',1350,None,'210315_tcv_B1',Top=None)`
 
 + The first argument specifies the primer to be under investigation. 
 
